@@ -1,0 +1,145 @@
+.show-product-img{
+	height:42px;
+	width:42px;
+}
+.form-img {
+	float: right;
+	margin-top: 11px;
+}
+.show-table{	
+	width:100%;
+}
+
+.render-pagination{
+	float:right;	
+}
+
+span.error{
+    color: red;
+}
+.error-product{
+	color: red;
+	padding-left: 211px;
+}
+.checkbox-text{
+	float:right;
+}
+.date-range-review-btn{
+	position: absolute!important;
+    top: 125%!important;
+    left: 10%!important;
+}
+
+.dell-gallery {
+	font-size: 15px;
+	font-weight: 400;
+	padding: 8px 22px;
+	margin: 10px;
+}
+.add-param-img{
+	width: 42px;
+	cursor: pointer;
+}
+
+.param-value {
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+.add-param{
+	padding-bottom: 15px;
+	padding-top: 0px;
+	border:solid 1px #d4cccc;
+	margin-bottom: 10px;
+}
+
+.box_header{
+	height: 40px;
+	padding-top: 7px;
+	background: #e4e4e4;
+	margin-bottom: 16px;
+}
+.box {
+	background: #e8e8e8;
+	padding: 14px 10px 14px 10px;
+}
+.close-box {
+	position: absolute;
+	right: 0;
+}
+.input-box {
+	width: 200px !important;
+}
+
+.dynamic-param-value{
+	margin-bottom: 25px;
+}
+.button_select_cancel {
+	width: 40% !important;
+	float: left;
+	margin: 0 0px 0px 20px !important;
+}
+.select_cateogry {
+	width: 30% !important;
+	padding: 10px 0 10px 0;
+	float: right;
+	margin-top: -2px !important;
+}
+.category_dropdown {
+	 width: 64%;
+	 float: left;
+}
+.hint-span{
+	color: #9da0a4;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	/* display: none; <- Crashes Chrome on hover */
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+input[type=number] {
+	-moz-appearance:textfield;
+}
+
+.google_searchbox {
+	width: 320px;
+	height: 40px;
+	padding: 2px 0 2px 14px;
+	border-radius: 6px;
+	border: solid 1px #9e9e9e;
+	font-size: 15px;
+	box-shadow: 4px 4px 4px 0px #bfbfbf;
+}
+.google_searchbox:focus{
+	outline: none;
+}
+.img-gallery{
+	height: 75%;
+	width: 100%;
+	object-fit: contain
+}
+.gallery-img-container{
+	width: 300px;
+	height: 250px;
+}
+.language-toggle{
+	margin-right: 7px;
+	margin-bottom: 3px;
+}
+.extra-width
+{
+	width: 1039px!important;
+	height: 1500px; /* control height here */
+}
+.align-btn
+{
+    top: 197%!important;
+}
+
+#direction_map:focus{
+	background-color: #1374c5 !important;
+	background: #1374c5 !important;
+	color: #fff !important;
+}

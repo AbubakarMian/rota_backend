@@ -1,0 +1,51 @@
+#userDashboard{
+
+    background-color: #be202e;
+    padding-top: 50px;
+}
+
+.dashboardHeading{
+    color: #f9b317;
+    border-bottom: 2px solid #e0dede;
+    font-size: 30px;
+}
+
+.anchorCreateGreet{
+    background-color: #f9b317;
+    color: #000;
+    padding: 5px;
+    font-size: 16px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    border-color: #f9b317;
+
+}
+
+.mainContent{
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+
+}
+
+.ListCard{
+    border-bottom: 1px solid #e0dede;
+    padding-top: 30px;
+    padding-bottom: 10px;
+}
+
+.CardImage{
+    max-width: 100px;
+    min-height: 100px;
+    vertical-align: middle;
+}
+
+.mainContent h4{
+   color: rgb(241, 241, 241);
+   font-size: 25px;
+}
+
+.mainContent p{
+    color: rgb(241, 241, 241);
+    font-size: 15px;
+}
