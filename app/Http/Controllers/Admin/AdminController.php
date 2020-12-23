@@ -103,23 +103,43 @@ class AdminController extends Controller
         $count = Doctor::count('id');
 
         $modules[] = [
+
             'url' => 'admin/doctor',
             'title' => 'Doctor',
             'count' => $count
         ];
 
+        // $count = Doctor::count('id');
+
 
         $modules[] = [
             'url' => 'admin/request',
-            'title' => 'Rota Request',
+            'title' => 'Doctors Summary',
             'count' => $count
         ];
         $modules[] = [
-            'url' => 'admin/rotadoctor',
+            'url' => 'admin/rota',
             'title' => 'ROTA',
             'count' => $count
         ];
+        // $count = Rota_Generate_Pattern::count('id');
+        $modules[] = [
+            'url' => 'admin/rota/generate/pattern',
+            'title' => 'ROTA Generate Pattern',
+            'count' => $count
+        ];
 
+        $modules[] = [
+            'url' => 'admin/general/rota',
+            'title' => 'General Rota Request',
+            'count' => $count
+        ];
+
+        $modules[] = [
+            'url' => 'admin/special/rota',
+            'title' => 'Special Rota Request',
+            'count' => $count
+        ];
 
         // $reports[] = [
         //     'url' => 'admin/reports/orders',

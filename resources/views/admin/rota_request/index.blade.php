@@ -1,6 +1,6 @@
 @extends('layouts.default_module')
 @section('module_name')
-Rota Request
+Doctor's Summary
 @stop
 @section('add_btn')
 
@@ -13,13 +13,13 @@ width="400px" style="table-layout:fixed;"
 
 
 <style>
-	td {
-		white-space: nowrap;
-		overflow: hidden;
-		width: 30px;
-		height: 30px;
-		text-overflow: ellipsis;
-	}
+    td {
+        white-space: nowrap;
+        overflow: hidden;
+        width: 30px;
+        height: 30px;
+        text-overflow: ellipsis;
+    }
 </style>
 
 @section('table')
@@ -28,29 +28,32 @@ width="400px" style="table-layout:fixed;"
 {!!Form::close() !!}
 @stop
 <thead>
-	<tr>
+    <tr>
 
         <th>Name</th>
-		<th>Age</th>
+        <th>Age</th>
         <th>Qualification</th>
-        <th>Total_duties </th>
-		<th>Image</th>
-        <th>Leave Page</th>
-        <th>Rota Request</th>
+        <th>Total duties </th>
+        <th>Image</th>
+        <th>Leave Details</th>
+        <th>Rota Details</th>
+        <th>Add Leaves</th>
+        <th>Add Rota Request</th>
 
-	</tr>
+    </tr>
 </thead>
 <tbody>
 
     @foreach($doctors as $d)
 
-	<tr>
+
+    <tr>
         <td>{!! $d->user->name !!}</td>
-		<td>{!! $d->age!!}</td>
+        <td>{!! $d->age!!}</td>
         <td>{!! $d->qualification !!}</td>
         <td>{!! $d->total_duties !!}</td>
 
-		<?php
+        <?php
                 if(!$d->user->avatar){
                     $d->user->avatar = asset('avatar/default_img.jpg');
                 }
@@ -58,9 +61,34 @@ width="400px" style="table-layout:fixed;"
 
 
 
+
         <td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img"></td>
-        <td>  <a href="{{ url('rota/leave/'.$d->id) }}">Leave</a></td>
-        <td>  <a href="{{ url('rota/request/'.$d->id) }}">Rota Request</a></td>
+
+        <td>
+
+            {{-- <a href="">
+                <span class="badge bg-info"
+                    data-url="{!! asset('admin/rota/leave/detailmodal/').'/'.$d->id !!}" name='msgmodal'>
+                    Leave Details</span>
+            </a> --}}
+            <a href="{{ url('admin/rota/leave/detail/'.$d->id)  }}" class='badge bg-info'>    Leave Details
+               </a>
+
+        </td>
+
+        <td> <a href="{{ url('admin/rota/request/detail/'.$d->id)  }}" class='badge bg-info'> Rota Request
+                Details</a></td>
+        {{-- <td>
+			<a href="" data-toggle="modal" name="activate_delete" data-target=".request_{!! $q->id !!}">
+				<span class=" badge bg-info btn-success">
+                   Rota Request Details</span></a>
+			@include('admin.rota_request.partial.request_modal',['order'=>$q])
+		</td> --}}
+
+
+
+        <td> <a href="{{ url('rota/leave/'.$d->id)  }}" class='badge bg-info'>Leave</a></td>
+        <td> <a href="{{ url('rota/request/'.$d->id) }}" class='badge bg-info'>Rota Request</a></td>
 
 
         {{-- <td>{!! Form::open(['method' => 'POST', 'route' => ['rota.leave' , $d->id]]) !!}
@@ -72,9 +100,9 @@ width="400px" style="table-layout:fixed;"
 
         {{-- <td>
             {{ route('rota/leave'.$d->id) }}
-			{!! Form::close() !!}
-		</td>
-      </td> --}}
+        {!! Form::close() !!}
+        </td>
+        </td> --}}
 
         {{-- <td>{!! Form::open(['method' => 'POST', 'route' => ['rota.leave', $d->id]]) !!}
 			<a href="" name="rota" data-target=".delete">
@@ -87,19 +115,58 @@ width="400px" style="table-layout:fixed;"
 
 
 
-	</tr>
-	@endforeach
+    </tr>
+    @endforeach
+    {{-- @endforeach
+    @endforeach --}}
 </tbody>
+
 @section('pagination')
 <span class="pagination pagination-md pull-right">{!! $doctors->render() !!}</span>
 <div class="col-md-3 pull-left">
-	<div class="form-group text-center">
-		<div>
-			{!! Form::open(['method' => 'get', 'route' => ['dashboard']]) !!}
-			{!! Form::submit('Cancel', ['class' => 'btn btn-default btn-block btn-lg btn-parsley']) !!}
-			{!! Form::close() !!}
-		</div>
-	</div>
+    <div class="form-group text-center">
+        <div>
+            {!! Form::open(['method' => 'get', 'route' => ['dashboard']]) !!}
+            {!! Form::submit('Cancel', ['class' => 'btn btn-default btn-block btn-lg btn-parsley']) !!}
+            {!! Form::close() !!}
+        </div>
+    </div>
 </div>
 @endsection
 @stop
+
+@include('admin.rota_request.partial.image_modal')
+@section('app_jquery')
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+    $(function(){
+
+			$('span[name="msgmodal"]').on('click', function(e){
+				e.preventDefault();
+                console.log('span !!!!!!!!!!!')
+				var my_url = $(this).attr('data-url');
+				var mySpan = this;
+				$.get(my_url , function (data) {
+					var trHTML = '';
+					$.ajax({
+						type: 'GET',
+						url: my_url,
+						data: 'application/json',
+						dataType: 'json',
+						success: function (data) {
+
+								console.log("sucess data !!!!!!!!!!!!",data);
+								trHTML = data;
+
+							$('#my_msg_div').html(trHTML);
+							$('#msgmodal').modal('show');
+						},
+						error: function (data) {
+							console.log('Error:', data);
+						}
+					});
+				});
+			});
+		});
+
+</script>

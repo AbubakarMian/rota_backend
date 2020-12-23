@@ -1,38 +1,52 @@
 
-    <div class="form-group">
-        {!! Form::label('dutydate','Duty_date') !!}
+
+
+       <div class="form-group">
+        {{-- <div> --}}
+            <input type="checkbox" name="is_general" value="general" onclick="toggle_duty_date(this);">
+            {!! Form::label('general','Is General') !!}
+        {{-- </div> --}}
+    </div>
+    <div class="form-group" id="duty_date">
+        {!! Form::label('dutydate','Duty Date') !!}
         <div>
             {!! Form::date('dutydate',null, ['class' => 'form-control',
-            'data-parsley-required'=>'true',
+            'data-parsley-required'=>'true','id'=>'duty_date',
             'data-parsley-trigger'=>'change',
-            'placeholder'=>'dutydate','required',
-            'maxlength'=>"100"]) !!}
+            'placeholder'=>'dutydate','required']) !!}
         </div>
     </div>
 
 
-      <select id="select-example" class="form-control"  name="weekday_id"  placeholder="Select weekday...">
-        @foreach ($weekday as $w)
-        <option value="{{$w->id}}">{{$w->name}}</option>
-
-        @endforeach
-    </select>
 
 
-<input name="doctor_id" id="doctor_id" value="{{$doctor->id}}" hidden>
+<div class="form-group" id="duty_date">
+    {!! Form::label('weekday_id','Week Day') !!}
+    <div>
+        {!! Form::select('weekday_id',$weekdays,null, ['class' => 'form-control',
+        'data-parsley-required'=>'true',
+        'data-parsley-trigger'=>'change',
+        'required']) !!}
+    </div>
+</div>
 
 
-    <input type="radio" name="shiftday" value="general">General<br>
-    <input type="radio" name="shiftday" value="morning">Morning<br>
-    <input type="radio" name="shiftday" value="night"> Night<br>
-    <input type="radio" name="shiftday" value="cc">CC<br>
+{{-- <input name="doctor_id" id="doctor_id" value="{{$doctor->id}}" hidden> --}}
 
-   <input type="radio" name="duty" value="wantduty">Want duty<br>
-  <input type="radio"  name="duty" value="wantoff">Want Off<br>
+<div class="form-group" id="duty_date">
+    {!! Form::label('shiftday','Shift Day') !!}
+    <div>
+        {!! Form::select('shiftday',['morning','evenging','night'],null, ['class' => 'form-control',
+        'data-parsley-required'=>'true',
+        'data-parsley-trigger'=>'change',
+        'required']) !!}
+    </div>
+</div>
 
 
 
-
+   {{-- <input type="radio" name="duty" value="wantduty">Want duty<br> --}}
+  {{-- <input type="radio"  name="duty" value="wantoff">Want Off<br> --}}
 
 
 
@@ -57,7 +71,15 @@
 
 <script>
 
+function toggle_duty_date(e) {
+    if(e.checked){
+        $('#duty_date').css('display','none');
+    }
+    else{
+        $('#duty_date').css('display','block');
+    }
 
+}
 
 
     function validateForm(){
@@ -78,14 +100,14 @@
 // }
 
 
-var button1 = document.getElementById("red");
-var button2 = document.getElementById("red");
+// var button1 = document.getElementById("red");
+// var button2 = document.getElementById("red");
 
-if (button1.checked){
-    alert("radio1 selected");
-}else if (button2.checked) {
-    alert("radio2 selected");
-}
+// if (button1.checked){
+//     alert("radio1 selected");
+// }else if (button2.checked) {
+//     alert("radio2 selected");
+// }
 
 
 

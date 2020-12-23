@@ -37,13 +37,16 @@ use Illuminate\Support\Facades\Route;
    /////leave request
    Route::get('rota/leave/{id}', 'Admin\Rota_RequestController@leave')->name('rota.leave');
    Route::post('admin/rota/leave/save', 'Admin\Rota_RequestController@save')->name('leave.save');
-   ////
+   Route::get('admin/rota/leave/detail/{id}', 'Admin\Rota_RequestController@detail')->name('admin.leave.detail');
+   Route::get('admin/rota/request/detail/{id}', 'Admin\Rota_RequestController@request')->name('admin.request.detail');
+
+   ////rota request page
    Route::get('rota/request/{id}', 'Admin\Rota_RequestController@create')->name('rota.request');
-   Route::post('admin/rota/request/save', 'Admin\Rota_RequestController@store')->name('request.save');
+   Route::post('admin/rota/request/save/{doctor_id}', 'Admin\Rota_RequestController@store')->name('request.save');
 
 
     //////////ROTA
-   Route::get('admin/rotadoctor', 'Admin\Rota_Controller@index')->name('rota.index');
+   Route::get('admin/rota', 'Admin\Rota_Controller@index')->name('rota.index');
    Route::get('admin/list/create', 'Admin\Rota_Controller@create')->name('doctor.list.create');
    Route::post('admin/list/save', 'Admin\Rota_Controller@save')->name('admin.doctorlist.save');
 //////rota generate
@@ -51,3 +54,26 @@ use Illuminate\Support\Facades\Route;
 Route::get('admin/rota/generate/{id}', 'Admin\Rota_Controller@generate')->name('rota.generate');
 
 Route::get('admin/rota/check', 'Admin\Rota_Controller@check')->name('rota.check');
+
+//////////Rota Generate Pattern
+Route::get('admin/rota/generate/pattern/{id}', 'Admin\Rota_Generate_Pattern_Controller@index')->name('rota.pattern.index');
+Route::get('admin/rota/generate/pattern/create', 'Admin\Rota_Controller@create')->name('rota.generate.pattern.create');
+Route::post('admin/rota/generate/pattern/save', 'Admin\Rota_Controller@save')->name('admin.rota_generate_pattern.save');
+
+///general rota request crud
+
+Route::get('admin/general/rota', 'Admin\General_Rota_Request_Controller@index')->name('general.rota.index');
+Route::get('admin/general/rota/create', 'Admin\General_Rota_Request_Controller@create')->name('general.rota.create');
+Route::post('admin/general/rota/save', 'Admin\General_Rota_Request_Controller@save')->name('admin.general_rota_request.save');
+
+//////special rota request
+
+Route::get('admin/special/rota', 'Admin\Special_Rota_Request_Controller@index')->name('special.rota.index');
+Route::get('admin/special/rota/create', 'Admin\Special_Rota_Request_Controller@create')->name('special.rota.create');
+Route::post('admin/special/rota/save', 'Admin\Special_Rota_Request_Controller@save')->name('admin.special_rota_request.save');
+
+///////Monthly rota details
+
+// Route::get('admin/monthly/rota/detail/{id}', 'Admin\Monthly_Rota_Details_Controller@detail')->name('admin.monthly.rota.detail');
+
+

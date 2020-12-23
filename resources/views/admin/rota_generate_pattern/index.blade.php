@@ -1,14 +1,14 @@
 @extends('layouts.default_module')
 @section('module_name')
-Doctor Rota List
+ Rota Generate pattern
 @stop
 @section('add_btn')
 
-{!! Form::open(['method' => 'get', 'route' => ['doctor.list.create'], 'files'=>true]) !!}
+{!! Form::open(['method' => 'get', 'route' => ['special.rota.create'], 'files'=>true]) !!}
 <span>{!! Form::submit('Add', ['class' => 'btn btn-success pull-right']) !!}</span>
 {!! Form::close() !!}
 
-
+@endsection
 @section('table-properties')
 width="400px" style="table-layout:fixed;"
 @endsection
@@ -26,42 +26,49 @@ width="400px" style="table-layout:fixed;"
 @section('table')
 {{-- {!! Form::open(['method' => 'get', 'route' => ['doctor.search'], 'files'=>true]) !!}
 @include('admin.doctor.partial.searchfilters')
-{!!Form::close() !!} --}}
-@stop
+{!!Form::close() !!}
+@stop --}}
 
 <thead>
 	<tr>
 
-        <th>Year</th>
-        <th>Month</th>
-        <th>Rota</th>
-        <th> Monthly Rota Details</th>
+        <th>Total days  of month </th>
 
 
 	</tr>
 </thead>
 <tbody>
 
-    @foreach($list as $l)
+
 
 	<tr>
-        <td>{!! $l->year!!}</td>
-        <td>{!! date("F", mktime(0, 0, 0, $l->month, 10))!!}</td>
-        <td>
-            <a href="{{ asset('admin/rota/generate/'.$l->id) }}" class="badge bg-info">Generate</a>
-        </td>
-        "
+<td>
+        for ($i = 1; $i <= 28; $i++) {}
 
 
-        <td>
-            <a href="{{ asset('admin/rota/generate/pattern/'.$l->id) }}" class="badge bg-info">  Rota Generate Pattern</a>
-        </td>
 
-   </tr>
-	@endforeach
+</td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</tr>
+    @endforeach
+    {{-- @endforeach --}}
 </tbody>
 @section('pagination')
-{{-- <span class="pagination pagination-md pull-right">{!! $l->render() !!}</span> --}}
+{{-- <span class="pagination pagination-md pull-right">{!! $general->render() !!}</span> --}}
 <div class="col-md-3 pull-left">
 	<div class="form-group text-center">
 		<div>

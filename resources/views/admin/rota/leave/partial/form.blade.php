@@ -1,6 +1,6 @@
 
     <div class="form-group">
-        {!! Form::label('startdate','Start_date') !!}
+        {!! Form::label('startdate','Start Date') !!}
         <div>
             {!! Form::date('startdate',null, ['class' => 'form-control',
             'data-parsley-required'=>'true',
@@ -11,7 +11,7 @@
     </div>
 <input name="doctor_id" id="doctor_id" value="{{$doctor->id}}" hidden>
     <div class="form-group">
-        {!! Form::label('enddate','End_date') !!}
+        {!! Form::label('enddate','End date') !!}
         <div>
             {!! Form::date('enddate',null, ['class' => 'form-control',
             'data-parsley-required'=>'true',
@@ -21,6 +21,7 @@
         </div>
 
     </div>
+    <input type="radio"  name="annual" value="annual_leave">Annual Leave<br>
 
 
 <div class="form-group col-md-12">
