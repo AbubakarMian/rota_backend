@@ -35,7 +35,7 @@ width="400px" style="table-layout:fixed;"
         <th>Name</th>
 		<th>Age</th>
         <th>Qualification</th>
-        <th>Total_duties </th>
+        <th>Total duties </th>
         <th>Doctor type</th>
 		<th>Image</th>
 

@@ -59,7 +59,7 @@ $admin_common = session()->get('admin_common');
 
                 <!-- logo -->
                 <a href="{{asset('index.php/admin/dashboard')}}" class="navbar-brand">
-                    <img src="{{ asset('images/Logo-02.png') }}" alt="">
+                    <img src="{{ asset('images/medicallogo.png') }}" alt="">
                     <span class="heading-font"></span>
                 </a>
                 <!-- /logo -->

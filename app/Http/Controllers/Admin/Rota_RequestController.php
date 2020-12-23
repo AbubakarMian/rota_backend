@@ -11,6 +11,8 @@ use App\models\Leave_Request;
 use App\models\User;
 use App\models\Weekday;
 use App\models\Rota_Request;
+use Illuminate\Support\Facades\Response;
+use LeaveRequest;
 
 class Rota_RequestController extends Controller
 {
@@ -18,9 +20,22 @@ class Rota_RequestController extends Controller
     public function index()
     {
 
-
-        $doctors = Doctor::with(['user'])->paginate(13);
+        // $leave = Leave_Request::get();
+        // $request = Rota_Request::get();
+        $doctors = Doctor::with(['user'])->paginate(10);
         return view('admin.rota_request.index', compact('doctors'));
+    }
+    public function detail($id){
+
+        $leave_request = Leave_Request::where('doctor_id',$id)->get();
+        $doctors = Doctor::with(['user'])->paginate(13);
+        return view('admin.rota_request.details', compact('doctors','leave_request'));
+    }
+    public function request($id){
+
+        $request = Rota_Request::where('doctor_id',$id)->get();
+        $doctors = Doctor::with(['user'])->paginate(13);
+        return view('admin.rota_request.request_details', compact('doctors','request'));
     }
 
 
@@ -55,6 +70,11 @@ class Rota_RequestController extends Controller
         $rota->start_date = strtotime($request->startdate);
         $rota->end_date = strtotime($request->enddate);
         $rota->doctor_id = $request->doctor_id;
+
+    // if ($request->annual == 'annual_leave') {
+        $rota->annual_leave = $request->annual =1;
+
+
         $rota->save();
 
         return redirect('admin/request');
@@ -65,22 +85,22 @@ class Rota_RequestController extends Controller
     {
 
         $doctor = Doctor::find($id);
-        $weekday = Weekday::get();
+        $weekdays = Weekday::pluck('name','id');
 
         return \View::make('admin.rota.request.create', compact(
             'doctor',
-            'weekday'
+            'weekdays'
         ));
     }
 
 
-    public function store(Request $request)
+    public function store(Request $request,$doctor_id)
     {
         //    return $request;
         // dd($request->dutydate);
 
         $evening = new Rota_Request();
-        $evening->doctor_id = $request->doctor_id;
+        $evening->doctor_id = $doctor_id;
         $evening->duty_date = strtotime($request->dutydate);
         $evening->week_day_id = $request->weekday_id;
 
@@ -102,6 +122,10 @@ class Rota_RequestController extends Controller
             $evening->want_off = 1;
 
         }
+        if ($request->annual == 'annual_leave') {
+            $evening->annual_leave = 1;
+        }
+
 
         $evening->save();
 
@@ -111,3 +135,22 @@ class Rota_RequestController extends Controller
         return redirect('admin/request');
     }
 }
+
+////////////////////modal show leave request (details showing)with ajax
+// public function detailmodal($id){
+
+//     $leave_request = Leave_Request::where('doctor_id',$id)->get();
+//     $response = Response::json([
+//         "status" => true,
+//         "msg" => $leave_request
+//     ]);
+//     return $response;
+// } public function detailmodal($id){
+
+//     $leave_request = Leave_Request::where('doctor_id',$id)->get();
+//     $response = Response::json([
+//         "status" => true,
+//         "msg" => $leave_request
+//     ]);
+//     return $response;
+// }

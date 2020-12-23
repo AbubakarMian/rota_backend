@@ -1,14 +1,14 @@
 
 
 @extends('layouts.default_edit')
-{{-- @section('heading')
-    {!! $heading !!}
-@endsection --}}
+@section('heading')
+   Dr. {!! $doctor->user->name !!} Rota Request
+@endsection
 
 @section('leftsideform')
 
 
-        {!! Form::open(['id'=>'my_form','method' => 'POST', 'route' => ['request.save' ], 'files'=>true]) !!}
+        {!! Form::open(['id'=>'my_form','method' => 'POST', 'route' => ['request.save',$doctor->id ], 'files'=>true]) !!}
 
        @include('admin.rota.request.partial.form')
         {!!Form::close()!!}

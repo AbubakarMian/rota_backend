@@ -1,14 +1,14 @@
 @extends('layouts.default_module')
 @section('module_name')
-Doctor Rota List
+Special Rota Request
 @stop
 @section('add_btn')
 
-{!! Form::open(['method' => 'get', 'route' => ['doctor.list.create'], 'files'=>true]) !!}
+{!! Form::open(['method' => 'get', 'route' => ['special.rota.create'], 'files'=>true]) !!}
 <span>{!! Form::submit('Add', ['class' => 'btn btn-success pull-right']) !!}</span>
 {!! Form::close() !!}
 
-
+@endsection
 @section('table-properties')
 width="400px" style="table-layout:fixed;"
 @endsection
@@ -26,42 +26,59 @@ width="400px" style="table-layout:fixed;"
 @section('table')
 {{-- {!! Form::open(['method' => 'get', 'route' => ['doctor.search'], 'files'=>true]) !!}
 @include('admin.doctor.partial.searchfilters')
-{!!Form::close() !!} --}}
-@stop
+{!!Form::close() !!}
+@stop --}}
 
 <thead>
 	<tr>
 
-        <th>Year</th>
-        <th>Month</th>
-        <th>Rota</th>
-        <th> Monthly Rota Details</th>
+        <th>Doctor </th>
+        <th>Duty Date </th>
+        <th>Want Duty </th>
+        <th>Want OFF </th>
+        <th>Annual leave</th>
+        <th>Shift</th>
 
 
 	</tr>
 </thead>
 <tbody>
 
-    @foreach($list as $l)
+    @foreach($list as $g)
 
 	<tr>
-        <td>{!! $l->year!!}</td>
-        <td>{!! date("F", mktime(0, 0, 0, $l->month, 10))!!}</td>
-        <td>
-            <a href="{{ asset('admin/rota/generate/'.$l->id) }}" class="badge bg-info">Generate</a>
-        </td>
-        "
+
+        <td>{!! $g->doctor->user->name!!}</td>
+
+        <td>{!! $g->duty_date!!}</td>
+        <td>{!! $g->want_duty!!}</td>
+        <td>{!! $g->want_off!!}</td>
+
+        <td>{!! $g->annual_leave!!}</td>
+        <td>{!! $g->shift!!}</td>
 
 
-        <td>
-            <a href="{{ asset('admin/rota/generate/pattern/'.$l->id) }}" class="badge bg-info">  Rota Generate Pattern</a>
-        </td>
 
-   </tr>
-	@endforeach
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</tr>
+    @endforeach
+    {{-- @endforeach --}}
 </tbody>
 @section('pagination')
-{{-- <span class="pagination pagination-md pull-right">{!! $l->render() !!}</span> --}}
+{{-- <span class="pagination pagination-md pull-right">{!! $general->render() !!}</span> --}}
 <div class="col-md-3 pull-left">
 	<div class="form-group text-center">
 		<div>

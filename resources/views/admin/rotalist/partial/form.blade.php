@@ -10,7 +10,7 @@
 
 <div class="form-group">
     {!! Form::label('month','Month') !!}
-    <div>
+</div>
 
     <select id="select-example" class="form-control"  name="month"  placeholder="Select month...">
 
