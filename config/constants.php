@@ -7,7 +7,7 @@ return [
 	],
 
 	'app-type' => [
-		'android' => "khatmenabowat-app-mobile",
+		'android' => "rota-app-mobile",
     ],
 
 	'social_login' => [
@@ -24,9 +24,16 @@ return [
         'success'=>'success',
     ],
     'duty_type'=>[
-        'morning'=>'morning',
-        'evening'=>'evening',
-        'night'=>'night',
-        'cc'=>'cc',
-    ]
+        'morning'=>'Morning',
+        'evening'=>'Evening',
+        'night'=>'Night'
+    ],
+    'weekdays'=>[
+        'monday'=>'Monday',
+        'tuesday'=>'Tuesday',
+        'wednesday'=>'Wednesday',
+        'thursday'=>'Thursday',
+        'friday'=>'Friday',
+        'saturday'=>'Saturday',
+        'sunday'=>'Sunday'],
 ];

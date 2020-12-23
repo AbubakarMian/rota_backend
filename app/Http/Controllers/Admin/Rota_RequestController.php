@@ -11,6 +11,8 @@ use App\models\Leave_Request;
 use App\models\User;
 use App\models\Weekday;
 use App\models\Rota_Request;
+use App\models\Special_rota_request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use LeaveRequest;
 
@@ -85,11 +87,13 @@ class Rota_RequestController extends Controller
     {
 
         $doctor = Doctor::find($id);
-        $weekdays = Weekday::pluck('name','id');
+        // $weekdays = Weekday::pluck('name','id');
+        $weekdays = Config::get('constants.weekdays');
+        $shifts = Config::get('constants.duty_type');
 
         return \View::make('admin.rota.request.create', compact(
             'doctor',
-            'weekdays'
+            'weekdays','shifts'
         ));
     }
 
@@ -99,15 +103,23 @@ class Rota_RequestController extends Controller
         //    return $request;
         // dd($request->dutydate);
 
-        $evening = new Rota_Request();
-        $evening->doctor_id = $doctor_id;
-        $evening->duty_date = strtotime($request->dutydate);
-        $evening->week_day_id = $request->weekday_id;
+        $Special_rota_request = new Special_rota_request();
+        // $evening = new Rota_Request();
+        $Special_rota_request->doctor_id = $doctor_id;
+        // $evening->duty_date = strtotime($request->dutydate);
+        // $evening->week_day_id = $request->weekday_id;
 
 
         if ($request->shiftday == 'general') {
-            $evening->is_general = 1;
-        } elseif ($request->shiftday == 'morning') {
+            $Special_rota_request->is_general = 1;
+        }
+        else{
+            $Special_rota_request->duty_date = strtotime($request->dutydate);
+        }
+
+
+
+        if ($request->shiftday == 'morning') {
             $evening->is_morning = 1;
         } elseif ($request->shiftday == 'night') {
             $evening->is_night = 1;
