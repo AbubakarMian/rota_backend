@@ -59,7 +59,7 @@ width="400px" style="table-layout:fixed;"
 
 		<?php
                 if(!$d->user->avatar){
-                    $d->user->avatar = asset('avatar/default_img.jpg');
+                    $d->user->avatar = asset('images/mediallogo.png');
                 }
             ?>
 
