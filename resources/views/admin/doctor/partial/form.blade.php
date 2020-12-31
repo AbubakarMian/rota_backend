@@ -74,8 +74,7 @@ if(isset($user)){
         <div class="form-group">
 
             <div class="form-group pull-right">
-                <img width="100px" src="{!! $avatar !!}" class="show-product-img" data-toggle="modal"
-                    data-target=".imagemodal">
+                <img width="100px" src="{!! $avatar !!}"class="show-product-img imgshow">
             </div>
 
             <div class="form-group">

@@ -147,3 +147,7 @@ input[type=number] {
 div#my_msg_div {
     margin-left: 109px;
 }
+
+div#my_msg_div {
+    margin-left: 6px;
+}
