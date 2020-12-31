@@ -1,35 +1,43 @@
-
-    <div class="form-group">
-        {!! Form::label('startdate','Start Date') !!}
-        <div>
-            {!! Form::date('startdate',null, ['class' => 'form-control',
-            'data-parsley-required'=>'true',
-            'data-parsley-trigger'=>'change',
-            'placeholder'=>'startdate','required',
-            'maxlength'=>"100"]) !!}
-        </div>
+<div class="form-group">
+    {!! Form::label('startdate','Start Date') !!}
+    <div>
+        {!! Form::date('startdate',null, ['class' => 'form-control',
+        'data-parsley-required'=>'true',
+        'data-parsley-trigger'=>'change',
+        'placeholder'=>'startdate','required',
+        'maxlength'=>"100"]) !!}
     </div>
+</div>
 <input name="doctor_id" id="doctor_id" value="{{$doctor->id}}" hidden>
-    <div class="form-group">
-        {!! Form::label('enddate','End date') !!}
-        <div>
-            {!! Form::date('enddate',null, ['class' => 'form-control',
-            'data-parsley-required'=>'true',
-            'data-parsley-trigger'=>'change',
-            'placeholder'=>'enddate','required',
-            'maxlength'=>"100"]) !!}
-        </div>
-
+<div class="form-group">
+    {!! Form::label('enddate','End date') !!}
+    <div>
+        {!! Form::date('enddate',null, ['class' => 'form-control',
+        'data-parsley-required'=>'true',
+        'data-parsley-trigger'=>'change',
+        'placeholder'=>'enddate','required',
+        'maxlength'=>"100"]) !!}
     </div>
-    <input type="radio"  name="annual" value="annual_leave">Annual Leave<br>
 
+</div>
 
-<div class="form-group col-md-12">
+<div class="form-group">
+
+    <div>
+        {!! Form::checkbox('annual',null, ['class' => 'form-control',
+        'data-parsley-required'=>'true',
+        'data-parsley-trigger'=>'change',
+        'placeholder'=>'enddate',
+        'value'=>"annual_leave"]) !!} &nbsp;
+        {!! Form::label('annual','Annual Leave') !!}
+    </div>
+
 </div>
 
 
 
-
+<div class="form-group col-md-12">
+</div>
 
 <div class="col-md-5 pull-left">
     <div class="form-group text-center">
@@ -42,10 +50,6 @@
 
 @section('app_jquery')
 <script>
-
-
-
-
     function validateForm(){
         return true;
     }

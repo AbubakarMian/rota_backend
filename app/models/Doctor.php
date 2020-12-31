@@ -15,6 +15,9 @@ class Doctor extends Model
         return $this->hasOne('App\models\User','id','user_id')->withTrashed();
     }
 
+    public function doctor_type(){
+        return $this->hasOne('App\models\Doctor_type','id','doctor_type_id')->withTrashed();
+    }
 
 
 

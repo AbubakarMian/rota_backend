@@ -26,10 +26,7 @@ class Rota_Controller extends Controller
     public function create()
     {
         $control = 'create';
-        return \View::make(
-            'admin.rotalist.create',
-            compact('control')
-        );
+        return \View::make('admin.rotalist.create',compact('control'));
     }
 
     public function save(Request $request)
@@ -65,8 +62,7 @@ class Rota_Controller extends Controller
         // dd($doctor_arr);
 
         $total_doctors = sizeof($doctor_arr);
-
-        $duty_type = Config::get('constants.duty_type');
+      $duty_type = Config::get('constants.duty_type');
 
         $doctor_index = 0;
         $data = [];

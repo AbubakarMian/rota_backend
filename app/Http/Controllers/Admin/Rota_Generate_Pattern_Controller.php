@@ -23,14 +23,17 @@ class Rota_Generate_Pattern_Controller extends Controller
     public function index()
     {
 
-        $list = Monthly_rota::get();
-        $total_days = cal_days_in_month(CAL_GREGORIAN, $list->month, $list->year);
+        // $list = Monthly_rota::get();
+        // $total_days = cal_days_in_month(CAL_GREGORIAN, $list->month, $list->year)->paginate(10);
+        // return view('admin.rota_generate_pattern.index');
 
-
-
-
+        $list = Rota_Generate_Pattern::get();
         return view('admin.rota_generate_pattern.index');
+
+
     }
+
+
 
 
 

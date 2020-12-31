@@ -24,10 +24,16 @@ width="400px" style="table-layout:fixed;"
 	}
 </style>
 @section('table')
-{{-- {!! Form::open(['method' => 'get', 'route' => ['doctor.search'], 'files'=>true]) !!}
-@include('admin.doctor.partial.searchfilters')
+{!! Form::open(['method' => 'get', 'route' => ['general.rota.search'], 'files'=>true]) !!}
+@include('admin.general_rota_request.partial.searchfilters')
 {!!Form::close() !!}
-@stop --}}
+{{-- @stop --}}
+
+
+
+
+
+
 
 <thead>
 	<tr>

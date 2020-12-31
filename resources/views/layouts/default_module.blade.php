@@ -88,5 +88,5 @@
     <script src="{{ asset('theme/scripts/bootstrap-datatables.js') }}"></script>
     <script src="{{ asset('theme/scripts/table-edit.js') }}"></script>
     <!-- /page script -->
-
+    @yield('html_after_jquery')
 @stop

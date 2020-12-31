@@ -1,7 +1,7 @@
 
 <script>
 $(function(){
-
+console.log('myapp.blade.js');
 @yield('document_ready_jq');
 
 $('#open_time').timeEntry();
@@ -60,8 +60,8 @@ $('span[name="map"]').on('click', function(e){
 $('.imgshow').on('click', function(e){
 
 var my_src = $(this).attr('src');
-$("#modalimg").attr("src", my_src);
-$('#ourmodal').modal('show');
+$(".generalimgmodalsrc").attr("src", my_src);
+$('.generalimgmodal').modal('show');
 });
 
 $('#Upload').on('click', function(e){
@@ -185,7 +185,7 @@ $('#hiddden_name').val(id);
 }
 
 function set_lat_long(lat , long , location){
-console.log("asdasdasd");
+
             $('#lat').val('24.8607');
             $('#long').val('67.0011');
     // $('#lat').val(lat);

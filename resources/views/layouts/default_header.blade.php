@@ -58,10 +58,12 @@ $admin_common = session()->get('admin_common');
                 <!-- /toggle offscreen menu -->
 
                 <!-- logo -->
-                <a href="{{asset('index.php/admin/dashboard')}}" class="navbar-brand">
-                    <img src="{{ asset('images/medicallogo.png') }}" alt="">
+                <div CLASS="LOGO">
+                <a href="{{asset('index.php/admin/dashboard')}}" class="navbar-brand" >
+                    <img src="{{ asset('images/medicallogo.png') }}" alt="" class="myimg">
                     <span class="heading-font"></span>
                 </a>
+                </div>
                 <!-- /logo -->
             </div>
 
@@ -207,6 +209,29 @@ $admin_common = session()->get('admin_common');
             <!-- /main content -->
         </section>
     </div>
+
+    <div class="modal fade generalimgmodal in" id="" tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog modal-mg ">
+            <div class="modal-content" id="confirm">
+                <div class="modal-header">
+                    <h4 class="modal-title">Image</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div id="my_msg_div" class="col-xs-12">
+                            <img class="generalimgmodalsrc" src="">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <!-- build:js({.tmp,app}) scripts/app.min.js -->
     <!--   this file will be loaded individually for all files to avoide conficts  -->
     <!--   <script src="{{ asset('theme/vendor/jquery/dist/jquery.js') }}"></script> -->

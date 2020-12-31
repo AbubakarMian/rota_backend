@@ -123,11 +123,11 @@ class AdminController extends Controller
             'count' => $count
         ];
         // $count = Rota_Generate_Pattern::count('id');
-        $modules[] = [
-            'url' => 'admin/rota/generate/pattern',
-            'title' => 'ROTA Generate Pattern',
-            'count' => $count
-        ];
+        // $modules[] = [
+        //     'url' => 'admin/rota/generate/pattern',
+        //     'title' => 'ROTA Generate Pattern',
+        //     'count' => $count
+        // ];
 
         $modules[] = [
             'url' => 'admin/general/rota',

@@ -13,4 +13,6 @@ class General_rota_request extends Model
     public function doctor(){
         return $this->hasOne('App\models\Doctor','id','doctor_id')->withTrashed();
     }
+
+    
 }

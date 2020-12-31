@@ -7,7 +7,7 @@ Doctor
 {!! Form::open(['method' => 'get', 'route' => ['doctor.create'], 'files'=>true]) !!}
 <span>{!! Form::submit('Add', ['class' => 'btn btn-success pull-right']) !!}</span>
 {!! Form::close() !!}
-
+@stop
 
 @section('table-properties')
 width="400px" style="table-layout:fixed;"
@@ -27,7 +27,7 @@ width="400px" style="table-layout:fixed;"
 {!! Form::open(['method' => 'get', 'route' => ['doctor.search'], 'files'=>true]) !!}
 @include('admin.doctor.partial.searchfilters')
 {!!Form::close() !!}
-@stop
+{{-- @stop --}}
 
 <thead>
 	<tr>
@@ -49,13 +49,12 @@ width="400px" style="table-layout:fixed;"
     @foreach($doctors as $d)
 
 	<tr>
+
         <td>{!! $d->user->name !!}</td>
 		<td>{!! $d->age!!}</td>
         <td>{!! $d->qualification !!}</td>
         <td>{!! $d->total_duties !!}</td>
-
-
-        <td>{!! $d->doctor_type_id !!}</td>
+        <td>{!! ucfirst($d->doctor_type->name) !!}</td>
 
 
 		<?php
@@ -66,7 +65,7 @@ width="400px" style="table-layout:fixed;"
 
 
 
-		<td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img"></td>
+		<td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img imgshow"></td>
 
 
         <td>

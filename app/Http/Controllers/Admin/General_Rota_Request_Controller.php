@@ -19,15 +19,19 @@ class General_Rota_Request_Controller extends Controller
 {
 
 
-    public function index()
+    public function index(Request $request)
     {
 
 
-        $list = General_rota_request::with('doctor')->get();
-        // dd($list[0]->doctor->user);
-        // $doctor = Doctor::with(['user'])->get();
+    //    $list = General_rota_request::with('doctor')->get();
 
-        return \View::make('admin.general_rota_request.index', compact('list'));
+    $name = $request->name ?? '';
+    $list =  General_rota_request::whereHas('doctor', function ($query) use ($name) {
+    $query->whereHas('user',function($u)use($name){
+    $u->where('name', 'like', '%' . $name . '%');
+    });
+    })->paginate(10);
+     return \View::make('admin.general_rota_request.index', compact('list','name'));
     }
 
 
@@ -56,11 +60,16 @@ class General_Rota_Request_Controller extends Controller
         $generate ->doctor_id=$request->doctor_id;
 
 
-
-
-
-
         $generate ->Save();
         return Redirect('admin/general/rota');
     }
+
+
+public function search(Request $request)
+{
+
+    return view('admin/general/rota');
+    }
+
 }
+

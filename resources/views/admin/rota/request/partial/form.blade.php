@@ -1,6 +1,6 @@
 <div class="form-group">
     {{-- <div> --}}
-    <input type="checkbox" name="is_general" value="general" onclick="toggle_form(this,'duty_date');">
+    <input type="checkbox" name="is_general" value="general"   id="chkPassport" onclick="toggle_form(this,'duty_date');toggle_form(this,'want_duty');">
     {!! Form::label('general','Is General') !!}
     {{-- </div> --}}
 </div>
@@ -8,7 +8,7 @@
     {!! Form::label('dutydate','Duty Date') !!}
     <div>
         {!! Form::date('dutydate',null, ['class' => 'form-control',
-        'data-parsley-required'=>'true','id'=>'duty_date',
+        'data-parsley-required'=>'true',
         'data-parsley-trigger'=>'change',
         'placeholder'=>'dutydate','required']) !!}
     </div>
@@ -32,14 +32,14 @@
 </div> --}}
 
 
-{{-- <input name="doctor_id" id="doctor_id" value="{{$doctor->id}}" hidden> --}}
+<input name="doctor_id" id="doctor_id" value="{{$doctor->id}}" hidden>
 
-<div class="form-group">
-    {{-- <div> --}}
+{{-- <div class="form-group">
+
     <input type="checkbox" name="on_shift" value="1" checked onclick="toggle_form(this,'shift');">
     {!! Form::label('shift','Select Shift') !!}
-    {{-- </div> --}}
-</div>
+
+</div> --}}
 
 <div class="form-group" id="shift">
     {!! Form::label('shiftday','Shift') !!}
@@ -53,8 +53,21 @@
 
 
 
-{{-- <input type="radio" name="duty" value="wantduty">Want duty<br> --}}
-{{-- <input type="radio"  name="duty" value="wantoff">Want Off<br> --}}
+<div id="dvPassport" style="display: none">
+<div class="form-group" id="totalduties">
+     {!! Form::label('total_duties','Total Duties') !!}
+<div class = 'form-control' >
+    {!! $doctor->total_duties !!}
+    </div>
+</div>
+</div>
+<div id="want_duty">
+<input type="radio" name="duty" value="wantduty" >Want duty<br>
+<input type="radio"  name="duty" value="wantoff">Want Off<br>
+</div>
+
+
+
 
 
 
@@ -79,7 +92,32 @@
 
     $('#'+div).toggle('show');
 }
+///
 
+
+$(function () {
+        $("#chkPassport").click(function () {
+            if ($(this).is(":checked")) {
+                $("#dvPassport").show();
+                // $("#AddPassport").hide();
+            } else {
+                $("#dvPassport").hide();
+                // $("#AddPassport").show();
+            }
+        });
+    });
+
+
+
+
+
+
+
+
+
+
+
+//////////
 
     function validateForm(){
         return true;
