@@ -98,13 +98,17 @@ class DoctorController extends Controller
 
 
     public function search(Request $request)
+
     {
-        $doctors = Doctor::whereHas('user', function ($query) use ($request) {
-            $query->where('name', 'like', '%' . $request->name . '%');
-        })->with(['user' => function ($query) use ($request) {
-            $query->where('name', 'like', '%' . $request->name . '%');
-        }])->paginate(13);
-        return view('admin.doctor.index', compact('doctors'));
+
+        $name = $request->name ?? '';
+
+        $doctors = Doctor::whereHas('user', function ($query) use ($name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        })->with(['user' => function ($query) use ($name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        }])->paginate(10);
+        return view('admin.doctor.index', compact('doctors','name'));
     }
 
     public function destroy_undestroy($id)

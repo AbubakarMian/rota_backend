@@ -22,11 +22,7 @@ class Special_Rota_Request_Controller extends Controller
 
     public function index(Request $request)
     {
-        if($request->duty == 'wantduty'){
-            return back()->with('error', 'true');
-        }
-
-         // dd($list[0]->doctor->user);
+       // dd($list[0]->doctor->user);
         // $doctor = Doctor::with(['user'])->get();
         $name = $request->name ?? '';
         $list = Special_rota_request::whereHas('doctor', function($query) use($name){

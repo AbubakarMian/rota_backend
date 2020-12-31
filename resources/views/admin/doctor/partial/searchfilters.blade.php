@@ -7,7 +7,7 @@
                      <div class="controls">
                          <div class="input-prepend input-group">
                              <span class="add-on input-group-addon"></span>
-                             {!! Form::text('name',null, ['class' => 'form-control',
+                             {!! Form::text('name',$name ??null, ['class' => 'form-control',
                              'data-parsley-required'=>'true',
                              'data-parsley-trigger'=>'change',
                              'placeholder'=>'Enter Name','id'=>'name']) !!}
