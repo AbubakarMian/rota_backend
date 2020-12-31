@@ -16,7 +16,7 @@
 
         <select id="select-example" class="form-control"  name="shift"  placeholder="Select shift...">
 
-            <option name="shift">General</option>
+            <option name="shift">Evening</option>
             <option name="shift">Morning</option>
             <option name="shift">Night</option>
 

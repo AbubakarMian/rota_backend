@@ -29,6 +29,7 @@ class DoctorController extends Controller
         $control = 'create';
         $types = Doctor_type::pluck('name', 'id')->toArray();
         $types = array_map('ucfirst', $types);
+
         return \View::make(
             'admin.doctor.create',
             compact('control', 'types')
@@ -46,8 +47,9 @@ class DoctorController extends Controller
     }
     public function edit($id)
     {
+
         $control = 'edit';
-        $doctor = Doctor::find($id);
+        $doctor = Doctor::with('user')->find($id);
         $types = Doctor_type::pluck('name', 'id');
         return \View::make('admin.doctor.create', compact(
             'control',
