@@ -17,11 +17,9 @@ class DoctorController extends Controller
     public function index(Request $request)
     {
 
-        // $doctors = Doctor::paginate(10);
-        $doctors = Doctor::with(['user'])->paginate(10);
-        // $type = Doctor_type::get();
 
-
+        $doctors = Doctor::with(['user','doctor_type'])->paginate(10);
+        // $doctors = array_map('ucfirst', 'doctor_type');
 
         return view('admin.doctor.index', compact('doctors'));
     }

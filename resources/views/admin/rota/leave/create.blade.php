@@ -1,11 +1,17 @@
 
 
 @extends('layouts.default_edit')
-{{-- @section('heading')
-    {!! $heading !!}
-@endsection --}}
+@section('heading')
+    Add {!! $doctor->user->name !!}'s Leave
+@endsection
 
 @section('leftsideform')
+    @if ($message = Session::get('error'))
+        <div class="alert alert-danger alert-block">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{ $message }}</strong>
+        </div>
+    @endif
 
 
         {!! Form::open(['id'=>'my_form','method' => 'POST', 'route' => ['leave.save' ], 'files'=>true]) !!}

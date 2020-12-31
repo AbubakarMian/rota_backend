@@ -4,9 +4,6 @@ Leave Details
 @stop
 @section('add_btn')
 
-
-
-
 @section('table-properties')
 width="400px" style="table-layout:fixed;"
 @endsection
@@ -26,7 +23,7 @@ width="400px" style="table-layout:fixed;"
 {!! Form::open(['method' => 'get', 'route' => ['doctor.search'], 'files'=>true]) !!}
 @include('admin.doctor.partial.searchfilters')
 {!!Form::close() !!}
-@stop
+{{-- @stop --}}
 <thead>
     <tr>
 
@@ -41,34 +38,11 @@ width="400px" style="table-layout:fixed;"
 
     @foreach($leave_request as $dt)
 
-
+{{-- ('d F, Y (l)'); --}}
     <tr>
-        <td>{!! $dt->start_date !!}</td>
-        <td>{!! $dt->end_date !!}</td>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <td>{!! date('d F, Y (l)', $dt->start_date) !!}</td>
+        <td>{!! date('d F, Y (l)', $dt->end_date )!!}</td>
     </tr>
-
-
     @endforeach
 
 </tbody>

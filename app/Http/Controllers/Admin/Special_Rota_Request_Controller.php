@@ -14,20 +14,30 @@ use App\models\Rota_Request;
 use Illuminate\Support\Facades\Response;
 use LeaveRequest;
 use App\models\Special_rota_request;
+use Config;
 
 class Special_Rota_Request_Controller extends Controller
 {
 
 
-    public function index()
+    public function index(Request $request)
     {
+        if($request->duty == 'wantduty'){
+            return back()->with('error', 'true');
+        }
 
-
-        $list = Special_rota_request::with('doctor')->get();
-        // dd($list[0]->doctor->user);
+         // dd($list[0]->doctor->user);
         // $doctor = Doctor::with(['user'])->get();
+        $name = $request->name ?? '';
+        $list = Special_rota_request::whereHas('doctor', function($query) use($name){
+       $query->whereHas('user', function($k) use($name){
+        $k->where('name','like','%'.$name.'%');
+       });
 
-        return \View::make('admin.special_rota_request.index', compact('list'));
+        })->paginate(10);
+
+
+        return \View::make('admin.special_rota_request.index', compact('list','name'));
     }
 
 
@@ -36,11 +46,11 @@ class Special_Rota_Request_Controller extends Controller
         $control = 'create';
         $special = Special_rota_request::get();
         $doctor = Doctor::with(['user'])->get();
-
+        $shifts = Config::get('constants.duty_type');
 
         return \View::make(
             'admin.special_rota_request.create',
-            compact('control', 'special', 'doctor')
+            compact('control', 'special', 'doctor','shifts')
         );
     }
 
@@ -52,13 +62,13 @@ class Special_Rota_Request_Controller extends Controller
 
         $generate = new Special_rota_request();
         $generate ->duty_date=strtotime($request->dutydate);
-        $generate ->shift=$request->shift;
+        $generate ->shift=$request->shiftday;
         $generate ->doctor_id=$request->doctor_id;
         if ($request->duty == 'wantduty') {
-            $generate->want_duty = 1;
+            $generate->want_duty = true;
         }
         elseif ($request->duty == 'wantoff') {
-            $generate->want_off = 1;
+            $generate->want_off = true;
 
         }
         if ($request->annual == 'annual_leave') {
@@ -66,13 +76,19 @@ class Special_Rota_Request_Controller extends Controller
         }
 
 
-
-
-
-
-
-
-        $generate ->Save();
+       $generate ->Save();
         return Redirect('admin/special/rota');
+    }
+
+
+
+    public function search(Request $request)
+    {
+        $doctors = Doctor::whereHas('user', function ($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        })->with(['user' => function ($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }])->paginate(13);
+        return view('admin.doctor.index', compact('doctors'));
     }
 }

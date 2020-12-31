@@ -49,3 +49,22 @@
     color: rgb(241, 241, 241);
     font-size: 15px;
 }
+/* .header .brand .navbar-brand img {
+    max-height: 27px;
+    margin-right: 14px;
+    margin-top: 18px;
+    display: inline;
+} */
+
+.LOGO {
+    margin-top: 24px;
+}
+
+.header .brand .navbar-brand img {
+    max-height: 25px;
+    margin-right: 5px;
+    margin-top: 20px;
+    display: inline;
+}
+
+

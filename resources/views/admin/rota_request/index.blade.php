@@ -36,9 +36,9 @@ width="400px" style="table-layout:fixed;"
         <th>Total duties </th>
         <th>Image</th>
         <th>Leave Details</th>
-        <th>Rota Details</th>
+
         <th>Add Leaves</th>
-        <th>Add Rota Request</th>
+        {{-- <th>Add Rota Request</th> --}}
 
     </tr>
 </thead>
@@ -62,7 +62,7 @@ width="400px" style="table-layout:fixed;"
 
 
 
-        <td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img"></td>
+        <td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img imgshow"></td>
 
         <td>
 
@@ -76,8 +76,8 @@ width="400px" style="table-layout:fixed;"
 
         </td>
 
-        <td> <a href="{{ url('admin/rota/request/detail/'.$d->id)  }}" class='badge bg-info'> Rota Request
-                Details</a></td>
+        {{-- <td> <a href="{{ url('admin/rota/request/detail/'.$d->id)  }}" class='badge bg-info'> Rota Request
+                Details</a></td> --}}
         {{-- <td>
 			<a href="" data-toggle="modal" name="activate_delete" data-target=".request_{!! $q->id !!}">
 				<span class=" badge bg-info btn-success">
@@ -88,7 +88,7 @@ width="400px" style="table-layout:fixed;"
 
 
         <td> <a href="{{ url('rota/leave/'.$d->id)  }}" class='badge bg-info'>Leave</a></td>
-        <td> <a href="{{ url('rota/request/'.$d->id) }}" class='badge bg-info'>Rota Request</a></td>
+        {{-- <td> <a href="{{ url('rota/request/'.$d->id) }}" class='badge bg-info'>Rota Request</a></td> --}}
 
 
         {{-- <td>{!! Form::open(['method' => 'POST', 'route' => ['rota.leave' , $d->id]]) !!}
