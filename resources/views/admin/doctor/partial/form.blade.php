@@ -1,7 +1,8 @@
 <div class="form-group">
+    {{-- {!! dd($doctor->user->name) !!} --}}
     {!! Form::label('name','Name') !!}
     <div>
-        {!! Form::text('name',null, ['class' => 'form-control',
+        {!! Form::text('name', $doctor->user->name ?? null, ['class' => 'form-control',
         'data-parsley-required'=>'true',
         'data-parsley-trigger'=>'change',
         'placeholder'=>'Name','required',
@@ -11,7 +12,7 @@
     <div class="form-group">
         {!! Form::label('email','Email') !!}
         <div>
-            {!! Form::text('email',null, ['class' => 'form-control',
+            {!! Form::text('email',$doctor->user->email ?? null, ['class' => 'form-control',
             'data-parsley-required'=>'true',
             'data-parsley-trigger'=>'change',
             'placeholder'=>'Email','required',
@@ -60,7 +61,7 @@
 
         <?php
 
-$avatar =  asset('avatar/default_img.jpg');
+$avatar =  asset('images/medicallogo.png');
 
 if(isset($user)){
 
