@@ -9,9 +9,8 @@
 @section('table')
 
 
+@include('admin.rota_generate_pattern.partial.calender')
 
-
-    @include('admin.rota_request.partial.bigcalender')
 
 
 
