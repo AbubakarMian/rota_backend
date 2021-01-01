@@ -143,7 +143,7 @@
 		var calendar =  $('#calendar').fullCalendar({
 			header: {
 				left: 'title',
-				center: 'agendaDay,agendaWeek,month',
+				center: 'month',//agendaDay,agendaWeek,
 				right: 'prev,next today'
 			},
 			editable: true,
@@ -166,7 +166,7 @@
 			allDaySlot: false,
 			selectHelper: true,
 			select: function(start, end, allDay) {
-				var title = prompt('Event Title:');
+				var title = prompt('Add Doctor:');
 				if (title) {
 					calendar.fullCalendar('renderEvent',
 						{
@@ -212,14 +212,14 @@
 				},
 				{
 					id: 999,
-					title: 'Repeating Event',
-					start: new Date(y, m, d-3, 16, 0),
+					title: 'DD Repeating Event',
+					start: new Date(y, m, d, 16, 0),
 					allDay: false,
 					className: 'info'
 				},
 				{
 					id: 999,
-					title: 'Repeating Event',
+					title: 'DD  Event',
 					start: new Date(y, m, d+4, 16, 0),
 					allDay: false,
 					className: 'info'
@@ -787,8 +787,6 @@ function Calendar(element, options, eventSources) {
 		rerenderEvents(eventID);
 	}
 
-
-
 	/* Header Updating
 	-----------------------------------------------------------------------------*/
 
@@ -808,8 +806,6 @@ function Calendar(element, options, eventSources) {
 		}
 	}
 
-
-
 	/* Selection
 	-----------------------------------------------------------------------------*/
 
@@ -825,8 +821,6 @@ function Calendar(element, options, eventSources) {
 		}
 	}
 
-
-
 	/* Date
 	-----------------------------------------------------------------------------*/
 
@@ -834,7 +828,6 @@ function Calendar(element, options, eventSources) {
 	function prev() {
 		renderView(-1);
 	}
-
 
 	function next() {
 		renderView(1);
@@ -868,7 +861,6 @@ function Calendar(element, options, eventSources) {
 		renderView();
 	}
 
-
 	function incrementDate(years, months, days) {
 		if (years !== undefined) {
 			addYears(date, years);
@@ -887,11 +879,8 @@ function Calendar(element, options, eventSources) {
 		return cloneDate(date);
 	}
 
-
-
 	/* Height "Freezing"
 	-----------------------------------------------------------------------------*/
-
 
 	function freezeContentHeight() {
 		content.css({
@@ -910,8 +899,6 @@ function Calendar(element, options, eventSources) {
 		});
 	}
 
-
-
 	/* Misc
 	-----------------------------------------------------------------------------*/
 
@@ -919,7 +906,6 @@ function Calendar(element, options, eventSources) {
 	function getView() {
 		return currentView;
 	}
-
 
 	function option(name, value) {
 		if (value === undefined) {
@@ -940,8 +926,6 @@ function Calendar(element, options, eventSources) {
 			);
 		}
 	}
-
-
 
 	/* External Dragging
 	------------------------------------------------------------------------*/
@@ -966,15 +950,12 @@ function Calendar(element, options, eventSources) {
 				}
 			});
 	}
-
-
 }
 
 ;;
 
 function Header(calendar, options) {
 	var t = this;
-
 
 	// exports
 	t.render = render;
@@ -989,8 +970,6 @@ function Header(calendar, options) {
 	// locals
 	var element = $([]);
 	var tm;
-
-
 
 	function render() {
 		tm = options.theme ? 'ui' : 'fc';
@@ -1011,7 +990,6 @@ function Header(calendar, options) {
 	function destroy() {
 		element.remove();
 	}
-
 
 	function renderSection(position) {
 		var e = $("<td class='fc-header-" + position + "'/>");

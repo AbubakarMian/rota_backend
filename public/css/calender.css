@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i');
+
+        tr.myboxes {
+            height: 121px;
+        }
+
+        h1.monthly
+        {
+            font-size: 44px;
+            font-family: cursive;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 43px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* #customers tr:hover {background-color: #ddd;} */
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: center;
+            background-color:#337ab7;
+            color: white;
+        }
+        thead.monday {
+            font-family: cursive;
+        }
+
+div.sticky {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+}
+input.mylogo {
+    /* padding-left: 37px; */
+    margin-bottom: 11px;
+    margin-left: 3px;
+    /* padding-left: 10px; */
+    margin-right: 8px;
+}
+.morning {
+    margin-bottom: 0px;
+    border-radius: 12px;
+    text-align: -webkit-center;
+    padding-top: 9px;
+    padding-bottom: 0px;
+}
+/* .ucc {
+    margin-left: 73%;
+    margin-top: -25px;
+    font-weight: 700;
+    font-family: cursive;
+} */
+input.mymorning {
+    border-radius: 3px;
+    font-size: small;
+    height: 35px;
+    padding-left: 10px;
+    border: 1px solid #ccc;
+}
+.bigmorning {
+    margin-top: -10px;
+    margin-bottom: 5px;
+}
+/* .mydate {
+    font-size: large;
+    font-family: cursive;
+    font-weight: bold;
+} */
+
+
+
+.mydate {
+    font-size: large;
+    font-family: cursive;
+    font-weight: bold;
+    background: #dad8d8;
+    padding: 4px 12px;
+    border-radius: 103px;
+}
+.ucc {
+    float: right;
+    width: 100%;
+    text-align: right;
+    padding-top: 6px;
+}
+.mydateArea {
+    display: flex;
+    width: 100%;
+    padding: 10px 10px;
+}
+h3.navigatorCalendar {
+    float: right;
+}
+
