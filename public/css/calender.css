@@ -29,18 +29,24 @@
         thead.monday {
             font-family: cursive;
         }
+        .panel-default {
+            border-color: #ddd;
+            margin-top: -30px;
+        }
 
 div.sticky {
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
+  margin-bottom: -80px;
+    margin-top: -40px;
 }
 input.mylogo {
-    /* padding-left: 37px; */
-    margin-bottom: 11px;
+    padding-left: 37px;
+    margin-bottom: 13px;
     margin-left: 3px;
-    /* padding-left: 10px; */
-    margin-right: 8px;
+    padding-left: 10px;
+    margin-right: 4px;
 }
 .morning {
     margin-bottom: 0px;
@@ -57,7 +63,7 @@ input.mylogo {
 } */
 input.mymorning {
     border-radius: 3px;
-    font-size: small;
+    font-size: smaller;
     height: 35px;
     padding-left: 10px;
     border: 1px solid #ccc;
@@ -65,6 +71,7 @@ input.mymorning {
 .bigmorning {
     margin-top: -10px;
     margin-bottom: 5px;
+    font-size: 11px;
 }
 /* .mydate {
     font-size: large;
@@ -86,7 +93,9 @@ input.mymorning {
     float: right;
     width: 100%;
     text-align: right;
-    padding-top: 6px;
+    padding-top: 7px;
+    margin-right: 10px;
+    text-decoration-line: underline;
 }
 .mydateArea {
     display: flex;
@@ -96,4 +105,59 @@ input.mymorning {
 h3.navigatorCalendar {
     float: right;
 }
+.switch {
+    position: relative;
+    display: inline-block;
+    margin-left: 7px;
+    /* top: 8px; */
+  }
+.switch-input {
+    display: none;
+  }
+  .switch-label {
+    display: block;
+    width: 39px;
+    height: 14px;
+    text-indent: -179%;
+    clip: rect(0 0 0 0);
+    /* color: transparent; */
+    user-select: none;
+}
+  .switch-label::before,
+  .switch-label::after {
+    content: "";
+    display: block;
+    position: absolute;
+    cursor: pointer;
+  }
+  .switch-label::before {
+    width: 92%;
+    height: 80%;
+    background-color: #dedede;
+    border-radius: 9999em;
+    -webkit-transition: background-color 0.25s ease;
+    transition: background-color 0.25s ease;
+}
+
+
+.switch-label::after {
+    top: 0;
+    left: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 47%;
+    background-color: #fff;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.45);
+    -webkit-transition: left 0.25s ease;
+    transition: left 0.25s ease;
+}
+  .switch-input:checked + .switch-label::before {
+    background-color: #89c12d;
+  }
+  .switch-input:checked + .switch-label::after {
+    left: 24px;
+  }
+
+
+
 
