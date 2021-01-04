@@ -14,21 +14,46 @@ use App\models\Monthly_rota;
 use Illuminate\Support\Facades\Response;
 use LeaveRequest;
 use App\models\Rota_Generate_Pattern;
-
+use Config;
 
 
 
 class Rota_Generate_Pattern_Controller extends Controller
 {
-    public function index()
+    public function index(Request $request, $id)
     {
 
-        // $list = Monthly_rota::get();
-        // $total_days = cal_days_in_month(CAL_GREGORIAN, $list->month, $list->year)->paginate(10);
-        // return view('admin.rota_generate_pattern.index');
+        $list = Rota_Generate_Pattern::where('monthly_rota_id',$id)->orderBy('duty_date','asc')->get();
+        $monthly_rota = Monthly_rota::find($id);
 
-        $list = Rota_Generate_Pattern::get();
-        return view('admin.rota_generate_pattern.index');
+        if(!$list->count()){
+
+            $days = cal_days_in_month(CAL_GREGORIAN,$monthly_rota->month,$monthly_rota->year);
+            for($i=1; $i<($days+1); $i++){
+                $duty_date = strtotime($i."-".$monthly_rota->month."-".$monthly_rota->year);
+
+                $data[] =
+                [
+                    'duty_date' => $duty_date,
+                    'monthly_rota_id' => $id,
+                    'has_ucc' => 0,
+                    'total_morning_doctors' => 4,
+                    'total_evening_doctors' => 4,
+                    'total_night_doctors' => 4,
+                    'total_doctors' => 12
+                ];
+
+            }
+            Rota_Generate_Pattern::insert($data);
+            $list = Rota_Generate_Pattern::where('monthly_rota_id',$id)->orderBy('duty_date','asc')->get();
+        }
+
+        $duty_date = strtotime("1-".$monthly_rota->month."-".$monthly_rota->year);
+        $start_weekday = date('w', $duty_date);
+        $weekdays = Config::get('constants.weekdays_num');
+        // dd($weekdays);
+        // dd($start_weekday);
+        return view('admin.rota_generate_pattern.index',compact('list','start_weekday','weekdays'));
 
 
     }

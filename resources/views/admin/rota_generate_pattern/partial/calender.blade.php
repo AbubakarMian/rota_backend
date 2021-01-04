@@ -1,19 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link href="{{ asset('css/calender.css') }}" rel="stylesheet">
-
-</head>
-
-
-
-
+<link href="{{ asset('css/calender.css') }}" rel="stylesheet">
 <h1 class="monthly">
 
     <center>
@@ -30,656 +15,81 @@
 <div class="table-responsive" id="mytable">
     <table class="table table-striped table table-hover table table-bordered table table-condensed" id="customers">
         <thead class="monday">
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-            <th>Saturday</th>
-            <th>Sunday</th>
+            @foreach($weekdays as $weekday)
+            <th>{!!$weekday!!}</th>
+            @endforeach
+
         </thead>
-
-
         <tbody id="calenderdates">
-            <tr class="myboxes">
 
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">1</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
+            <?php $tds = 0; ?>
+            @foreach ($list as $key=>$item)
 
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
 
-                    </div>
-                </td>
+            <?php
+                if($tds == 1){
+                    echo '<tr class="myboxes">';
+                }
 
-               <td>
-                   <div class="mydateArea">
-                    <div class="mydate">2</div>
-                    <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                   </div>
+            ?>
 
-                    <div class="bigmorning">
+
+            @if($key === 0)
+            <?php $tds = $start_weekday; ?>
+            @for($i = $start_weekday ; $i>1; $i-- )
+            <td></td>
+            @endfor
+            @endif
+            <td>
+                <div class="mydateArea">
+                    <div class="mydate">{!!($key+1)!!}</div>
+                    <div class="ucc">UCC</div>
+                </div>
+
+                <div class="bigmorning">
 
                     <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
+                        <input type="number" placeholder="Morning" class="mymorning" name="total_morning_doctors"
+                            value="{!!$item->total_morning_doctors!!}">
+                        <div class="switch">
+                            <input id="switch-1" type="checkbox" class="switch-input">
+                            <label for="switch-1" class="switch-label"></label>
+                        </div>
                     </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">3</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-
-                    <div class="bigmorning">
 
                     <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
+                        <input type="number" placeholder="Evening" class="mymorning" name="total_evening_doctors"
+                            value="{!!$item->total_evening_doctors!!}">
+                        <div class="switch">
+                            <input id="switch-2" type="checkbox" class="switch-input">
+                            <label for="switch-2" class="switch-label"></label>
+                        </div>
                     </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">4</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-
-                    <div class="bigmorning">
 
                     <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                    <div class="mydate">5</div>
-                    <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                    </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">6</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">7</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-            </tr>
-  <div>
-</div>
-            <tr class="myboxes">
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">8</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">9</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">10</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">11</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">12</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">13</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">14</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-            </tr>
-
-            <tr class="myboxes">
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">15</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">16</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">17</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
+                        <input type="number" placeholder="Night" class="mymorning" name="total_night_doctors"
+                            value="{!!$item->total_night_doctors!!}">
+                        <div class="switch">
+                            <input id="switch-3" type="checkbox" class="switch-input">
+                            <label for="switch-3" class="switch-label"></label>
+                        </div>
 
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">18</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">19</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">20</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">21</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-            </tr>
-
-
-            <tr class="myboxes">
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">22</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">23</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">24</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
                     </div>
-                </td>
+                </div>
+            </td>
+            <?php
+                if($tds == 7){
+                    echo '</tr>';
+                    $tds = 1;
+                }else{
+                    $tds = $tds + 1;
+                }
 
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">25</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
+            ?>
 
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">26</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">27</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">28</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-            </tr>
-
-
-            <tr class="myboxes">
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">29</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">30</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
-
-                <td>
-                    <div class="mydateArea">
-                        <div class="mydate">31</div>
-                        <div class="ucc"> <input type="checkbox" class="mylogo">UCC</div>
-                       </div>
-                    <div class="bigmorning">
-
-                    <div class="morning">
-                    <input type="number" placeholder="Morning" class="mymorning" >
-                    </div>
-                    <div class="morning">
-                    <input type="number" placeholder="Evening" class="mymorning" >
-                    </div>
-                    <div  class="morning">
-                    <input type="number" placeholder="Night" class="mymorning" >
-                    </div>
-
-                    </div>
-                </td>
+            @endforeach
 
 
-            </tr>
 
 
 

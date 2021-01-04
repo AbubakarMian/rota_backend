@@ -67,7 +67,7 @@ class Rota_Controller extends Controller
         $doctor_index = 0;
         $data = [];
         for ($date = 1; $date <= $total_days; $date++) {
-            // $time = strtotime('10/16/2003');
+
             $rota_date = strtotime($rota_month->month . '/' . $date . '/' . $rota_month->year);
 
             foreach ($duty_type as $dt) {
