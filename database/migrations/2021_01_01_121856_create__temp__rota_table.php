@@ -13,7 +13,7 @@ class CreateTempRotaTable extends Migration
      */
     public function up()
     {
-        Schema::create('rota', function (Blueprint $table) {
+        Schema::create('temp_rota', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('doctor_id')->nullable()->default(0);
             $table->bigInteger('monthly_rota_id')->nullable()->default(0);
@@ -25,8 +25,8 @@ class CreateTempRotaTable extends Migration
             $table->timestamps();
             $table->softDeletes();
             });
-        }
-        });
+
+
     }
 
     /**
