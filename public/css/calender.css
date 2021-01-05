@@ -63,8 +63,7 @@ input.mylogo {
 } */
 input.mymorning {
     border-radius: 3px;
-    font-size: smaller;
-    height: 35px;
+    height: 25px;
     padding-left: 10px;
     border: 1px solid #ccc;
 }
@@ -82,25 +81,25 @@ input.mymorning {
 
 
 .mydate {
-    font-size: large;
+    font-size: 16px;
     font-family: cursive;
     font-weight: bold;
     background: #dad8d8;
-    padding: 4px 12px;
+    padding: 1px 8px;
     border-radius: 103px;
 }
 .ucc {
     float: right;
     width: 100%;
     text-align: right;
-    padding-top: 7px;
+    padding-top: 2px;
     margin-right: 10px;
     text-decoration-line: underline;
 }
 .mydateArea {
     display: flex;
     width: 100%;
-    padding: 10px 10px;
+    padding: 4px 4px;
 }
 h3.navigatorCalendar {
     float: right;
@@ -109,7 +108,7 @@ h3.navigatorCalendar {
     position: relative;
     display: inline-block;
     margin-left: 7px;
-    /* top: 8px; */
+    top: 8px;
   }
 .switch-input {
     display: none;

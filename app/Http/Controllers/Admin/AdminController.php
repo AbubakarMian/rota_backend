@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\models\Doctor;
+use App\models\Rota;
+use App\models\Special_rota_request;
+use App\models\Rota_Generate_pattern;
+use App\models\Monthly_rota;
+use App\models\General_rota_request;
+
 
 
 class AdminController extends Controller
@@ -109,14 +115,17 @@ class AdminController extends Controller
             'count' => $count
         ];
 
-        // $count = Doctor::count('id');
 
 
+
+        $count = Doctor::count('id');
         $modules[] = [
             'url' => 'admin/request',
             'title' => 'Doctors Summary',
             'count' => $count
         ];
+
+        $count = Rota::count('id');
         $modules[] = [
             'url' => 'admin/rota',
             'title' => 'ROTA',
@@ -129,12 +138,15 @@ class AdminController extends Controller
         //     'count' => $count
         // ];
 
+
+        $count = General_rota_request::count('id');
         $modules[] = [
             'url' => 'admin/general/rota',
             'title' => 'General Rota Request',
             'count' => $count
         ];
 
+        $count = Special_rota_request::count('id');
         $modules[] = [
             'url' => 'admin/special/rota',
             'title' => 'Special Rota Request',

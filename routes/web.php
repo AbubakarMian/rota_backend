@@ -57,8 +57,10 @@ Route::get('admin/rota/check', 'Admin\Rota_Controller@check')->name('rota.check'
 
 //////////Rota Generate Pattern
 Route::get('admin/rota/generate/pattern/{id}', 'Admin\Rota_Generate_Pattern_Controller@index')->name('rota.pattern.index');
-Route::get('admin/rota/generate/pattern/create', 'Admin\Rota_Controller@create')->name('rota.generate.pattern.create');
-Route::post('admin/rota/generate/pattern/save', 'Admin\Rota_Controller@save')->name('admin.rota_generate_pattern.save');
+// Route::get('admin/rota/generate/pattern/create', 'Admin\Rota_Controller@create')->name('rota.generate.pattern.create');
+// Route::post('admin/rota/generate/pattern/save', 'Admin\Rota_Controller@save')->name('admin.rota_generate_pattern.save');
+Route::post('admin/generatepattern/postajax/{id}','Admin\Rota_Generate_Pattern_Controller@update');
+
 
 ///general rota request crud
 

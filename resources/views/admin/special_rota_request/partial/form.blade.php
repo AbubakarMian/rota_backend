@@ -13,20 +13,9 @@
 
 
  <input type="radio" name="duty" value="wantduty"  id="myRadio" checked>Want duty &nbsp;
-<input type="radio"  name="duty" value="wantoff">Want Off
+<input type="radio"  name="duty" value="wantoff">Want Off&nbsp; &nbsp;
 
-{{-- <div class="form-group">
 
-    <div>
-        {!! Form::radio('duty',null, ['class' => 'form-control',
-        'data-parsley-required'=>'true',
-        'data-parsley-trigger'=>'change',
-        'placeholder'=>'enddate',
-        'value'=>"annual_leave"]) !!} &nbsp;
-        {!! Form::label('annual','Annual Leave') !!}
-    </div>
-
-</div> --}}
 
 
 <div class="form-group" id="shift">

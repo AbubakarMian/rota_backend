@@ -25,14 +25,12 @@
             <?php $tds = 0; ?>
             @foreach ($list as $key=>$item)
 
-
             <?php
                 if($tds == 1){
                     echo '<tr class="myboxes">';
                 }
 
             ?>
-
 
             @if($key === 0)
             <?php $tds = $start_weekday; ?>
@@ -49,29 +47,34 @@
                 <div class="bigmorning">
 
                     <div class="morning">
-                        <input type="number" placeholder="Morning" class="mymorning" name="total_morning_doctors"
-                            value="{!!$item->total_morning_doctors!!}">
+                        <input type="number" placeholder="Morning " class="mymorning morningvalue_{!!$item->id!!}" name="total_morning_doctors"
+                            value="{!!$item->total_morning_doctors!!}" onchange="update_ajax('{!!$item->id!!}');">
+
+
                         <div class="switch">
-                            <input id="switch-1" type="checkbox" class="switch-input">
-                            <label for="switch-1" class="switch-label"></label>
+                            <input id="morning_ucc-{{$item->id}}" type="checkbox" class="switch-input morning_ucc_value_{!!$item->id!!}"
+                              onchange="update_ajax('{!!$item->id!!}');"  {!!$item->has_morning_ucc ? 'checked':''!!}
+                            name="morning_ucc"  value="{!!$item->has_ucc!!}">
+                            <label for="morning_ucc-{{$item->id}}" class="switch-label" value="{!!$item->has_morning_ucc!!}"></label>
+                        </div>
+
+                    </div>
+
+                    <div class="morning">
+                        <input type="number" placeholder="Evening" class="mymorning eveningvalue_{!!$item->id!!}" name="total_evening_doctors"
+                            value="{!!$item->total_evening_doctors!!}" onchange="update_ajax('{!!$item->id!!}');">
+                        <div class="switch">
+                            <input id="evening_ucc-{{$item->id}}" type="checkbox" class="switch-input" name="evening_ucc"  value="{!!$item->has_ucc!!}">
+                            <label for="evening_ucc-{{$item->id}}" class="switch-label" value="{!!$item->has_ucc!!}"></label>
                         </div>
                     </div>
 
                     <div class="morning">
-                        <input type="number" placeholder="Evening" class="mymorning" name="total_evening_doctors"
-                            value="{!!$item->total_evening_doctors!!}">
+                        <input type="number" placeholder="Night" class="mymorning nightvalue_{!!$item->id!!}" name="total_night_doctors"
+                            value="{!!$item->total_night_doctors!!}" onchange="update_ajax('{!!$item->id!!}');">
                         <div class="switch">
-                            <input id="switch-2" type="checkbox" class="switch-input">
-                            <label for="switch-2" class="switch-label"></label>
-                        </div>
-                    </div>
-
-                    <div class="morning">
-                        <input type="number" placeholder="Night" class="mymorning" name="total_night_doctors"
-                            value="{!!$item->total_night_doctors!!}">
-                        <div class="switch">
-                            <input id="switch-3" type="checkbox" class="switch-input">
-                            <label for="switch-3" class="switch-label"></label>
+                            <input id="night_ucc-{{$item->id}}" type="checkbox" class="switch-input" name="night_ucc"  value="{!!$item->has_ucc!!}">
+                            <label for="night_ucc-{{$item->id}}" class="switch-label" value="{!!$item->has_ucc!!}"></label>
                         </div>
 
                     </div>
@@ -88,32 +91,40 @@
             ?>
 
             @endforeach
-
-
-
-
-
         </tbody>
     </table>
-
-
 </div>
-
 
 @section('app_jquery')
 <script>
-    populate_calender();
 
-    function populate_calender(){
-        $('#calenderdates').append(append_tr());
+    function update_ajax(id){
+        console.log('asd',$('.morning_ucc_value_'+id).is(':checked'));
+        // alert($('.morningvalue_'+id).val());
+        // alert($('.eveningvalue_'+id).val());
+        // alert($('.nightvalue_'+id).val());
+        var my_url = "{!!asset('admin/generatepattern/postajax')!!}/"+id;
+        // console.log('gdfsg',my_url);
+        $.ajax({
+        url: my_url,
+        method: 'POST',
+        dataType: 'json',
+        data: {
+            'total_morning_doctors' :$('.morningvalue_'+id).val(),
+            'total_evening_doctors' :$('.eveningvalue_'+id).val(),
+            'total_night_doctors' :$('.nightvalue_'+id).val(),
+            'has_morning_ucc' : $('.morning_ucc_value_'+id).is(':checked')?1:0,
+            '_token':'{!!csrf_token()!!}'
+        },
+        success: function(data){
+            console.log('Sucess:', data);
+        },
+        error: function (data) {
+            console.log('Error:', data);
+        }
+        });
+
     }
-
-    function append_tr(){
-        return (
-        ``
-        );
-    }
-
 
 </script>
 @endsection
