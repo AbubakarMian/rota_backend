@@ -42,7 +42,7 @@ class Special_Rota_Request_Controller extends Controller
         $control = 'create';
         $special = Special_rota_request::get();
         $doctor = Doctor::with(['user'])->get();
-        $shifts = Config::get('constants.duty_type');
+        $shifts = Config::get('constants.duty_type_request');
 
         return \View::make(
             'admin.special_rota_request.create',

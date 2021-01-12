@@ -28,6 +28,12 @@ return [
         'evening'=>'Evening',
         'night'=>'Night'
     ],
+    'duty_type_request'=>[
+        'morning'=>'Morning',
+        'evening'=>'Evening',
+        'night'=>'Night',
+        // 'general'=>'General',
+    ],
     'weekdays'=>[
         'monday'=>'Monday',
         'tuesday'=>'Tuesday',

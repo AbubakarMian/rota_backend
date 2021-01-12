@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\models\Special_rota_request;
+use App\models\General_rota_request;
 use App\models\Monthly_rota;
+use App\models\Leave_Request;
 use App\models\Doctor;
 use App\models\Rota;
 use App\models\Rota_Request;
@@ -101,26 +104,55 @@ class Rota_Controller extends Controller
 
     public function generate($id){
 
-        $doctors = Doctor::with('user')->get();
-
         $list = Rota::where('monthly_rota_id',$id)->orderBy('duty_date','asc')->get();
         $monthly_rota = Monthly_rota::find($id);
 
-      if(!$list->count()){
+      if($list->count()){
         $days = cal_days_in_month(CAL_GREGORIAN,$monthly_rota->month,$monthly_rota->year);
+        $shifts = Config::get('constants.duty_type');
+
+        $doctors = Doctor::get();
+        $doctors_arr = [];
+        foreach($doctors as $d){
+            $req_duties_mor = General_rota_request::where('doctor_id',$d->id)->where('shift',$shifts['morning']);
+            $req_duties_eve = General_rota_request::where('doctor_id',$d->id)->where('shift',$shifts['evening']);
+            $req_duties_night = General_rota_request::where('doctor_id',$d->id)->where('shift',$shifts['night']);
+            $doctors_arr[] = [
+                'doctor_id'=>$d->id,
+                'total_duties'=>$d->total_duties,
+                'extra'=>0,
+                'given_morning'=>0,
+                'given_evening'=>0,
+                'given_night'=>0,
+                'extra'=>0,
+                'req_morning'=>$req_duties_mor,
+                'req_evening'=>$req_duties_eve,
+                'req_night'=>$req_duties_night,
+
+            ];
+        }
+
 
        for($i=1; $i<($days+1);$i++){
-        $duty_date = strtotime($i."-".$monthly_rota->month."-".$monthly_rota->year);
-// dd('hjsdahs');
-        $data[] =
-        [
-            'duty_date' => $duty_date,
-            'monthly_rota_id' => $id,
-            'is_ucc' => 0,
-            'shift' => 4,
-            'doctor_id' => $doctors
+           $doctors = Doctor::pluck('id')->toArray();
 
-        ];
+        $duty_date = strtotime($i."-".$monthly_rota->month."-".$monthly_rota->year);
+        // dd($duty_date);
+
+
+        foreach($shifts as $shift){
+            $doct = $this->get_suitable_doctor($shift);
+            $data[] =
+            [
+                'duty_date' => $duty_date,
+                'monthly_rota_id' => $id,
+                'is_ucc' => 0,
+                'shift' => $shift,
+                'doctor_id' => $doctors
+
+            ];
+        }
+
         }
         // dd($data);
        Rota::insert($data);
@@ -132,11 +164,37 @@ class Rota_Controller extends Controller
         $weekdays = Config::get('constants.weekdays_num');
         return view('admin.doctor_calender.index',compact('list','start_weekday','weekdays','doctors'));
     }
+    function get_suitable_doctor($shift){
+        $doctors = $this->filter_anualleaves($doctors,$duty_date);
+        $doctor = $this->special_rota_request($doctors,$duty_date,$shift);
+        if($doctor){
+            return $doctor;
+        }
+        $doctor = $this->general_rota_request($doctors,$duty_date,$shift);
+
+        dd( $doct );
+        return $doct;
+    }
+    function special_rota_request($doctors,$duty_date,$shift){
+        $doctor = Special_rota_request::where('duty_date',$duty_date)
+                                        ->where('want_duty',1)
+                                        ->where('shift',$shift)
+                                        ->first();
+        return $doctor;
+    }
 
 
+    function filter_anualleaves($doctors,$duty_date){
+        $doct = Leave_Request::
+                            where('start_date','<=',$duty_date)
+                            ->where('end_date','>=',$duty_date)
+                            ->where('annual_leave',1)
+                            ->whereIn('id',$doctors)
+                            ->pluck('id')->toArray();
 
+        $result=array_diff($doctors,$doct);
 
-
-
+        return $result;
+    }
 
 }
