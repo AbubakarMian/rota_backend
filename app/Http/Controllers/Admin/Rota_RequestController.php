@@ -28,10 +28,31 @@ class Rota_RequestController extends Controller
     }
     public function detail($id){
 
-       $leave_request = Leave_Request::where('doctor_id',$id)->get();
-        $doctors = Doctor::with(['user'])->paginate(13);
-        return view('admin.rota_request.details', compact('doctors','leave_request'));
+       $leave_request = Leave_Request::where('doctor_id',$id)->paginate();
+        // $doctors = Doctor::with(['user'])->paginate(13);
+        $status = Config::get('constants.ajax_action');
+        return view('admin.rota_request.details', compact('leave_request','status'));
     }
+    public function status(Request $request,$id){
+        $leave_request = Leave_Request::find($id);
+
+        if($request->status == 'accept'){
+            $new_status = 'accepted';
+        }
+        else{
+            $new_status = 'rejected';
+        }
+        $leave_request->status = $new_status;
+        $leave_request->save();
+ //////////response
+        $res = new \stdClass();
+        $res->status = true;
+        $res->new_value = ucfirst($new_status);
+        return json_encode($res);
+
+    }
+
+
     public function request($id){
 
         $request = Rota_Request::where('doctor_id',$id)->get();

@@ -48,14 +48,14 @@ width="400px" style="table-layout:fixed;"
         <td>{!! $l->year!!}</td>
         <td>{!! date("F", mktime(0, 0, 0, $l->month, 10))!!}</td>
         <td>
-            <a href="{{ asset('admin/rota/generate/'.$l->id) }}" class="badge bg-info">Generate</a>
+            <a href="{{ asset('admin/rota/generate/'.$l->id) }}" class="badge bg-info">doctor name calender </a>
         </td>
 
 
 
         <td>
             {{-- @include('admin.rotalist.partial.calender') --}}
-            <a href="{{ asset('admin/rota/generate/pattern/'.$l->id) }}" class="badge bg-info">  Rota Generate Pattern</a>
+            <a href="{{ asset('admin/rota/generate/pattern/'.$l->id) }}" class="badge bg-info">  Rota Generate Pattern </a>
         </td>
 
    </tr>

@@ -38,7 +38,13 @@ use Illuminate\Support\Facades\Route;
    Route::get('rota/leave/{id}', 'Admin\Rota_RequestController@leave')->name('rota.leave');
    Route::post('admin/rota/leave/save', 'Admin\Rota_RequestController@save')->name('leave.save');
    Route::get('admin/rota/leave/detail/{id}', 'Admin\Rota_RequestController@detail')->name('admin.leave.detail');
+   Route::post('admin/rota/leave/status/{id}', 'Admin\Rota_RequestController@status')->name('admin.leave.status');
+
+
+   ////status
    Route::get('admin/rota/request/detail/{id}', 'Admin\Rota_RequestController@request')->name('admin.request.detail');
+   Route::get('admin/rota/request/status/accepted/{id}', 'Admin\Rota_RequestController@accepted');
+   Route::get('admin/rota/request/status/rejected/{id}', 'Admin\Rota_RequestController@rejected');
 
    ////rota request page
    Route::get('rota/request/{id}', 'Admin\Rota_RequestController@create')->name('rota.request');
@@ -49,7 +55,7 @@ use Illuminate\Support\Facades\Route;
    Route::get('admin/rota', 'Admin\Rota_Controller@index')->name('rota.index');
    Route::get('admin/list/create', 'Admin\Rota_Controller@create')->name('doctor.list.create');
    Route::post('admin/list/save', 'Admin\Rota_Controller@save')->name('admin.doctorlist.save');
-//////rota generate
+//////rota generate//////////
 
 Route::get('admin/rota/generate/{id}', 'Admin\Rota_Controller@generate')->name('rota.generate');
 
