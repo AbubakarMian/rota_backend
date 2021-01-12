@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
+
 class Rota_Controller extends Controller
 {
 
@@ -46,7 +47,7 @@ class Rota_Controller extends Controller
 
 
 
-    public function generate($id)
+    public function generatemonthly($id)
     {
         $rota_month = Monthly_rota::find($id);
         $total_days = cal_days_in_month(CAL_GREGORIAN, $rota_month->month, $rota_month->year);
@@ -98,12 +99,44 @@ class Rota_Controller extends Controller
 
 
 
-    public function check(){
+    public function generate($id){
 
+        $doctors = Doctor::with('user')->get();
 
-    return \View::make('admin.checkout.even');
+        $list = Rota::where('monthly_rota_id',$id)->orderBy('duty_date','asc')->get();
+        $monthly_rota = Monthly_rota::find($id);
 
+      if(!$list->count()){
+        $days = cal_days_in_month(CAL_GREGORIAN,$monthly_rota->month,$monthly_rota->year);
+
+       for($i=1; $i<($days+1);$i++){
+        $duty_date = strtotime($i."-".$monthly_rota->month."-".$monthly_rota->year);
+// dd('hjsdahs');
+        $data[] =
+        [
+            'duty_date' => $duty_date,
+            'monthly_rota_id' => $id,
+            'is_ucc' => 0,
+            'shift' => 4,
+            'doctor_id' => $doctors
+
+        ];
+        }
+        // dd($data);
+       Rota::insert($data);
+
+       $list = Rota::where('monthly_rota_id',$id)->orderBy('duty_date','asc')->get();
+ }
+        // $duty_date = strtotime("1-".$monthly_rota->month."-".$monthly_rota->year);
+        $start_weekday = date('w', $list[0]->duty_date);
+        $weekdays = Config::get('constants.weekdays_num');
+        return view('admin.doctor_calender.index',compact('list','start_weekday','weekdays','doctors'));
     }
+
+
+
+
+
 
 
 }

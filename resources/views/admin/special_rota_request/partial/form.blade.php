@@ -12,8 +12,8 @@
 </div>
 
 
- <input type="radio" name="duty" value="wantduty"  id="myRadio" checked>Want duty &nbsp;
-<input type="radio"  name="duty" value="wantoff">Want Off&nbsp; &nbsp;
+ <input type="radio" name="duty" value="wantduty"  id="myRadio" checked><span class="myduty">Want duty</span>
+<input type="radio"  name="duty" value="wantoff"><span class="myoff">Want off</span>
 
 
 

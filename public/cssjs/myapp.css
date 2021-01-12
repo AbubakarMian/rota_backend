@@ -151,3 +151,18 @@ div#my_msg_div {
 div#my_msg_div {
     margin-left: 6px;
 }
+
+span.myduty {
+    margin-left: 5px;
+    font-family: inherit;
+    font-size: initial;
+    font-weight: lighter;
+    margin-right: 15px;
+}
+
+span.myoff {
+    margin-left: 5px;
+    font-family: inherit;
+    font-size: initial;
+    font-weight: lighter;
+}

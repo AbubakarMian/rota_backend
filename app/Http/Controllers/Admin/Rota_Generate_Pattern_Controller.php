@@ -93,6 +93,10 @@ public function update(Request $request,$id){
         $generate->total_evening_doctors = $request->total_evening_doctors;
         $generate->total_night_doctors = $request->total_night_doctors;
         $generate->has_morning_ucc = $request->has_morning_ucc;
+        $generate->has_evening_ucc = $request->has_evening_ucc;
+        $generate->has_night_ucc = $request->has_night_ucc;
+
+
 
 
 
