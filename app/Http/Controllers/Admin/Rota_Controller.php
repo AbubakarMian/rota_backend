@@ -142,7 +142,7 @@ class Rota_Controller extends Controller
 
 
         foreach($shifts as $shift){
-            $doct = $this->get_suitable_doctor($shift);
+            $doct = $this->get_suitable_doctor($doctors_arr,$duty_date,$shift);
             $data[] =
             [
                 'duty_date' => $duty_date,
@@ -165,23 +165,39 @@ class Rota_Controller extends Controller
         $weekdays = Config::get('constants.weekdays_num');
         return view('admin.doctor_calender.index',compact('list','start_weekday','weekdays','doctors'));
     }
-    function get_suitable_doctor($shift){
-        $doctors = $this->filter_anualleaves($doctors,$duty_date);
-        $doctor = $this->special_rota_request($doctors,$duty_date,$shift);
+    function get_suitable_doctor($doctors_arr,$duty_date,$shift){
+        $doctors_id = array_column($doctors_arr, 'doctor_id');
+        $doctors_id = $this->filter_anualleaves($doctors_id,$duty_date);
+        $doctor = $this->special_rota_request_wantduty($doctors_id,$duty_date,$shift);
         if($doctor){
             return $doctor;
         }
-        $doctor = $this->general_rota_request($doctors,$duty_date,$shift);
+        $doctors_id = $this->special_rota_request_wantoff($doctors_id,$duty_date,$shift);
 
-        dd( $doct );
+        $doctor = $this->select_doctor_general_rota($doctors_arr,$doctors_id,$duty_date,$shift);
+        if($doctor){
+            return $doctor;
+        }
+        $doctor = $this->select_doctor_rota($doctors_arr,$doctors_id,$duty_date,$shift);
+
+
+        // dd( $doct );
         return $doct;
     }
-    function special_rota_request($doctors,$duty_date,$shift){
+    function special_rota_request_wantduty($doctors,$duty_date,$shift){
         $doctor = Special_rota_request::where('duty_date',$duty_date)
                                         ->where('want_duty',1)
                                         ->where('shift',$shift)
                                         ->first();
         return $doctor;
+    }
+
+    function special_rota_request_wantoff($doctors_id,$duty_date,$shift){
+        $doctors_off = Special_rota_request::where('duty_date',$duty_date)
+                                        ->where('want_duty',0)
+                                        ->pluck('id')->toArray();
+        $result=array_diff($doctors,$doctors_off);
+        return $result;
     }
 
 
@@ -196,6 +212,34 @@ class Rota_Controller extends Controller
         $result=array_diff($doctors,$doct);
 
         return $result;
+    }
+
+
+
+    function  select_doctor_general_rota($doctors_arr,$doctors_id,$duty_date,$shift){
+
+        foreach($doctors_arr as $doctor){
+            if($shift == 'morning'){
+
+                if($doctor['req_morning']<$doctor['given_morning']){
+                    return $doctor;
+                }
+            }
+            elseif($shift == 'evening'){
+
+                if($doctor['req_evening']<$doctor['given_evening']){
+                    return $doctor;
+                }
+            }
+            else{
+                if($doctor['req_night']<$doctor['given_night']){
+                    return $doctor;
+                }
+            }
+        }
+    }
+    function select_doctor_rota($doctors_arr,$doctors_id,$duty_date,$shift){
+
     }
 
 }
