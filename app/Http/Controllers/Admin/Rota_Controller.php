@@ -119,6 +119,7 @@ class Rota_Controller extends Controller
             $req_duties_night = General_rota_request::where('doctor_id',$d->id)->where('shift',$shifts['night']);
             $doctors_arr[] = [
                 'doctor_id'=>$d->id,
+                'doctor_type'=>$d->type,
                 'total_duties'=>$d->total_duties,
                 'extra'=>0,
                 'given_morning'=>0,
