@@ -22,6 +22,7 @@ class DoctorController extends Controller
         // $doctors = array_map('ucfirst', 'doctor_type');
 
         return view('admin.doctor.index', compact('doctors'));
+
     }
 
     public function create()
@@ -120,11 +121,11 @@ class DoctorController extends Controller
             $new_value = 'Activate';
         } else {
             Doctor::withTrashed()->find($id)->restore();
-            $new_value = 'Deactivate';
+            $new_value = 'Delete';
         }
         $response = Response::json([
             "status" => true,
-            'action' => Config::get('constants.ajax_action.update'),
+            'action' => Config::get('constants.ajax_action.delete'),
             'new_value' => $new_value
         ]);
         return $response;

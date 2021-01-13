@@ -50,4 +50,9 @@ return [
         '5'=>'Friday',
         '6'=>'Saturday',
         '7'=>'Sunday'],
+    'find_doctors_level'=>[
+        1=>'1',
+        2=>'2',
+        3=>'3',
+    ]
 ];
