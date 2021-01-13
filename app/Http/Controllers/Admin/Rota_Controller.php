@@ -108,8 +108,10 @@ class Rota_Controller extends Controller
         $monthly_rota = Monthly_rota::find($id);
 
       if($list->count()){
-        $days = cal_days_in_month(CAL_GREGORIAN,$monthly_rota->month,$monthly_rota->year);
+        // $days = cal_days_in_month(CAL_GREGORIAN,$monthly_rota->month,$monthly_rota->year);
+        $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id',$id)->get();
         $shifts = Config::get('constants.duty_type');
+        $find_doctors_level = Config::get('constants.find_doctors_level');
 
         $doctors = Doctor::get();
         $doctors_arr = [];
@@ -117,7 +119,7 @@ class Rota_Controller extends Controller
             $req_duties_mor = General_rota_request::where('doctor_id',$d->id)->where('shift',$shifts['morning']);
             $req_duties_eve = General_rota_request::where('doctor_id',$d->id)->where('shift',$shifts['evening']);
             $req_duties_night = General_rota_request::where('doctor_id',$d->id)->where('shift',$shifts['night']);
-            $doctors_arr[] = [
+            $doctors_arr[$d->id] = [
                 'doctor_id'=>$d->id,
                 'doctor_type'=>$d->type,
                 'total_duties'=>$d->total_duties,
@@ -126,6 +128,7 @@ class Rota_Controller extends Controller
                 'given_evening'=>0,
                 'given_night'=>0,
                 'extra'=>0,
+                'consecutive_duties'=>0,
                 'req_morning'=>$req_duties_mor,
                 'req_evening'=>$req_duties_eve,
                 'req_night'=>$req_duties_night,
@@ -134,25 +137,73 @@ class Rota_Controller extends Controller
         }
 
 
-       for($i=1; $i<($days+1);$i++){
-           $doctors = Doctor::pluck('id')->toArray();
+   foreach($special_rota_request as $special_rota_request){
 
-        $duty_date = strtotime($i."-".$monthly_rota->month."-".$monthly_rota->year);
-        // dd($duty_date);
+    $duty_date = $special_rota_request->duty_date;
+    $doctors_index = 0;
+    $find_doctors_level_index = 1;
+    [$doctors_arr,$doctors] = $this->get_suitable_doctor($doctors_arr,$duty_date,$shift);
+    $special_rota_request = $doctor;
+      for($i=0;$i<$doctor;$i++){
 
 
-        foreach($shifts as $shift){
-            $doct = $this->get_suitable_doctor($doctors_arr,$duty_date,$shift);
-            $data[] =
-            [
-                'duty_date' => $duty_date,
-                'monthly_rota_id' => $id,
-                'is_ucc' => 0,
-                'shift' => $shift,
-                'doctor_id' => $doctors
 
-            ];
+
+      }
+
+
+
+   }
+
+       foreach($rota_generate_patterns as $rota_generate_pattern){
+
+        $duty_date = $rota_generate_pattern->duty_date;
+
+        $doctors_index = 0;
+        $find_doctors_level_index = 1;
+        [$doctors_arr,$doctors] = $this->get_suitable_doctor($doctors_arr,
+                                                            $duty_date,$shifts['morning'],
+                                                            $find_doctors_level[$find_doctors_level_index]);
+        $rota_generate_pattern_total_morning_doctors = $rota_generate_pattern->total_morning_doctors+$rota_generate_pattern->has_morning_ucc;
+        for($i=0;$i<$rota_generate_pattern_total_morning_doctors;$i++){
+
+            $is_ucc = 0;
+            if($i==0 && $rota_generate_pattern->has_morning_ucc){
+                $is_ucc = 1;
+            }
+
+            while(!isset($doctors[$doctors_index])){
+            $select_doctor = 0;
+            $find_doctors_level_index = $find_doctors_level_index + 1;
+            [$doctors_arr,$doctors] = $this->get_suitable_doctor($doctors_arr,
+                                                                $duty_date,$shifts['morning']
+                                                                ,$find_doctors_level[$find_doctors_level_index]);
+
+            }
+                $data[] =
+                [
+                    'duty_date' => $duty_date,
+                    'monthly_rota_id' => $id,
+                    'is_ucc' => $is_ucc,
+                    'shift' => $shifts['morning'],
+                    'doctor_id' => $doctor->id
+                ];
+
+
         }
+
+        // foreach($shifts as $shift){
+        //     [$doctors_arr,$doctor] = $this->get_suitable_doctor($doctors_arr,$duty_date,$shift);
+        //     $data[] =
+        //     [
+        //         'duty_date' => $duty_date,
+        //         'monthly_rota_id' => $id,
+        //         'is_ucc' => 0,
+        //         'shift' => $shift,
+        //         'doctor_id' => $doctor->id
+
+        //     ];
+        // }
 
         }
         // dd($data);
@@ -226,6 +277,8 @@ class Rota_Controller extends Controller
                 }
             }
             elseif($shift == 'evening'){
+
+
 
                 if($doctor['req_evening']<$doctor['given_evening']){
                     return $doctor;
