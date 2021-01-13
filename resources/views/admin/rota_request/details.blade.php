@@ -26,10 +26,10 @@ width="400px" style="table-layout:fixed;"
 {{-- @stop --}}
 <thead>
     <tr>
-        @foreach($leave_request as $lr)
+        {{-- @foreach($leave_request as $lr) --}}
 
 <h3>
-     {{-- {!! $lr->doctor->user->name !!}'s Leave Details --}}
+     " Doctor : {!! $doctors->user->name !!}"
 </h3>
 
         <th>Start Date</th>
@@ -41,7 +41,7 @@ width="400px" style="table-layout:fixed;"
 </thead>
 <tbody>
 
-    {{-- @foreach($leave_request as $lr) --}}
+    @foreach($leave_request as $lr)
     {{-- {!!dd($status)!!} --}}
     {{-- ('d F, Y (l)'); --}}
     <tr>

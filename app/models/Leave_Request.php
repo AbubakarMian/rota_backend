@@ -11,7 +11,7 @@ class Leave_Request extends Model
     protected $table='leave_request';
 
 
-    // public function doctor(){
-    //     return $this->hasOne('App\models\Doctor','id','doctor_id')->withTrashed();
-    // }
+    public function doctor(){
+        return $this->hasOne('App\models\Doctor','id','doctor_id')->withTrashed();
+    }
 }
