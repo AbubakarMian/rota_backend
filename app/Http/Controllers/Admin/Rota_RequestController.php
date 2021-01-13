@@ -29,9 +29,11 @@ class Rota_RequestController extends Controller
     public function detail($id){
 
        $leave_request = Leave_Request::where('doctor_id',$id)->paginate(10);
+       $doctors = Doctor::with(['user'])->find($id);
+    //    dd($doctors);
         // $doctors = Doctor::with(['user'])->paginate(13);
         $status = Config::get('constants.ajax_action');
-        return view('admin.rota_request.details', compact('leave_request','status'));
+        return view('admin.rota_request.details', compact('leave_request','status','doctors'));
     }
     public function status(Request $request,$id){
         $leave_request = Leave_Request::find($id);

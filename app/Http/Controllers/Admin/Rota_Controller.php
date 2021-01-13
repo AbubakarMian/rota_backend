@@ -108,8 +108,8 @@ class Rota_Controller extends Controller
         $monthly_rota = Monthly_rota::find($id);
 
       if($list->count()){
-        // $days = cal_days_in_month(CAL_GREGORIAN,$monthly_rota->month,$monthly_rota->year);
-        $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id',$id)->get();
+        $days = cal_days_in_month(CAL_GREGORIAN,$monthly_rota->month,$monthly_rota->year);
+        $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id',$id)->orderBy('duty_date','asc')->get();
         $shifts = Config::get('constants.duty_type');
         $find_doctors_level = Config::get('constants.find_doctors_level');
 
@@ -121,37 +121,94 @@ class Rota_Controller extends Controller
             $req_duties_night = General_rota_request::where('doctor_id',$d->id)->where('shift',$shifts['night']);
             $doctors_arr[$d->id] = [
                 'doctor_id'=>$d->id,
+                'doctor'=>$d,
                 'doctor_type'=>$d->type,
                 'total_duties'=>$d->total_duties,
                 'extra'=>0,
+                // 'consecutive_duties'=>0,
                 'given_morning'=>0,
                 'given_evening'=>0,
                 'given_night'=>0,
-                'extra'=>0,
-                'consecutive_duties'=>0,
                 'req_morning'=>$req_duties_mor,
                 'req_evening'=>$req_duties_eve,
                 'req_night'=>$req_duties_night,
-
+                'total_leaves'=>($days - $d->total_duties),
+                'assigned_leaves'=>0,
+                'holiday_leaves'=>0
             ];
         }
 
+    $duties_arr = [];
+   foreach($rota_generate_patterns as $rota_generate_pattern){
 
-   foreach($special_rota_request as $special_rota_request){
+    $duty_date = $rota_generate_pattern->duty_date;
+    $special_rota_request = Special_rota_request::where('duty_date',$duty_date)->get();
 
-    $duty_date = $special_rota_request->duty_date;
-    $doctors_index = 0;
-    $find_doctors_level_index = 1;
-    [$doctors_arr,$doctors] = $this->get_suitable_doctor($doctors_arr,$duty_date,$shift);
-    $special_rota_request = $doctor;
-      for($i=0;$i<$doctor;$i++){
+    if(!isset($special_rota_request->duty_date)){
+        $duties_arr [$special_rota_request->duty_date]= [
+            'duty_date'=>$special_rota_request->duty_date,
+            'special_rota_morning_doctors'=>[],
+            'special_rota_evening_doctors'=>[],
+            'special_rota_night_doctors'=>[],
+            'special_rota_off_doctors'=>[],
+            'assigned_morning_doctors_res'=>[],
+            'assigned_evening_doctors_res'=>[],
+            'assigned_night_doctors_res'=>[],
+            'assigned_morning_doctors_reg'=>[],
+            'assigned_evening_doctors_reg'=>[],
+            'assigned_night_doctors_reg'=>[],
+            'consecutive_doctors'=>[],
+            'qualified_doctors_doctors'=>[],
+            'non_qualified_doctors_doctors'=>[],
+        ];
+    }
 
+    if($special_rota_request->wantoff ){
+        $duties_arr [$special_rota_request->duty_date]['special_rota_off_doctors'][]=
+            $special_rota_request->doctor_id;
+    }
 
+    else if($special_rota_request->shift == $shifts['morning']){
+        $duties_arr [$special_rota_request->duty_date]['special_rota_morning_doctors'][]=
+            $special_rota_request->doctor_id;
+            if($doctors_arr[$special_rota_request->doctor_id]['doctor_type'] == 1){
+                $duties_arr [$special_rota_request->duty_date]['assigned_morning_doctors_res'][]=
+                $special_rota_request->doctor_id;
+            }
+            else{
+                $duties_arr [$special_rota_request->duty_date]['assigned_morning_doctors_res'][]=
+                $special_rota_request->doctor_id;
+            }
 
+    }
 
-      }
+    else if($special_rota_request->shift == $shifts['evening']){
+        $duties_arr [$special_rota_request->duty_date]['special_rota_evening_doctors'][]=
+            $special_rota_request->doctor_id;
 
+            if($doctors_arr[$special_rota_request->doctor_id]['doctor_type'] == 1){
+                $duties_arr [$special_rota_request->duty_date]['assigned_evening_doctors_res'][]=
+                $special_rota_request->doctor_id;
+            }
+            else{
+                $duties_arr [$special_rota_request->duty_date]['assigned_evening_doctors_reg'][]=
+                $special_rota_request->doctor_id;
+            }
+    }
 
+    else if($special_rota_request->shift == $shifts['night']){
+        $duties_arr [$special_rota_request->duty_date]['special_rota_night_doctors'][]=
+            $special_rota_request->doctor_id;
+
+            if($doctors_arr[$special_rota_request->doctor_id]['doctor_type'] == 1){
+                $duties_arr [$special_rota_request->duty_date]['assigned_night_doctors_res'][]=
+                $special_rota_request->doctor_id;
+            }
+            else{
+                $duties_arr [$special_rota_request->duty_date]['assigned_night_doctors_reg'][]=
+                $special_rota_request->doctor_id;
+            }
+    }
 
    }
 
