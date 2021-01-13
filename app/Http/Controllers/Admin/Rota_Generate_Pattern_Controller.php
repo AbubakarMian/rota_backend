@@ -36,7 +36,6 @@ class Rota_Generate_Pattern_Controller extends Controller
                 [
                     'duty_date' => $duty_date,
                     'monthly_rota_id' => $id,
-                    'has_ucc' => 0,
                     'total_morning_doctors' => 4,
                     'total_evening_doctors' => 4,
                     'total_night_doctors' => 4,
