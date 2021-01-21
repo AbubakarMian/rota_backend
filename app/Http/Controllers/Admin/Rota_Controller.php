@@ -36,14 +36,20 @@ class Rota_Controller extends Controller
     public function save(Request $request)
     {
         $doctorlist = new Monthly_rota();
-        $this->add_or_update($request, $doctorlist);
+       $this->add_or_update($request, $doctorlist);
         return redirect('admin/rotadoctor');
     }
 
     public function add_or_update(Request $request, $doctorlist)
     {
+     
+        $days = cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year);
+        
+      
         $doctorlist->year = $request->year;
         $doctorlist->month = $request->month;
+        $doctorlist->total_days = $days;
+
         $doctorlist->save();
         return redirect()->back();
     }
