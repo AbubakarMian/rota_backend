@@ -54,5 +54,9 @@ return [
         1=>'1',
         2=>'2',
         3=>'3',
+    ],
+    'doctor_type'=>[
+        '1'=>'resident',
+        '2'=>'registrar',
     ]
 ];
