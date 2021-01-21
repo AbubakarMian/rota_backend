@@ -78,16 +78,16 @@ public function update(Request $request,$id){
 
     $generate = Rota_Generate_Pattern::find($id);
     $this->add_or_update($request,$generate);
+
+    $res = new \stdClass();
+    $res->status = true;
+    return json_encode($res);
     // return Redirect('admin/doctor');
 
 }
     public function add_or_update(Request $request, $generate)
 
     {
-
-        // $request->all();
-        // $generate->duty_date = $request->duty_date;
-        // $generate->monthly_rota_id = $request->$id;
         $generate->total_morning_doctors = $request->total_morning_doctors;
         $generate->total_evening_doctors = $request->total_evening_doctors;
         $generate->total_night_doctors = $request->total_night_doctors;
@@ -95,19 +95,7 @@ public function update(Request $request,$id){
         $generate->has_evening_ucc = $request->has_evening_ucc;
         $generate->has_night_ucc = $request->has_night_ucc;
 
-
-
-
-
-
-
         $generate->save();
-
-        $res = new \stdClass();
-        $res->status = true;
-        // return json_encode($res);
-
-
 }
 
 
