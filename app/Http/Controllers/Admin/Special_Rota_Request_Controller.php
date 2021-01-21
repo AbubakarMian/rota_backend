@@ -58,20 +58,18 @@ class Special_Rota_Request_Controller extends Controller
 
         $generate = new Special_rota_request();
         $generate ->duty_date=strtotime($request->dutydate);
-
+        $generate ->shift=$request->shiftday;
         $generate ->doctor_id=$request->doctor_id;
         if ($request->duty == 'wantduty') {
             $generate->want_duty = true;
-            $generate ->shift=$request->shiftday;
         }
         elseif ($request->duty == 'wantoff') {
             $generate->want_off = true;
-            $generate ->shift=null;
 
         }
-        // if ($request->annual == 'annual_leave') {
-        //     $generate->annual_leave = 1;
-        // }
+        if ($request->annual == 'annual_leave') {
+            $generate->annual_leave = 1;
+        }
 
 
        $generate ->Save();

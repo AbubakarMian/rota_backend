@@ -55,23 +55,39 @@ width="400px" style="table-layout:fixed;"
 
     <tr>
 
-        <td>{!! ucwords($g->doctor->user->name)!!}</td>
+        <td>{!! $g->doctor->user->name!!}</td>
 
         <td>{!! date('d F, Y (l)', $g->duty_date)!!}</td>
 
         @if($g->want_duty == 1)
-        <td>True</td>
+        <td>true</td>
         @else
-        <td>False</td>
+        <td>false      </td>
         @endif
 
         @if($g->want_off==1)
-        <td>True</td>
+        <td>true</td>
         @else
-        <td>False</td>
+        <td>false</td>
         @endif
 
-        <td>{!! ucfirst($g->shift ?? 'None')!!}</td>
+        <td>{!! $g->shift!!}</td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     </tr>
@@ -79,7 +95,7 @@ width="400px" style="table-layout:fixed;"
     {{-- @endforeach --}}
 </tbody>
 @section('pagination')
-<span class="pagination pagination-md pull-right">{!! $list->render() !!}</span>
+{{-- <span class="pagination pagination-md pull-right">{!! $general->render() !!}</span> --}}
 <div class="col-md-3 pull-left">
     <div class="form-group text-center">
         <div>
