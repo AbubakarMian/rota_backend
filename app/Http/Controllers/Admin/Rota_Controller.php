@@ -86,7 +86,117 @@ class Rota_Controller extends Controller
         Rota::insert($data);
         dd('saved');
     }
-    public function get_duties_info($rota_generate_patterns)
+
+    public function has_room_for_doctors($total_doctors, $dependent_arr)
+    {
+        $room_for_doctors = $total_doctors;
+        if (sizeof($dependent_arr)) {
+            $room_for_doctors = $room_for_doctors - sizeof($dependent_arr);
+        } else {
+            $room_for_doctors = $room_for_doctors - 1;
+        }
+        return $room_for_doctors;
+    }
+
+    public function assign_duties_to_special_request_doctors($duties_arr, $rota_generate_pattern, $duty_date){
+
+        $special_rota_morning_request = $duties_arr[$duty_date]['special_rota_morning_request'];
+        $special_rota_evening_request = $duties_arr[$duty_date]['special_rota_evening_request'];
+        $special_rota_night_request = $duties_arr[$duty_date]['special_rota_night_request'];
+        if (isset($special_rota_morning_request)) {
+            foreach ($special_rota_morning_request as $special_req) {
+                if ($special_req->doctor->doctor_type == 1) {
+                    $duties_arr [$duty_date]['special_rota_morning_doctors_res'][] = $special_req->doctor_id;
+                    $has_room = $this->has_room_for_doctors(
+                        $rota_generate_pattern->total_morning_doctors,
+                        $duties_arr[$duty_date]['assigned_morning_doctors_reg']
+                    );
+                    if ($has_room) {
+                        $duties_arr [$duty_date]['assigned_morning_doctors_res'][] = $special_req->doctor_id;
+                    }
+                } else {
+                    $duties_arr [$duty_date]['special_rota_morning_doctors_reg'][] = $special_req->doctor_id;
+                    $has_room = $this->has_room_for_doctors(
+                        $rota_generate_pattern->total_morning_doctors,
+                        $duties_arr[$duty_date]['assigned_morning_doctors_res']
+                    );
+        
+                    if ($has_room) {
+                        $duties_arr [$duty_date]['assigned_morning_doctors_reg'][] = $special_req->doctor_id;
+                    }
+                }
+            }
+        }
+        if (isset($special_rota_evening_request)) {
+            foreach ($special_rota_evening_request as $special_req) {
+                if ($special_req->doctor->doctor_type == 1) {
+                    $duties_arr [$duty_date]['special_rota_evening_doctors_res'][] = $special_req->doctor_id;
+                    $has_room = $this->has_room_for_doctors(
+                        $rota_generate_pattern->total_evening_doctors,
+                        $duties_arr[$duty_date]['assigned_evening_doctors_reg']
+                    );
+                    if ($has_room) {
+                        $duties_arr [$duty_date]['assigned_evening_doctors_res'][] = $special_req->doctor_id;
+                    }
+                } else {
+                    $duties_arr [$duty_date]['special_rota_evening_doctors_reg'][] = $special_req->doctor_id;
+                    $has_room = $this->has_room_for_doctors(
+                        $rota_generate_pattern->total_evening_doctors,
+                        $duties_arr[$duty_date]['assigned_evening_doctors_res']
+                    );
+        
+                    if ($has_room) {
+                        $duties_arr [$duty_date]['assigned_evening_doctors_reg'][] = $special_req->doctor_id;
+                    }
+                }
+            }
+        }
+        if (isset($special_rota_night_request)) {
+            foreach ($special_rota_night_request as $special_req) {
+                if ($special_req->doctor->doctor_type == 1) {
+                    $duties_arr [$duty_date]['special_rota_night_doctors_res'][] = $special_req->doctor_id;
+                    $has_room = $this->has_room_for_doctors(
+                        $rota_generate_pattern->total_night_doctors,
+                        $duties_arr[$duty_date]['assigned_night_doctors_reg']
+                    );
+                    if ($has_room) {
+                        $duties_arr [$duty_date]['assigned_night_doctors_res'][] = $special_req->doctor_id;
+                    }
+                } else {
+                    $duties_arr [$duty_date]['special_rota_night_doctors_reg'][] = $special_req->doctor_id;
+                    $has_room = $this->has_room_for_doctors(
+                        $rota_generate_pattern->total_night_doctors,
+                        $duties_arr[$duty_date]['assigned_night_doctors_res']
+                    );
+        
+                    if ($has_room) {
+                        $duties_arr [$duty_date]['assigned_night_doctors_reg'][] = $special_req->doctor_id;
+                    }
+                }
+            }
+        }
+        return $duties_arr;
+    }
+    
+    public function assign_duties_to_consecutive_doctors($duties_arr,$doctors_arr ,$rota_generate_pattern, $duty_date){
+        $consecutive_morning_doctors = $duties_arr[$duty_date]['consecutive_morning_doctors_arr'];
+        $consecutive_evening_doctors = $duties_arr[$duty_date]['consecutive_evening_doctors_arr'];
+        $consecutive_night_doctors = $duties_arr[$duty_date]['consecutive_night_doctors_arr'];
+        
+        foreach($consecutive_night_doctors as $d){
+            if($d['type']==1 && has_room_for_doctors($rota_generate_pattern->total_night_doctors, 
+                                        $duties_arr[$duty_date]['assigned_night_doctors_reg'])){
+                $duties_arr['assigned_night_doctors_res'][] = $d['id'];
+            }
+            if($d['type']==2 && has_room_for_doctors($rota_generate_pattern->total_night_doctors, 
+                                        $duties_arr[$duty_date]['assigned_night_doctors_res'])){
+                $duties_arr['assigned_night_doctors_reg'][] = $d['id'];
+            }             
+        }
+        // evening and morning doctors can be adjusted in night shif
+    }
+
+    public function get_duties_info_and_assign_special_requests($rota_generate_patterns)
     {
         $duties_arr = [];
         foreach ($rota_generate_patterns as $rota_generate_pattern_key => $rota_generate_pattern) {
@@ -96,11 +206,11 @@ class Rota_Controller extends Controller
                 $consecutive_doctors = Doctor::join('rota', function ($j) use ($duty_date) {
                     return $j->where('doctor.id', 'rota.doctor_id')
                             ->where('duty_date', '!=', strtotime('-2 day', $duty_date));
-                })->where('duty_date', strtotime('-1 day', $duty_date));
+                })->with('doctor')->where('duty_date', strtotime('-1 day', $duty_date));
         
-                $consecutive_morning_doctors_arr = $consecutive_doctors->pluck('doctor_id')->toArray();
-                $consecutive_evening_doctors_arr = $consecutive_doctors->pluck('doctor_id')->toArray();
-                $consecutive_night_doctors_arr = $consecutive_doctors->pluck('doctor_id')->toArray();
+                $consecutive_morning_doctors_arr = $consecutive_doctors->get()->toArray();
+                $consecutive_evening_doctors_arr = $consecutive_doctors->get()->toArray();
+                $consecutive_night_doctors_arr = $consecutive_doctors->get()->toArray();
                 $consecutive_doctors_arr = array_merge(
                     $consecutive_morning_doctors_arr,
                     $consecutive_evening_doctors_arr,
@@ -109,7 +219,6 @@ class Rota_Controller extends Controller
             }
             $duty_date = $rota_generate_pattern->duty_date;
             $special_rota_request = Special_rota_request::where('duty_date', $duty_date);
-            // $special_rota_morning_request = $special_rota_request->where('want_duty', 1)->where('shift', 'morning')->pluck('doctor_id');
             $special_rota_morning_request = $special_rota_request->where('want_duty', 1)->where('shift', 'morning')->get();
             $special_rota_evening_request = $special_rota_request->where('want_duty', 1)->where('shift', 'evening')->get();
             $special_rota_night_request = $special_rota_request->where('want_duty', 1)->where('shift', 'night')->get();
@@ -128,66 +237,35 @@ class Rota_Controller extends Controller
                     'all_leaves'=>$all_leaves,
                     'special_rota_morning_doctors_res'=>[],
                     'special_rota_morning_doctors_reg'=>[],
+                    'special_rota_evening_doctors_res'=>[],
+                    'special_rota_evening_doctors_reg'=>[],
+                    'special_rota_night_doctors_res'=>[],
+                    'special_rota_night_doctors_reg'=>[],
+                    'special_rota_morning_request'=>$special_rota_morning_request,
                     'special_rota_evening_doctors'=>$special_rota_evening_request,
                     'special_rota_night_doctors'=>$special_rota_night_request,
                     'special_rota_off_doctors'=>$special_rota_want_off,
                     'assigned_morning_doctors_res'=> [],
-                    'assigned_evening_doctors_res'=>[],
-                    'assigned_night_doctors_res'=>[],
                     'assigned_morning_doctors_reg'=>[],
+                    'assigned_evening_doctors_res'=>[],
                     'assigned_evening_doctors_reg'=>[],
+                    'assigned_night_doctors_res'=>[],
                     'assigned_night_doctors_reg'=>[],
-                    'consecutive_doctors'=>$consecutive_doctors_arr,
-                    'consecutive_morning_doctors_arr'=>$consecutive_morning_doctors_arr,
-                    'consecutive_evening_doctors_arr'=>$consecutive_evening_doctors_arr,
-                    'consecutive_night_doctors_arr'=>$consecutive_night_doctors_arr,
+                    'consecutive_doctors'=>$consecutive_doctors_arr, // only one duty of yesterday assigned
+                    'consecutive_morning_doctors'=>$consecutive_morning_doctors_arr,
+                    'consecutive_evening_doctors'=>$consecutive_evening_doctors_arr,
+                    'consecutive_night_doctors'=>$consecutive_night_doctors_arr,
                     'qualified_doctors'=>[],
                     'qualified_morning_doctors'=>[],
                     'qualified_evening_doctors'=>[],
                     'qualified_night_doctors'=>[],
                     'diss_qualified_doctors'=>$all_diss_qualified_doctors,
                 ];
-                if(isset($special_rota_morning_request)){
-                    foreach($special_rota_morning_request as $special_req){
-                        if($special_req->doctor->doctor_type == 1){
-                            $duties_arr [$duty_date]['special_rota_morning_doctors_res'][] = $special_req->doctor_id;
-                            if(sizeof($duties_arr [$duty_date]['assigned_morning_doctors_res'] <    // room for special_rota_morning_doctors_reg
-                                    $rota_generate_pattern->total_morning_doctors )){   
-                                $duties_arr [$duty_date]['assigned_morning_doctors_res'][] = $special_req->doctor_id;
-                            }                            
-                        }
-                        else{
-                            $duties_arr [$duty_date]['special_rota_morning_doctors_reg'][] = $special_req->doctor_id;
-                            if(sizeof($duties_arr [$duty_date]['assigned_morning_doctors_reg'] <    // room for assigned_morning_doctors_res
-                                    $rota_generate_pattern->total_morning_doctors )){   
-                                $duties_arr [$duty_date]['assigned_morning_doctors_reg'][] = $special_req->doctor_id;
-                            }  
-                        }
-                    }
-                }
-                
-                   
-                    // 'assigned_evening_doctors_res'=>[],
-                    // 'assigned_night_doctors_res'=>[],
-                    // 'assigned_morning_doctors_reg'=>[],
-                    // 'assigned_evening_doctors_reg'=>[],
-                    // 'assigned_night_doctors_reg'=>[],
-                    // 'consecutive_doctors'=>$consecutive_doctors_arr,
-                    // 'consecutive_morning_doctors_arr'=>$consecutive_morning_doctors_arr,
-                    // 'consecutive_evening_doctors_arr'=>$consecutive_evening_doctors_arr,
-                    // 'consecutive_night_doctors_arr'=>$consecutive_night_doctors_arr,
-                    // 'qualified_doctors'=>[],
-                    // 'qualified_morning_doctors'=>[],
-                    // 'qualified_evening_doctors'=>[],
-                    // 'qualified_night_doctors'=>[],
-                    // 'diss_qualified_doctors'=>$all_diss_qualified_doctors,
-                
-
-
+            $duties_arr = $this->assign_duties_to_special_request_doctors($duties_arr, $rota_generate_pattern, $duty_date);
+            $duties_arr = $this->assign_duties_to_consecutive_doctors($duties_arr,$doctors_arr, $rota_generate_pattern, $duty_date);
         }
         return $duties_arr;
     }
-
 
     public function generate($id)
     {
@@ -200,7 +278,7 @@ class Rota_Controller extends Controller
                                                         ->orderBy('duty_date', 'asc')->get();
             $doctors_arr = $this->get_doctors_rotareq_details($monthly_rota, $rota_generate_patterns);
         
-            $duties_arr = $this->get_duties_info($rota_generate_patterns);
+            $duties_arr = $this->get_duties_info_and_assign_special_requests($rota_generate_patterns);
 
             $generated_rota = $this->generate_rota($rota_generate_patterns, $doctors_arr, $duties_arr);
 
@@ -296,15 +374,19 @@ class Rota_Controller extends Controller
 
     public function get_suitable_doctor($doctors_arr, $duties_arr, $duty_date, $shift, $level)
     {
-        $doctor = $this->select_doctor_general_rota($doctors_arr, $doctors_id, $duty_date, $shift);
+        $duties_arr = $this->select_consecutive_doctors($doctors_arr, $duties_arr, $duty_date, $shift);
+        $doctor = $this->select_doctor_general_rota($doctors_arr, $duties_arr, $duty_date, $shift);
         if ($doctor) {
             return $doctor;
         }
         $doctor = $this->select_doctor_rota($doctors_arr, $doctors_id, $duty_date, $shift);
 
-
-        // dd( $doct );
         return $doct;
+    }
+
+    public function select_consecutive_doctors($doctors_arr, $duties_arr, $duty_date, $shift)
+    {
+        $duties_arr[$duty_date]['consecutive_doctors'] = array_merge($duties_arr[$duty_date]['consecutive_doctors']);
     }
    
 
