@@ -53,3 +53,11 @@ $duties_arr [$duty_date]= [
             'qualified_night_doctors'=>[],
             'diss_qualified_doctors'=>$all_diss_qualified_doctors,
 ];
+
+// update diss_qualified_doctors on assign doctor
+// update doctors_consective_duties_num on assign doctor
+// update duties_assigned_dates
+// count consective duties
+// update requsetd gereral rota given_morning on assign doctor
+// add check for gereral rota  given_shifts
+// make reset $duties_arr [$duty_date] 
