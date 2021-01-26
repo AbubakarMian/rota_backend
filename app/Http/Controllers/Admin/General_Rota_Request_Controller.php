@@ -17,12 +17,8 @@ use App\models\General_rota_request;
 
 class General_Rota_Request_Controller extends Controller
 {
-
-
     public function index(Request $request)
     {
-
-
     //    $list = General_rota_request::with('doctor')->get();
 
     $name = $request->name ?? '';
@@ -41,19 +37,14 @@ class General_Rota_Request_Controller extends Controller
         $general = General_rota_request::get();
         $doctor = Doctor::with(['user'])->get();
 
-
         return \View::make(
             'admin.general_rota_request.create',
             compact('control', 'general', 'doctor')
         );
     }
 
-
-
-
     public function save(Request $request)
     {
-
         $generate = new General_rota_request();
         $generate ->total_duties=$request->total_duties;
         $generate ->shift=$request->shift;
