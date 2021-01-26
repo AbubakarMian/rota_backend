@@ -167,6 +167,9 @@ class GenerateRota
 
     public function assign_duty($duty_date, $doctor, $shift)
     {
+        if(in_array($doctor->id,$this->duties_arr [$duty_date]['diss_qualified_doctors'])){
+            return false;
+        }
         if ($shift == $this->shifts['morning']) {
             if ($doctor->doctor_type == 1) {
                 $has_room = $this->has_room_for_doctors(
@@ -175,6 +178,7 @@ class GenerateRota
                 );
                 if ($has_room) {
                     $this->duties_arr [$duty_date]['assigned_morning_doctors_res'][] = $doctor->id;
+                    return true;
                 }
             } else {
                 $has_room = $this->has_room_for_doctors(
@@ -184,6 +188,7 @@ class GenerateRota
     
                 if ($has_room) {
                     $this->duties_arr [$duty_date]['assigned_morning_doctors_reg'][] = $doctor->id;
+                    return true;
                 }
             }
         } elseif ($shift == $this->shifts['evening']) {
@@ -194,9 +199,9 @@ class GenerateRota
                 );
                 if ($has_room) {
                     $this->duties_arr [$duty_date]['assigned_evening_doctors_res'][] = $special_req->doctor_id;
+                    return true;
                 }
             } else {
-                $this->duties_arr [$duty_date]['special_rota_evening_doctors_reg'][] = $special_req->doctor_id;
                 $has_room = $this->has_room_for_doctors(
                     $rota_generate_pattern->total_evening_doctors,
                     $this->duties_arr[$duty_date]['assigned_evening_doctors_res']
@@ -204,11 +209,33 @@ class GenerateRota
     
                 if ($has_room) {
                     $this->duties_arr [$duty_date]['assigned_evening_doctors_reg'][] = $special_req->doctor_id;
+                    return true;
+                }
+            }
+        } elseif ($shift == $this->shifts['night']) {
+            if ($special_req->doctor->doctor_type == 1) {
+                $has_room = $this->has_room_for_doctors(
+                    $rota_generate_pattern->total_night_doctors,
+                    $this->duties_arr[$duty_date]['assigned_night_doctors_reg']
+                );
+                if ($has_room) {
+                    $this->duties_arr [$duty_date]['assigned_night_doctors_res'][] = $special_req->doctor_id;
+                    return true;
+                }
+            } else {
+                $has_room = $this->has_room_for_doctors(
+                    $rota_generate_pattern->total_night_doctors,
+                    $this->duties_arr[$duty_date]['assigned_night_doctors_res']
+                );
+    
+                if ($has_room) {
+                    $this->duties_arr [$duty_date]['assigned_night_doctors_reg'][] = $special_req->doctor_id;
+                    return true;
                 }
             }
         }
 
-        return $doctor->doctor_type;
+        return false;
     }
 
     public function assign_duties_to_special_request_doctors($duty_date)
@@ -218,8 +245,8 @@ class GenerateRota
         $special_rota_night_request = $this->duties_arr[$duty_date]['special_rota_night_request'];
         if (isset($special_rota_morning_request)) {
             foreach ($special_rota_morning_request as $special_req) {
-                $doctor_type = $this->assign_duty($duty_date, $special_req->doctor, 'morning');
-                if ($doctor_type == 1) {
+                $this->assign_duty($duty_date, $special_req->doctor, 'morning');
+                if ($special_req->doctor->doctor_type == 1) {
                     $this->duties_arr [$duty_date]['special_rota_morning_doctors_res'][] = $special_req->doctor_id;
                 } else {
                     $this->duties_arr [$duty_date]['special_rota_morning_doctors_reg'][] = $special_req->doctor_id;
@@ -229,7 +256,7 @@ class GenerateRota
         if (isset($special_rota_evening_request)) {
             foreach ($special_rota_evening_request as $special_req) {
                 $this->assign_duty($duty_date, $special_req->doctor, 'evening');
-                if ($doctor_type == 1) {
+                if ($special_req->doctor->doctor_type == 1) {
                     $this->duties_arr [$duty_date]['special_rota_evening_doctors_res'][] = $special_req->doctor_id;
                 } else {
                     $this->duties_arr [$duty_date]['special_rota_evening_doctors_reg'][] = $special_req->doctor_id;
@@ -239,7 +266,7 @@ class GenerateRota
         if (isset($special_rota_night_request)) {
             foreach ($special_rota_night_request as $special_req) {
                 $this->assign_duty($duty_date, $special_req->doctor, 'evening');
-                if ($doctor_type == 1) {
+                if ($special_req->doctor->doctor_type == 1) {
                     $this->duties_arr [$duty_date]['special_rota_night_doctors_res'][] = $special_req->doctor_id;
                 } else {
                     $this->duties_arr [$duty_date]['special_rota_night_doctors_reg'][] = $special_req->doctor_id;
@@ -255,82 +282,23 @@ class GenerateRota
         $consecutive_morning_doctors = $this->duties_arr[$duty_date]['consecutive_morning_doctors_arr'];
         
         foreach ($consecutive_night_doctors as $d) {
-            if ($d['type']==1 && $this->has_room_for_doctors(
-                $this->rota_generate_pattern->total_night_doctors,
-                $this->duties_arr[$duty_date]['assigned_night_doctors_reg']
-            )) {
-                $this->duties_arr['assigned_night_doctors_res'][] = $d['id'];
-            } elseif ($d['type']==2 && has_room_for_doctors(
-                $this->rota_generate_pattern->total_night_doctors,
-                $duties_arr[$duty_date]['assigned_night_doctors_res']
-            )) {
-                $this->duties_arr['assigned_night_doctors_reg'][] = $d['id'];
-            }
+            $this->assign_duty($duty_date, $doctor, 'night');
         }
         // evening consecutive doctors can be adjusted in night shift
         foreach ($consecutive_evening_doctors as $d) {
-            if ($d['type']==1) {
-                if ($this->has_room_for_doctors(
-                    $this->rota_generate_pattern->total_evening_doctors,
-                    $this->duties_arr[$duty_date]['assigned_evening_doctors_reg']
-                )) {
-                    $this->duties_arr['assigned_evening_doctors_res'][] = $d['id'];
-                } elseif ($this->has_room_for_doctors(
-                    $rota_generate_pattern->total_night_doctors,
-                    $this->duties_arr[$duty_date]['assigned_night_doctors_reg']
-                )) {
-                    $this->duties_arr['assigned_night_doctors_res'][] = $d['id'];
-                }
-            } elseif ($d['type']==2) {
-                if ($this->has_room_for_doctors(
-                    $rota_generate_pattern->total_evening_doctors,
-                    $this->duties_arr[$duty_date]['assigned_evening_doctors_res']
-                )) {
-                    $duties_arr['assigned_evening_doctors_reg'][] = $d['id'];
-                } elseif ($this->has_room_for_doctors(
-                    $rota_generate_pattern->total_night_doctors,
-                    $this->duties_arr[$duty_date]['assigned_night_doctors_res']
-                )) {
-                    $this->duties_arr['assigned_night_doctors_reg'][] = $d['id'];
-                }
+            $doctor_added = $this->assign_duty($duty_date, $doctor, 'evening');
+            if(!$doctor_added){
+                $this->assign_duty($duty_date, $doctor, 'night');
             }
         }
         // morning consecutive doctors can be adjusted in evening and night shift both
         foreach ($consecutive_morning_doctors as $d) {
-            if ($d['type']==1) {
-                if ($this->has_room_for_doctors(
-                    $this->rota_generate_pattern->total_morning_doctors,
-                    $this->duties_arr[$duty_date]['assigned_morning_doctors_reg']
-                )) {
-                    $this->duties_arr['assigned_morning_doctors_res'][] = $d['id'];
-                } elseif ($this->has_room_for_doctors(
-                    $this->rota_generate_pattern->total_evening_doctors,
-                    $this->duties_arr[$duty_date]['assigned_evening_doctors_reg']
-                )) {
-                    $this->duties_arr['assigned_morning_doctors_res'][] = $d['id'];
-                } elseif ($this->has_room_for_doctors(
-                    $this->rota_generate_pattern->total_night_doctors,
-                    $this->duties_arr[$duty_date]['assigned_night_doctors_reg']
-                )) {
-                    $this->duties_arr['assigned_morning_doctors_res'][] = $d['id'];
-                }
-            } elseif ($d['type']==2) {
-                if (has_room_for_doctors(
-                    $this->rota_generate_pattern->total_moring_doctors,
-                    $duties_arr[$duty_date]['assigned_moring_doctors_res']
-                )) {
-                    $this->duties_arr['assigned_moring_doctors_reg'][] = $d['id'];
-                } elseif (has_room_for_doctors(
-                    $this->rota_generate_pattern->total_evening_doctors,
-                    $this->duties_arr[$duty_date]['assigned_evening_doctors_res']
-                )) {
-                    $this->duties_arr['assigned_evening_doctors_reg'][] = $d['id'];
-                } elseif (has_room_for_doctors(
-                    $this->rota_generate_pattern->total_night_doctors,
-                    $this->duties_arr[$duty_date]['assigned_night_doctors_res']
-                )) {
-                    $this->duties_arr['assigned_night_doctors_reg'][] = $d['id'];
-                }
+            $doctor_added = $this->assign_duty($duty_date, $doctor, 'morning');
+            if(!$doctor_added){
+                $this->assign_duty($duty_date, $doctor, 'evening');
+            }
+            elseif(!$doctor_added){
+                $this->assign_duty($duty_date, $doctor, 'night');
             }
         }
     }
@@ -396,14 +364,14 @@ class GenerateRota
         foreach ($doctors_arr as $doctor) {
             if ($shift == 'morning') {
                 if ($duties_arr[$duty_date]['total_morning_doctors'] == sizeof($duties_arr[$duty_date]['assigned_morning_doctors_res'])) {
-                    return $this->select_doctor_general_rota($doctors_arr, $duties_arr, $duty_date, $shift='evening');
+                    return $this->select_doctor_general_rota( $duty_date, $shift='evening');
                 }
             } elseif ($shift == 'evening') {
                 if ($duties_arr[$duty_date]['total_evening_doctors'] == sizeof($duties_arr[$duty_date]['assigned_evening_doctors_res'])) {
-                    return $this->select_doctor_general_rota($doctors_arr, $duties_arr, $duty_date, $shift='night');
+                    return $this->select_doctor_general_rota( $duty_date, $shift='night');
                 }
             } else {
-                return [$doctors_arr, $duties_arr];
+                return ;
             }
         
             if (in_array($doctor->id, $duties_arr[$duty_date]['diss_qualified_doctors'])) {
@@ -416,7 +384,7 @@ class GenerateRota
                 continue;
             }
             if ($shift == 'morning') {
-                // if(check if it has room){  add 'duties_assigned_dates'=>[] fill disqualified doctors
+                // if(check if it has room){  add 'duties_assigned_dates'=>[] fill disqualified doctors in assign doctor
                 if ($doctor['req_morning']<$doctor['given_morning']) {
                     $doctor['given_morning'] = $doctor['given_morning'] + 1;
                     $doctor['given_morning'] = $doctor['given_morning'] + 1;
