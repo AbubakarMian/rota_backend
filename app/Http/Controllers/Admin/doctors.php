@@ -18,8 +18,9 @@ $doctors_arr[$d->id] = [
             // 'duties_assigned_dates'=>[]
             ];
 $duties_arr [$duty_date]= [
+            'index'=>$rota_generate_pattern_key,
             'duty_date'=>$duty_date,
-            'doctors_consective_duties_num'=>[[5=>1,7=>3]],// doctor_id=>duties_count
+            'doctors_consective_duties_arr'=>[[5=>1,7=>3]],// doctor_id=>duties_count
             'total_morning_doctors'=>$rota_generate_pattern->total_morning_doctors,
             'total_evening_doctors'=>$rota_generate_pattern->total_evening_doctors,
             'total_night_doctors'=>$rota_generate_pattern->total_night_doctors,
@@ -27,14 +28,14 @@ $duties_arr [$duty_date]= [
             'regular_leaves'=>$regular_leaves,
             'all_leaves'=>$all_leaves,
             'special_rota_morning_doctors_res'=>[],
-            'special_rota_morning_doctors_reg'=>[],                    
+            'special_rota_morning_doctors_reg'=>[],
             'special_rota_evening_doctors_res'=>[],
-            'special_rota_evening_doctors_reg'=>[],                    
+            'special_rota_evening_doctors_reg'=>[],
             'special_rota_night_doctors_res'=>[],
-            'special_rota_night_doctors_reg'=>[],                    
+            'special_rota_night_doctors_reg'=>[],
             'special_rota_morning_request'=>$special_rota_morning_request,
             'special_rota_evening_doctors'=>$special_rota_evening_request,
-            'special_rota_night_doctors'=>$special_rota_night_request,                    
+            'special_rota_night_doctors'=>$special_rota_night_request,
             'special_rota_off_doctors'=>$special_rota_want_off,
             'all_assigned_doctors'=> [],
             'assigned_morning_doctors_res'=> [],
@@ -55,9 +56,9 @@ $duties_arr [$duty_date]= [
 ];
 
 // update diss_qualified_doctors on assign doctor
-// update doctors_consective_duties_num on assign doctor
+// update doctors_consective_duties_arr on assign doctor
 // update duties_assigned_dates
 // count consective duties
 // update requsetd gereral rota given_morning on assign doctor
 // add check for gereral rota  given_shifts
-// make reset $duties_arr [$duty_date] 
+// make reset $duties_arr [$duty_date]
