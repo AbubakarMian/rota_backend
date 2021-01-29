@@ -18,9 +18,7 @@ $doctors_arr[$d->id] = [
             // 'duties_assigned_dates'=>[]
             ];
 $duties_arr [$duty_date]= [
-            'index'=>$rota_generate_pattern_key,
             'duty_date'=>$duty_date,
-            'doctors_consective_duties_arr'=>[[5=>1,7=>3]],// doctor_id=>duties_count
             'total_morning_doctors'=>$rota_generate_pattern->total_morning_doctors,
             'total_evening_doctors'=>$rota_generate_pattern->total_evening_doctors,
             'total_night_doctors'=>$rota_generate_pattern->total_night_doctors,
@@ -48,6 +46,7 @@ $duties_arr [$duty_date]= [
             'consecutive_morning_doctors_arr'=>$consecutive_morning_doctors_arr,
             'consecutive_evening_doctors_arr'=>$consecutive_evening_doctors_arr,
             'consecutive_night_doctors_arr'=>$consecutive_night_doctors_arr,
+            'doctors_duty_num_initial'=>$doctors_duty_num_initial,[[5=>1,7=>3]],// doctor_id=>duties_count
             'qualified_doctors'=>[],
             'qualified_morning_doctors'=>[],
             'qualified_evening_doctors'=>[],
@@ -62,3 +61,6 @@ $duties_arr [$duty_date]= [
 // update requsetd gereral rota given_morning on assign doctor
 // add check for gereral rota  given_shifts
 // make reset $duties_arr [$duty_date]
+// move above arra index 0
+// add pre date
+// get duties_arr from function
