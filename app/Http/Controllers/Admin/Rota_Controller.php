@@ -15,6 +15,7 @@ use App\models\Doctor_type;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use App\Libraries\GenerateRota;
 
 class Rota_Controller extends Controller
 {
@@ -92,19 +93,13 @@ class Rota_Controller extends Controller
         $rota = Rota::where('monthly_rota_id', $id)->orderBy('duty_date', 'asc')->get();
         $monthly_rota = Monthly_rota::find($id);
 
+        // dd($rota);
         if (true) {//if(!$list->count()){
             $find_doctors_level = Config::get('constants.find_doctors_level');
+
             $generated_rota = new GenerateRota($monthly_rota);
             $generated_rota_arr = $generated_rota->generate_rota_arr();
-            // $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota_id)
-            //                                             ->orderBy('duty_date', 'asc')->get();
-            // $doctors_arr = $this->get_doctors_rotareq_details($monthly_rota, $rota_generate_patterns);
-        
-            // $duties_arr = $this->get_duties_info_and_assign_special_requests($rota_generate_patterns);
-
-            // $generated_rota = $this->generate_rota($rota_generate_patterns, $doctors_arr, $duties_arr);
-
-            
+            dd('sdfsdsdf');
             Rota::insert($data);
         }
         // $duty_date = strtotime("1-".$monthly_rota->month."-".$monthly_rota->year);
