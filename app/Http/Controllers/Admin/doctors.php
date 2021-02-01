@@ -68,3 +68,9 @@ $duties_arr [$duty_date]= [
 // move above arra index 0
 // add pre date
 // get duties_arr from function
+
+
+
+// get all doctors
+// is doctor valid
+// if doctor is already give duty on that day
