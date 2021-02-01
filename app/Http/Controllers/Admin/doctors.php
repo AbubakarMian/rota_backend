@@ -25,6 +25,9 @@ $duties_arr [$duty_date]= [
             'total_morning_doctors'=>$rota_generate_pattern->total_morning_doctors,
             'total_evening_doctors'=>$rota_generate_pattern->total_evening_doctors,
             'total_night_doctors'=>$rota_generate_pattern->total_night_doctors,
+            'has_morning_ucc'=>$rota_generate_pattern->has_morning_ucc,
+            'has_evening_ucc'=>$rota_generate_pattern->has_evening_ucc,
+            'has_night_ucc'=>$rota_generate_pattern->has_night_ucc,
             'annual_leave'=>$annual_leaves,
             'regular_leaves'=>$regular_leaves,
             'all_leaves'=>$all_leaves,
@@ -74,3 +77,22 @@ $duties_arr [$duty_date]= [
 // get all doctors
 // is doctor valid
 // if doctor is already give duty on that day
+
+
+$has_room = $this->has_room_for_doctors(
+    $rota_generate_pattern->total_morning_doctors,
+    $this->duties_arr[$duty_date]['assigned_morning_doctors_reg']
+);
+
+
+
+public function has_room_for_doctors($total_doctors, $dependent_arr)
+{
+    $room_for_doctors = $total_doctors;
+    if (sizeof($dependent_arr)) {
+        $room_for_doctors = $room_for_doctors - sizeof($dependent_arr);
+    } else {
+        $room_for_doctors = $room_for_doctors - 1;
+    }
+    return $room_for_doctors;
+}

@@ -71,6 +71,7 @@ return [
             'qualified_doctors'=>'qualified_morning_doctors',
             'given'=>'given_morning',
             'required_shift'=>'req_morning',
+            'has_ucc'=>'has_morning_ucc',
         ],
         'evening'=>[
             'total_doctors'=>'total_evening_doctors',
@@ -83,6 +84,7 @@ return [
             'qualified_doctors'=>'qualified_evening_doctors',
             'given'=>'given_evening',
             'required_shift'=>'req_evening',
+            'has_ucc'=>'has_evening_ucc',
         ],
         'night'=>[
             'total_doctors'=>'total_night_doctors',
@@ -95,6 +97,7 @@ return [
             'qualified_doctors'=>'qualified_night_doctors',
             'given'=>'given_night',
             'required_shift'=>'req_night',
+            'has_ucc'=>'has_night_ucc',
         ],
     ],
     'rules'=>[
