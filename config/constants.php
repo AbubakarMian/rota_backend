@@ -70,6 +70,7 @@ return [
             'consecutive_doctors_arr'=>'consecutive_morning_doctors_arr',
             'qualified_doctors'=>'qualified_morning_doctors',
             'given'=>'given_morning',
+            'required_shift'=>'req_morning',
         ],
         'evening'=>[
             'total_doctors'=>'total_evening_doctors',
@@ -81,6 +82,7 @@ return [
             'consecutive_doctors_arr'=>'consecutive_evening_doctors_arr',
             'qualified_doctors'=>'qualified_evening_doctors',
             'given'=>'given_evening',
+            'required_shift'=>'req_evening',
         ],
         'night'=>[
             'total_doctors'=>'total_night_doctors',
@@ -92,6 +94,38 @@ return [
             'consecutive_doctors_arr'=>'consecutive_night_doctors_arr',
             'qualified_doctors'=>'qualified_night_doctors',
             'given'=>'given_night',
+            'required_shift'=>'req_night',
         ],
+    ],
+    'rules'=>[
+        'level-1'=>[
+            'annual_leave'=> true,
+            'regular_leaves'=> true,
+            'special_off_requests'=> true,
+            'special_shift_requests'=> true,
+            'consecutive_doctors'=> true,
+            'extra_duties'=> 3,
+            'general_shift_requests'=> true,
+        ],
+
+        'level-2'=>[
+            'annual_leave'=> true,
+            'regular_leaves'=> true,
+            'special_off_requests'=> false,
+            'special_shift_requests'=> false,
+            'consecutive_doctors'=> true,
+            'extra_duties'=> 5,
+            'general_shift_requests'=> false,
+        ],
+
+        'level-3'=>[
+            'annual_leave'=> true,
+            'regular_leaves'=> false,
+            'special_off_requests'=> false,
+            'special_shift_requests'=> false,
+            'consecutive_doctors'=> true,
+            'extra_duties'=> 7,
+            'general_shift_requests'=> false,
+        ]
     ]
 ];

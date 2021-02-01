@@ -9,13 +9,16 @@ $doctors_arr[$d->id] = [
             'given_morning'=>0,
             'given_evening'=>0,
             'given_night'=>0,
+            'given_general'=>0,
             'req_morning'=>$req_duties_mor,
             'req_evening'=>$req_duties_eve,
             'req_night'=>$req_duties_night,
+            'req_general'=>($d->total_duties - ($req_duties_mor+$req_duties_eve+$req_duties_night)),
             'total_leaves'=>($days - $d->total_duties),
             'assigned_leaves'=>0,
+            'total_assigned_duties'=>0,
             'holiday_leaves'=>0, // if he already got sat sun off,
-            // 'duties_assigned_dates'=>[]
+            'duties_assigned_dates'=>[]
             ];
 $duties_arr [$duty_date]= [
             'duty_date'=>$duty_date,
@@ -47,11 +50,12 @@ $duties_arr [$duty_date]= [
             'consecutive_evening_doctors_arr'=>$consecutive_evening_doctors_arr,
             'consecutive_night_doctors_arr'=>$consecutive_night_doctors_arr,
             'doctors_duty_num_initial'=>$doctors_duty_num_initial,[[5=>1,7=>3]],// doctor_id=>duties_count
-            'qualified_doctors'=>[],
-            'qualified_morning_doctors'=>[],
-            'qualified_evening_doctors'=>[],
-            'qualified_night_doctors'=>[],
+            'dis_qualified_consecutive_doctors'=>[],// doctor_id=>duties_count
+            'disqualified_morning_doctors'=>[],
+            'disqualified_evening_doctors'=>[],
+            'disqualified_night_doctors'=>[],
             'diss_qualified_doctors'=>$all_diss_qualified_doctors,
+            'check_general_request'=>true,
 ];
 
 // update diss_qualified_doctors on assign doctor
