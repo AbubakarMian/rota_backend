@@ -24,9 +24,9 @@ return [
         'success'=>'success',
     ],
     'duty_type'=>[
-        'morning'=>'Morning',
-        'evening'=>'Evening',
-        'night'=>'Night'
+        'morning'=>'morning',
+        'evening'=>'evening',
+        'night'=>'night'
     ],
     'duty_type_request'=>[
         'morning'=>'Morning',

@@ -88,6 +88,7 @@ class Rota_Controller extends Controller
         dd('saved');
     }
 
+
     public function generate($id)
     {
         $rota = Rota::where('monthly_rota_id', $id)->orderBy('duty_date', 'asc')->get();

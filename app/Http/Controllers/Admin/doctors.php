@@ -79,20 +79,20 @@ $duties_arr [$duty_date]= [
 // if doctor is already give duty on that day
 
 
-$has_room = $this->has_room_for_doctors(
-    $rota_generate_pattern->total_morning_doctors,
-    $this->duties_arr[$duty_date]['assigned_morning_doctors_reg']
-);
+// $has_room = $this->has_room_for_doctors(
+//     $rota_generate_pattern->total_morning_doctors,
+//     $this->duties_arr[$duty_date]['assigned_morning_doctors_reg']
+// );
 
 
 
-public function has_room_for_doctors($total_doctors, $dependent_arr)
-{
-    $room_for_doctors = $total_doctors;
-    if (sizeof($dependent_arr)) {
-        $room_for_doctors = $room_for_doctors - sizeof($dependent_arr);
-    } else {
-        $room_for_doctors = $room_for_doctors - 1;
-    }
-    return $room_for_doctors;
-}
+// public function has_room_for_doctors($total_doctors, $dependent_arr)
+// {
+//     $room_for_doctors = $total_doctors;
+//     if (sizeof($dependent_arr)) {
+//         $room_for_doctors = $room_for_doctors - sizeof($dependent_arr);
+//     } else {
+//         $room_for_doctors = $room_for_doctors - 1;
+//     }
+//     return $room_for_doctors;
+// }
