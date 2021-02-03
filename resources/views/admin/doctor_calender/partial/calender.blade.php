@@ -31,7 +31,6 @@
                 if($tds == 1){
                     echo '<tr class="myboxes">';
                 }
-
             ?>
 
                 @if($key === 0)
@@ -46,12 +45,7 @@
                         <div class="mydate">{!!($key+1)!!}</div>
                         <div class="ucc">UCC</div>
                     </div>
-
                     <div class="mybigmorning">
-
-
-
-
                         <div class="morningdoctor">
                             <h5 class="mydoctor">Morning
                             </h5>
@@ -60,31 +54,24 @@
                                     <div class="multiple_line_text_{!!$item->id!!}"> </div>
                                 </div>
                                 <div class="col-sm-6">
-
-                                    <select id="dates-field2" onchange="show_doctors('multiple_line_text_{!!$item->id!!}');"
+                                    <select id="dates-field2"
+                                        onchange="show_doctors('multiple_line_text_{!!$item->id!!}');"
                                         class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
                                         @foreach ($doctors as $doctor)
-                                        <option value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <option {!!$doctor->id < 4 ?'selected':''!!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
                                         @endforeach
-
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
                                     <select id="myucc" class="multiple_line form-control">
-                                        <option value="" >Ucc</option>
+                                        <option value="">Ucc</option>
                                         @foreach ($doctors as $doctor)
-                                        <option value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <option {!!$doctor->id < 4 ?'selected':''!!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
                                         @endforeach
-
                                     </select>
+                                </div>
                             </div>
-                            </div>
-
-
-
                         </div>
-
-
                         <div class="eveningdoctor">
                             <h5 class="mydoctor">Evening
                             </h5>
@@ -98,25 +85,18 @@
                                         @foreach ($doctors as $doctor)
                                         <option value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
                                         @endforeach
-
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
                                     <select id="myucc" class="multiple_line form-control">
-                                        <option value="" >Ucc</option>
+                                        <option value="">Ucc</option>
                                         @foreach ($doctors as $doctor)
                                         <option value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
                                         @endforeach
-
                                     </select>
+                                </div>
                             </div>
-                            </div>
-
-
-
                         </div>
-
-
                         <div class="nightdoctor">
                             <h5 class="mydoctor">Night </h5>
                             <div class="row">
@@ -129,22 +109,17 @@
                                         @foreach ($doctors as $doctor)
                                         <option value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
                                         @endforeach
-
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
                                     <select id="myucc" class="multiple_line form-control">
-                                        <option value="" >Ucc</option>
+                                        <option value="">Ucc</option>
                                         @foreach ($doctors as $doctor)
                                         <option value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
                                         @endforeach
-
                                     </select>
+                                </div>
                             </div>
-                            </div>
-
-
-
                         </div>
                     </div>
                 </td>
@@ -157,7 +132,6 @@
                 }
 
             ?>
-
                 @endforeach
 
         </tbody>
