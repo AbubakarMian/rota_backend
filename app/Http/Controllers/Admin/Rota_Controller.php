@@ -133,6 +133,11 @@ class Rota_Controller extends Controller
         }
         // dd($temp_monthly_rota);
         Temp_monthly_rota::insert($temp_monthly_rota);
+
+        $list = $rota_generate_patterns;
+        // $list = Temp_monthly_rota::where('temp_rota_id',$temp_rota_id)->get();
+        // dd($temp_monthly_rota);
+        $doctors = Doctor::get();
         $start_weekday = date('w', $rota[0]->duty_date);
         $weekdays = Config::get('constants.weekdays_num');
         return view('admin.doctor_calender.index', compact('list', 'start_weekday', 'weekdays', 'doctors'));
