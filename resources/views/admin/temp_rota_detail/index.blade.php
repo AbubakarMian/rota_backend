@@ -34,6 +34,7 @@ width="400px" style="table-layout:fixed;"
 
         <th>Doctor Id</th>
         <th>Doctor Name</th>
+        <th>Doctor Required Duties</th>
 		<th>Total Morning</th>
 		<th>Total Evening</th>
 		<th>Total Night</th>
@@ -47,10 +48,10 @@ width="400px" style="table-layout:fixed;"
 <tbody>
 
     @foreach($rota_details as $rd)
-
 	<tr>
         <td>{!! $rd->doctor_id!!}</td>
         <td>{!! $rd->doctor->user->name!!}</td>
+        <td>{!! $rd->doctor->total_duties!!}</td>
 		<td>{!! $rd->total_morning!!}</td>
         <td>{!! $rd->total_evening!!}</td>
 		<td>{!! $rd->total_night !!}</td>

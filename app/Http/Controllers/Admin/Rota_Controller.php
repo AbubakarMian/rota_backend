@@ -105,7 +105,7 @@ class Rota_Controller extends Controller
             $generated_rota = new GenerateRota($monthly_rota);
             list($generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
 
-
+            dd($doctors_duties_assigned);
 
 
 

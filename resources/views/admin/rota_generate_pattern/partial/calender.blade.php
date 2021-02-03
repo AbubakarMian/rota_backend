@@ -1,8 +1,6 @@
 <link href="{{ asset('css/calender.css') }}" rel="stylesheet">
 
-<div>
-    <a href="{{ asset('/admin/temp/rota/detail/'. $list[0]->monthly_rota_id ) }}"   type="button" class="btn btn-info" >Details</a>
-    </div>
+
 
 <h1 class="monthly">
 
