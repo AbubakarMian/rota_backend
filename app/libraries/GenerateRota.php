@@ -30,6 +30,7 @@ class GenerateRota
     protected $consective_days_allowed = 4;
     protected $doctors_duty_num_initial=[];
     protected $level='';
+    protected $extra_duties_allowed=0;
 
     public function __construct($monthly_rota)
     {

@@ -24,10 +24,23 @@
 
         <tbody id="calenderdates">
             <tr class="myboxes">
-                <?php $tds = 0; ?>
-                @foreach ($list as $key=>$item)
+                <?php $tds = 0;
+                $rota_generate_pattern = $temp_rota->rota_generate_pattern;
+                // dd($temp_rota);
+                ?>
+                @foreach ($temp_rota->rota_generate_pattern as $key=>$item)
 
                 <?php
+
+                $morning_doctors = $temp_rota->doctors()
+                ->where('shift','morning')->where('duty_date',$item->duty_date)->get();
+
+                $evening_doctors = $temp_rota->doctors()
+                ->where('shift','evening')->where('duty_date',$item->duty_date)->get();
+
+                $night_doctors = $temp_rota->doctors()
+                ->where('shift','night')->where('duty_date',$item->duty_date)->get();
+                // dd($morning_doctors);
                 if($tds == 1){
                     echo '<tr class="myboxes">';
                 }
