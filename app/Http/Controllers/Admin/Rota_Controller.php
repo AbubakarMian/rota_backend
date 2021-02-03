@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\models\Special_rota_request;
 use App\models\General_rota_request;
+use App\models\Temp_Rota_detail;
 use App\models\Monthly_rota;
 use App\models\Leave_Request;
 use App\models\Doctor;
@@ -105,6 +106,9 @@ class Rota_Controller extends Controller
             list($generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
 
 
+
+
+
             $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                         ->orderBy('duty_date', 'asc')->get();
 
@@ -116,6 +120,21 @@ class Rota_Controller extends Controller
             $temp_rota->save();
             $temp_rota_id = $temp_rota->id;
 
+            $temp_rota_details = [];
+            foreach($doctors_duties_assigned as $doctor_duties){
+                              $temp_rota_detail =  new Temp_Rota_detail();
+
+                              $temp_rota_details[] = [
+                                  'doctor_id'=>$doctor_duties['doctor_id'],
+                                  'total_morning'=>$doctor_duties['given_morning'],
+                                  'total_evening'=>$doctor_duties['given_evening'],
+                                  'total_night'=>$doctor_duties['given_night'],
+                                  'total_duties'=>$doctor_duties['total_duties'],
+                                  'total_leaves'=>$doctor_duties['total_leaves'],
+                                  'temp_rota_id'=>$temp_rota_id,
+                              ];
+                           }
+                           Temp_Rota_detail::insert($temp_rota_details);
             $temp_monthly_rota = [];
             foreach ($rota_generate_patterns as $rota_generate_pattern) {
                 $duty_date = $rota_generate_pattern->duty_date;
