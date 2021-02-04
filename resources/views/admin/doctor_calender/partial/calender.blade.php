@@ -28,10 +28,44 @@
 
         <tbody id="calenderdates">
             <tr class="myboxes">
-                <?php $tds = 0; ?>
-                @foreach ($list as $key=>$item)
+                <?php $tds = 0;
+                $rota_generate_pattern = $temp_rota->rota_generate_pattern;
+                // dd($temp_rota);
+                ?>
+                @foreach ($temp_rota->rota_generate_pattern as $key=>$item)
 
                 <?php
+
+                $morning_doctors = $temp_rota->doctors()
+                ->where('shift','morning')->where('duty_date',$item->duty_date)->get('doctor_id','is_ucc')->toArray();
+
+                $evening_doctors = $temp_rota->doctors()
+                ->where('shift','evening')->where('duty_date',$item->duty_date)->get('doctor_id','is_ucc')->toArray();
+
+                $night_doctors = $temp_rota->doctors()
+                ->where('shift','night')->where('duty_date',$item->duty_date)->get('doctor_id','is_ucc')->toArray();
+
+                $ucc_morning_doctor = '';
+                foreach ($morning_doctors as $key => $doctor) {
+                                                if($doctor->is_ucc){
+                                                    $ucc_morning_doctor = $doctor->doctor_id;
+                                                }
+                                            }
+
+                                            $ucc_evening_doctor = '';
+                foreach ($evening_doctors as $key => $doctor) {
+                                                if($doctor->is_ucc){
+                                                    $ucc_evening_doctor = $doctor->doctor_id;
+                                                }
+                                            }
+
+                                            $ucc_night_doctor = '';
+                foreach ($evening_doctors as $key => $doctor) {
+                                                if($doctor->is_ucc){
+                                                    $ucc_night_doctor = $doctor->doctor_id;
+                                                }
+                                            }
+
                 if($tds == 1){
                     echo '<tr class="myboxes">';
                 }
@@ -62,7 +96,14 @@
                                         onchange="show_doctors('multiple_line_text_{!!$item->id!!}');"
                                         class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
                                         @foreach ($doctors as $doctor)
-                                        <option {!!$doctor->id < 4 ?'selected':''!!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <?php
+                                            $selected = '';
+
+                                            if(in_array($doctor->id,array_column($morning_doctors,'doctor_id'))){
+                                                $selected = 'selected';
+                                            }
+                                        ?>
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -70,7 +111,13 @@
                                     <select id="myucc" class="multiple_line form-control">
                                         <option value="">Ucc</option>
                                         @foreach ($doctors as $doctor)
-                                        <option {!!$doctor->id < 4 ?'selected':''!!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <?php
+                                            $selected = '';
+                                            if(in_array($doctor->id,$evening_doctors)){
+                                                $selected = 'selected';
+                                            }
+                                        ?>
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -95,7 +142,13 @@
                                     <select id="myucc" class="multiple_line form-control">
                                         <option value="">Ucc</option>
                                         @foreach ($doctors as $doctor)
-                                        <option value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <?php
+                                            $selected = '';
+                                            if(in_array($doctor->id,$night_doctors)){
+                                                $selected = 'selected';
+                                            }
+                                        ?>
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
                                         @endforeach
                                     </select>
                                 </div>

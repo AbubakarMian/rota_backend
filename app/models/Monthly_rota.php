@@ -9,4 +9,8 @@ class Monthly_rota extends Model
 {
     use SoftDeletes;
     protected $table='monthly_rota';
+
+    public function temp_rota(){
+        return $this->hasOne('App\models\TempRota','monthly_rota_id','id');
+    }
 }
