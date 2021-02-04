@@ -40,6 +40,8 @@ use Illuminate\Support\Facades\Route;
    Route::get('admin/rota/leave/detail/{id}', 'Admin\Rota_RequestController@detail')->name('admin.leave.detail');
    Route::post('admin/rota/leave/status/{id}', 'Admin\Rota_RequestController@status')->name('admin.leave.status');
 
+   Route::get('admin/temp/rota/detail/{id}', 'Admin\Temp_Rota_Controller@index')->name('temp.rota.detail');
+
 
    ////status
    Route::get('admin/rota/request/detail/{id}', 'Admin\Rota_RequestController@request')->name('admin.request.detail');
