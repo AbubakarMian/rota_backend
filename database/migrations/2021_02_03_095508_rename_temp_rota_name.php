@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveAnnualLeaveFromSpecialRotaRequest extends Migration
+class RenameTempRotaName extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class RemoveAnnualLeaveFromSpecialRotaRequest extends Migration
      */
     public function up()
     {
-        Schema::table('special_rota_request', function (Blueprint $table) {
-            $table->dropColumn('annual_leave');
-        });
+
+        Schema::dropIfExists('temp_rota');
+        Schema::drop('temp_monthly_rota_doctors');
+
     }
 
     /**
@@ -25,8 +26,6 @@ class RemoveAnnualLeaveFromSpecialRotaRequest extends Migration
      */
     public function down()
     {
-        Schema::table('special_rota_request', function (Blueprint $table) {
-            //
-        });
+        //
     }
 }

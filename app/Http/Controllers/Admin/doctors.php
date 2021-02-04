@@ -49,8 +49,8 @@ $duties_arr [$duty_date]= [
             'assigned_night_doctors_res'=>[],
             'assigned_night_doctors_reg'=>[],
             'consecutive_doctors'=>$consecutive_doctors_arr, // only one duty of yesterday assigned
-            'consecutive_morning_doctors_arr'=>$consecutive_morning_doctors_arr,
-            'consecutive_evening_doctors_arr'=>$consecutive_evening_doctors_arr,
+            'consecutive_morning_doctors'=>$consecutive_morning_doctors_arr,
+            'consecutive_evening_doctors'=>$consecutive_evening_doctors_arr,
             'consecutive_night_doctors_arr'=>$consecutive_night_doctors_arr,
             'doctors_duty_num_initial'=>$doctors_duty_num_initial,[[5=>1,7=>3]],// doctor_id=>duties_count
             'dis_qualified_consecutive_doctors'=>[],// doctor_id=>duties_count
@@ -73,26 +73,9 @@ $duties_arr [$duty_date]= [
 // get duties_arr from function
 
 
+// $2y$10$5khvtNrxHhxHXrySnw5UheJiAmy63iREf1HpFohUUfou0BjMUFfJ.
 
-// get all doctors
-// is doctor valid
-// if doctor is already give duty on that day
-
-
-// $has_room = $this->has_room_for_doctors(
-//     $rota_generate_pattern->total_morning_doctors,
-//     $this->duties_arr[$duty_date]['assigned_morning_doctors_reg']
-// );
-
-
-
-// public function has_room_for_doctors($total_doctors, $dependent_arr)
-// {
-//     $room_for_doctors = $total_doctors;
-//     if (sizeof($dependent_arr)) {
-//         $room_for_doctors = $room_for_doctors - sizeof($dependent_arr);
-//     } else {
-//         $room_for_doctors = $room_for_doctors - 1;
-//     }
-//     return $room_for_doctors;
-// }
+if(!in_array($doctor_id,[2,12,4])){
+    //
+    dd($doctor_id);
+}
