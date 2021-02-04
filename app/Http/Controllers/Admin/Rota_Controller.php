@@ -105,13 +105,8 @@ class Rota_Controller extends Controller
             $generated_rota = new GenerateRota($monthly_rota);
             list($generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
 
-            dd($doctors_duties_assigned);
-
-
-
             $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                         ->orderBy('duty_date', 'asc')->get();
-// dd($generated_rota_arr);
             $temp_rota_count = TempRota::where('monthly_rota_id', $id)->count('id');
             $temp_rota_count = $temp_rota_count+1;
             $temp_rota = new TempRota();
@@ -154,12 +149,16 @@ class Rota_Controller extends Controller
         Temp_monthly_rota::insert($temp_monthly_rota);
         $temp_rota = TempRota::with('rota_generate_pattern')->where('id',$temp_rota_id)->first();
 
-        // $list = Temp_monthly_rota::where('temp_rota_id',$temp_rota_id)->get();
-        // dd($temp_monthly_rota);
-        $doctors = Doctor::get();
+
+        $doctors = Doctor::with('user')->get();
+        $doctors_by_id = [];
+        foreach($doctors as $doctor){
+            $doctors_by_id[$doctor->id] = $doctor->user->name;
+        }
+
         $start_weekday = date('w', $rota[0]->duty_date);
         $weekdays = Config::get('constants.weekdays_num');
-        return view('admin.doctor_calender.index', compact('temp_rota', 'start_weekday', 'weekdays', 'doctors'));
+        return view('admin.doctor_calender.index', compact('temp_rota', 'start_weekday', 'weekdays', 'doctors','doctors_by_id'));
     }
 
     public function get_temp_duties($temp_rota_id, $duty_date, $rota_generate_pattern, $rota_by_date, $doctors)

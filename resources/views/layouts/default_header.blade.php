@@ -129,7 +129,6 @@ $admin_common = session()->get('admin_common');
                                 <span>Modules</span>
                             </a>
                             <ul class="sub-menu">
-
                                 @foreach($admin_common->modules as $key => $module)
                                 <li>
                                     <a href="{!! asset('index.php/'.$module['url']) !!}">
