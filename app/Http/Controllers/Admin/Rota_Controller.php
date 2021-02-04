@@ -107,7 +107,7 @@ class Rota_Controller extends Controller
 
             $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                         ->orderBy('duty_date', 'asc')->get();
-
+// dd($generated_rota_arr);
             $temp_rota_count = TempRota::where('monthly_rota_id', $id)->count('id');
             $temp_rota_count = $temp_rota_count+1;
             $temp_rota = new TempRota();
@@ -165,7 +165,7 @@ class Rota_Controller extends Controller
         foreach ($shift_type as $shift_key=>$shift) {
             $selected_shift_res = $shift['assigned_doctors_res'];
             $selected_shift_reg = $shift['assigned_doctors_reg'];
-
+            // dd($temp_date_rota);
             foreach ($rota_by_date[$selected_shift_res] as $key=>$d_id) {
                 $is_ucc = 0;
                 if ($shift['has_ucc'] && $key==0) {
@@ -173,7 +173,7 @@ class Rota_Controller extends Controller
                 }
                 $temp_duties[] = $this->get_temp_duty($temp_rota_id, $duty_date, $doctors[$d_id], $shift_key, $is_ucc);
             }
-            foreach ($rota_by_date[$selected_shift_res] as $key=>$d_id) {
+            foreach ($rota_by_date[$selected_shift_reg] as $key=>$d_id) {
                 $is_ucc = 0;
                 $temp_duties[] = $this->get_temp_duty($temp_rota_id, $duty_date, $doctors[$d_id], $shift_key, $is_ucc);
             }
