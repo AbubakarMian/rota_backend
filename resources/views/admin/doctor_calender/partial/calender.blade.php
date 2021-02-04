@@ -2,8 +2,9 @@
 <link href="{{ asset('css/calender.css') }}" rel="stylesheet">
 
 <div>
-    <a href="{{ asset('/admin/temp/rota/detail/'. $list[0]->monthly_rota_id ) }}"   type="button" class="btn btn-info" >Details</a>
-    </div>
+    <a href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->monthly_rota_id ) }}" type="button"
+        class="btn btn-info">Details</a>
+</div>
 <h1 class="monthly">
 
     <center>
@@ -32,46 +33,59 @@
                 $rota_generate_pattern = $temp_rota->rota_generate_pattern;
                 // dd($temp_rota);
                 ?>
-                @foreach ($temp_rota->rota_generate_pattern as $key=>$item)
+                @foreach ($temp_rota->rota_generate_pattern as $date_index=>$item)
 
                 <?php
 
                 $morning_doctors = $temp_rota->doctors()
-                ->where('shift','morning')->where('duty_date',$item->duty_date)->get('doctor_id','is_ucc')->toArray();
+                ->where('shift','morning')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc'])->toArray();
 
                 $evening_doctors = $temp_rota->doctors()
-                ->where('shift','evening')->where('duty_date',$item->duty_date)->get('doctor_id','is_ucc')->toArray();
+                ->where('shift','evening')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc'])->toArray();
 
                 $night_doctors = $temp_rota->doctors()
-                ->where('shift','night')->where('duty_date',$item->duty_date)->get('doctor_id','is_ucc')->toArray();
+                ->where('shift','night')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc'])->toArray();
 
                 $ucc_morning_doctor = '';
+                $all_morning_doctor = '';
                 foreach ($morning_doctors as $key => $doctor) {
-                                                if($doctor->is_ucc){
-                                                    $ucc_morning_doctor = $doctor->doctor_id;
+                                                if($doctor['is_ucc']){
+                                                    $ucc_morning_doctor = $doctor['doctor_id'];
                                                 }
+
+                                                $all_morning_doctor = $all_morning_doctor.' '.$doctors_by_id[$doctor['doctor_id']];
                                             }
 
                                             $ucc_evening_doctor = '';
+                $all_evening_doctor = '';
                 foreach ($evening_doctors as $key => $doctor) {
-                                                if($doctor->is_ucc){
-                                                    $ucc_evening_doctor = $doctor->doctor_id;
+                                                if($doctor['is_ucc']){
+                                                    $ucc_evening_doctor = $doctor['doctor_id'];
                                                 }
+                                                // dd($doctors_by_id);
+                                                $all_evening_doctor = $all_evening_doctor.' '.$doctors_by_id[$doctor['doctor_id']];
+
                                             }
 
-                                            $ucc_night_doctor = '';
-                foreach ($evening_doctors as $key => $doctor) {
-                                                if($doctor->is_ucc){
-                                                    $ucc_night_doctor = $doctor->doctor_id;
+                $ucc_night_doctor = '';
+                $all_night_doctor = '';
+                foreach ($night_doctors as $key => $doctor) {
+                                                if($doctor['is_ucc']){
+                                                    $ucc_night_doctor = $doctor['doctor_id'];
                                                 }
-                                            }
+                $all_night_doctor = $all_night_doctor.' '.$doctors_by_id[$doctor['doctor_id']];
 
+                                            }
+                                            // dd(in_array($ucc_morning_doctor,$morning_doctors));
+                                            // dd($morning_doctors);
+                                            // dd($ucc_night_doctor);
+                                            // dd($doctors);
                 if($tds == 1){
                     echo '<tr class="myboxes">';
                 }
             ?>
 
-                @if($key === 0)
+                @if($date_index === 0)
                 <?php $tds = $start_weekday; ?>
                 @for($i = $start_weekday ; $i>1; $i-- )
                 <td></td>
@@ -80,7 +94,7 @@
 
                 <td>
                     <div class="mydatearrow">
-                        <div class="mydate">{!!($key+1)!!}</div>
+                        <div class="mydate">{!!($date_index+1)!!}</div>
                         <div class="ucc">UCC</div>
                     </div>
                     <div class="mybigmorning">
@@ -89,11 +103,11 @@
                             </h5>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="multiple_line_text_{!!$item->id!!}"> </div>
+                                    <div class="multiple_line_text_morning_{!!$item->id!!}"> {!!$all_morning_doctor!!}</div>
                                 </div>
                                 <div class="col-sm-6">
                                     <select id="dates-field2"
-                                        onchange="show_doctors('multiple_line_text_{!!$item->id!!}');"
+                                        onchange="show_doctors('multiple_line_text_morning_{!!$item->id!!}');"
                                         class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
                                         @foreach ($doctors as $doctor)
                                         <?php
@@ -103,7 +117,8 @@
                                                 $selected = 'selected';
                                             }
                                         ?>
-                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -113,11 +128,14 @@
                                         @foreach ($doctors as $doctor)
                                         <?php
                                             $selected = '';
-                                            if(in_array($doctor->id,$evening_doctors)){
+
+                                            if($ucc_morning_doctor==$doctor->id){
+
                                                 $selected = 'selected';
                                             }
                                         ?>
-                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -128,13 +146,21 @@
                             </h5>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="multiple_line_text_1"> </div>
+                                    <div class="multiple_line_text_evening_{!!$item->id!!}"> {!!$all_evening_doctor!!} </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <select id="dates-field2" onchange="show_doctors('multiple_line_text_1');"
+                                    <select id="dates-field2" onchange="show_doctors('multiple_line_text_evening_{!!$item->id!!}');"
                                         class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
                                         @foreach ($doctors as $doctor)
-                                        <option value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <?php
+                                            $selected = '';
+
+                                            if(in_array($doctor->id,array_column($evening_doctors,'doctor_id'))){
+                                                $selected = 'selected';
+                                            }
+                                        ?>
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -144,11 +170,13 @@
                                         @foreach ($doctors as $doctor)
                                         <?php
                                             $selected = '';
-                                            if(in_array($doctor->id,$night_doctors)){
+                                            // if(in_array($ucc_evening_doctor,array_column($evening_doctors,'doctor_id'))){
+                                            if($ucc_evening_doctor==$doctor->id){
                                                 $selected = 'selected';
                                             }
                                         ?>
-                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -158,21 +186,36 @@
                             <h5 class="mydoctor">Night </h5>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="multiple_line_text_1"> </div>
+                                    <div class="multiple_line_text_night_{!!$item->id!!}">  {!!$all_night_doctor!!}</div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <select id="dates-field2" onchange="show_doctors('multiple_line_text_1');"
+                                    <select id="dates-field2" onchange="show_doctors('multiple_line_text_night_{!!$item->id!!}');"
                                         class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
                                         @foreach ($doctors as $doctor)
-                                        <option value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <?php
+                                        $selected = '';
+
+                                        if(in_array($doctor->id,array_column($night_doctors,'doctor_id'))){
+                                            $selected = 'selected';
+                                        }
+                                    ?>
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
                                     <select id="myucc" class="multiple_line form-control">
-                                        <option value="">Ucc</option>
                                         @foreach ($doctors as $doctor)
-                                        <option value="{!!$doctor->id!!}">{!!$doctor->user->name!!}</option>
+                                        <option value="">Ucc</option>
+                                        <?php
+                                            $selected = '';
+                                            if($ucc_night_doctor==$doctor->id){
+                                                $selected = 'selected';
+                                            }
+                                        ?>
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -204,16 +247,29 @@
     $('.multiselect-ui').multiselect({
         includeSelectAllOption: false
     });
+
+    @foreach ($temp_rota->rota_generate_pattern as $callitem)
+    setTimeout(function(){
+        $('.multiple_line_text_morning_'+'{!!$callitem->id!!}').onchange();
+        show_doctors('multiple_line_text_morning_'+'{!!$callitem->id!!}')
+    },2000)
+    $('.multiple_line_text_morning_'+'{!!$callitem->id!!}').onchange();
+    show_doctors('multiple_line_text_morning_'+'{!!$callitem->id!!}');
+    show_doctors('multiple_line_text_evening_'+'{!!$callitem->id!!}');
+    show_doctors('multiple_line_text_night_'+'{!!$callitem->id!!}');
+    @endforeach
+
 });
 
 var selected_doctors = '';
 
 function show_doctors(show_list){
-    // 'multiple_line_text_1'
+    // 'multiple_line_text_1 'selected_doctors selector
+    console.log('show_list -------------',show_list);
     setTimeout(function(){
         $('.'+show_list).html(selected_doctors);
         console.log('e asdsa',selected_doctors);
-    },300)
+    },2000)
 
 
 }
@@ -427,7 +483,7 @@ function show_doctors(show_list){
 
 
                 selected_doctors = selected.substr(0, selected.length - this.delimiterText.length);
-                console.log('selected_doctors ',selected_doctors);
+                // console.log('selected_doctors ',selected_doctors);
 
                 if (this.disabledText.length > 0
                         && (select.prop('disabled') || (options.length == 0 && this.disableIfEmpty)))  {
@@ -1807,7 +1863,7 @@ function show_doctors(show_list){
             }
             else {
                 // selected_doctors = this.options.buttonText(options, this.$select);
-                console.log('selector',selected_doctors);
+                // console.log('selector',selected_doctors);
                 $('.multiselect .multiselect-selected-text', this.$container).text(this.options.buttonText(options, this.$select));
             }
             // console.log('selector',this.options.buttonText(options, this.$select));
