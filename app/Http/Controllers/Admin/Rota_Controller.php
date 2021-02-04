@@ -105,6 +105,10 @@ class Rota_Controller extends Controller
             $generated_rota = new GenerateRota($monthly_rota);
             list($generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
 
+            dd($doctors_duties_assigned);
+
+
+
             $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                         ->orderBy('duty_date', 'asc')->get();
 // dd($generated_rota_arr);
