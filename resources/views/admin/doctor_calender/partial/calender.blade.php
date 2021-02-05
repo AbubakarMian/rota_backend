@@ -73,7 +73,7 @@
                                                 if($doctor['is_ucc']){
                                                     $ucc_night_doctor = $doctor['doctor_id'];
                                                 }
-                $all_night_doctor = $all_night_doctor.' '.$doctors_by_id[$doctor['doctor_id']];
+                                                 $all_night_doctor = $all_night_doctor.' '.$doctors_by_id[$doctor['doctor_id']];
 
                                             }
                                             // dd(in_array($ucc_morning_doctor,$morning_doctors));

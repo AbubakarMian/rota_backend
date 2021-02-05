@@ -39,7 +39,7 @@ class Rota_Controller extends Controller
     {
         $doctorlist = new Monthly_rota();
         $this->add_or_update($request, $doctorlist);
-        return redirect('admin/rotadoctor');
+        return redirect('admin/rota');
     }
 
     public function add_or_update(Request $request, $doctorlist)
@@ -147,7 +147,7 @@ class Rota_Controller extends Controller
         }
         // dd($temp_monthly_rota);
         Temp_monthly_rota::insert($temp_monthly_rota);
-        $temp_rota = TempRota::with('rota_generate_pattern')->where('id',$temp_rota_id)->first();
+        $temp_rota = TempRota::with('rota_generate_pattern')->where('id',$temp_rota_id)->orderBy('created_at','desc')->first();
 
 
         $doctors = Doctor::with('user')->get();
@@ -156,7 +156,7 @@ class Rota_Controller extends Controller
             $doctors_by_id[$doctor->id] = $doctor->user->name;
         }
 
-        $start_weekday = date('w', $rota[0]->duty_date);
+        $start_weekday = date('w', $temp_rota->rota_generate_pattern[0]->duty_date);
         $weekdays = Config::get('constants.weekdays_num');
         return view('admin.doctor_calender.index', compact('temp_rota', 'start_weekday', 'weekdays', 'doctors','doctors_by_id'));
     }
