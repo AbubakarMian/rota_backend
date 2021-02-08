@@ -78,7 +78,7 @@ $duties_arr [$duty_date]= [
 
 // $2y$10$5khvtNrxHhxHXrySnw5UheJiAmy63iREf1HpFohUUfou0BjMUFfJ.
 
-if(!in_array($doctor_id,[2,12,4])){
-    //
-    dd($doctor_id);
-}
+DELETE FROM `rota_generate_pattern` WHERE `rota_generate_pattern`.`id` != 0;
+DELETE FROM `temp_rota` WHERE `temp_rota`.`id` != 0;
+DELETE FROM `temp_rota_detail` WHERE `temp_rota_detail`.`id` != 0;
+DELETE FROM `temp_monthly_rota_doctors` WHERE `temp_monthly_rota_doctors`.`id` != 0;

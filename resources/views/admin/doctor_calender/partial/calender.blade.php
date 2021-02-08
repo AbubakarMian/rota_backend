@@ -53,9 +53,9 @@
                                                     $ucc_morning_doctor = $doctor['doctor_id'];
                                                 }
 
-                                                $all_morning_doctor = $all_morning_doctor.' '.$doctors_by_id[$doctor['doctor_id']];
+                                                $all_morning_doctor = $all_morning_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
                                             }
-
+                                            $all_morning_doctor = preg_replace('/ , /', '', $all_morning_doctor, 1);
                                             $ucc_evening_doctor = '';
                 $all_evening_doctor = '';
                 foreach ($evening_doctors as $key => $doctor) {
@@ -63,9 +63,11 @@
                                                     $ucc_evening_doctor = $doctor['doctor_id'];
                                                 }
                                                 // dd($doctors_by_id);
-                                                $all_evening_doctor = $all_evening_doctor.' '.$doctors_by_id[$doctor['doctor_id']];
+                                                $all_evening_doctor = $all_evening_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
 
                                             }
+                                            $all_evening_doctor = preg_replace('/ , /', '', $all_evening_doctor, 1);
+                                            // preg_replace(' , ', '', $all_evening_doctor, 1);
 
                 $ucc_night_doctor = '';
                 $all_night_doctor = '';
@@ -73,13 +75,10 @@
                                                 if($doctor['is_ucc']){
                                                     $ucc_night_doctor = $doctor['doctor_id'];
                                                 }
-                                                 $all_night_doctor = $all_night_doctor.' '.$doctors_by_id[$doctor['doctor_id']];
-
+                                                 $all_night_doctor = $all_night_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
                                             }
-                                            // dd(in_array($ucc_morning_doctor,$morning_doctors));
-                                            // dd($morning_doctors);
-                                            // dd($ucc_night_doctor);
-                                            // dd($doctors);
+                                            $all_night_doctor = preg_replace('/ , /', '', $all_night_doctor, 1);
+
                 if($tds == 1){
                     echo '<tr class="myboxes">';
                 }
@@ -248,17 +247,6 @@
         includeSelectAllOption: false
     });
 
-    @foreach ($temp_rota->rota_generate_pattern as $callitem)
-    setTimeout(function(){
-        $('.multiple_line_text_morning_'+'{!!$callitem->id!!}').onchange();
-        show_doctors('multiple_line_text_morning_'+'{!!$callitem->id!!}')
-    },2000)
-    $('.multiple_line_text_morning_'+'{!!$callitem->id!!}').onchange();
-    show_doctors('multiple_line_text_morning_'+'{!!$callitem->id!!}');
-    show_doctors('multiple_line_text_evening_'+'{!!$callitem->id!!}');
-    show_doctors('multiple_line_text_night_'+'{!!$callitem->id!!}');
-    @endforeach
-
 });
 
 var selected_doctors = '';
@@ -273,8 +261,6 @@ function show_doctors(show_list){
 
 
 }
-
-
 
 !function ($) {
     "use strict";// jshint ;_;
