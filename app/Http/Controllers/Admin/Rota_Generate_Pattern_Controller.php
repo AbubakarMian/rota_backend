@@ -48,10 +48,9 @@ class Rota_Generate_Pattern_Controller extends Controller
         }
 
         $duty_date = strtotime("1-".$monthly_rota->month."-".$monthly_rota->year);
-        $start_weekday = date('w', $duty_date);
+        $start_weekday = date('w', $duty_date)+1; // since our week starts from sunday add 1
         $weekdays = Config::get('constants.weekdays_num');
-        // dd($weekdays);
-        // dd($start_weekday);
+
         return view('admin.rota_generate_pattern.index',compact('list','start_weekday','weekdays'));
 
 

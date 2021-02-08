@@ -35,21 +35,24 @@ return [
         // 'general'=>'General',
     ],
     'weekdays'=>[
+        'sunday'=>'Sunday',
         'monday'=>'Monday',
         'tuesday'=>'Tuesday',
         'wednesday'=>'Wednesday',
         'thursday'=>'Thursday',
         'friday'=>'Friday',
-        'saturday'=>'Saturday',
-        'sunday'=>'Sunday'],
+        'saturday'=>'Saturday'
+    ],
     'weekdays_num'=>[
-        '1'=>'Monday',
-        '2'=>'Tuesday',
-        '3'=>'Wednesday',
-        '4'=>'Thursday',
-        '5'=>'Friday',
-        '6'=>'Saturday',
-        '7'=>'Sunday'],
+        '1'=>'Sunday',
+        '2'=>'Monday',
+        '3'=>'Tuesday',
+        '4'=>'Wednesday',
+        '5'=>'Thursday',
+        '6'=>'Friday',
+        '7'=>'Saturday',
+
+    ],
     'find_doctors_level'=>[
         1=>'1',
         2=>'2',
