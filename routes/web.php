@@ -59,8 +59,20 @@ use Illuminate\Support\Facades\Route;
    Route::post('admin/list/save', 'Admin\Rota_Controller@save')->name('admin.doctorlist.save');
 //////rota generate//////////
 
-Route::get('admin/rota/generate/{id}', 'Admin\Rota_Controller@generate')->name('rota.generate');
+// Route::get('admin/temp_rota/generate/{monthly_rota_id}', 'Admin\Rota_Controller@temp_rota')->name('rota.generate'); // temp rota
 
+
+Route::get('admin/temp_rota/list/{monthly_rota_id}', 'Admin\Rota_Controller@temp_rota')->name('temprota.list'); // temp rota
+
+Route::post('admin/rota/generate/{monthly_rota_id}', 'Admin\Rota_Controller@generate')->name('temprota.new.generate'); // new rota
+Route::get('admin/rota/view/{temp_rota_id}', 'Admin\Rota_Controller@get_temp_rota')->name('temprota.view'); // view previous
+
+
+
+
+//////add  new rota
+// Route::get('admin/rota/generate/create', 'Admin\Rota_Controller@add_new_rota')->name('rota.generate.create'); // view previous
+// ////
 Route::get('admin/rota/check', 'Admin\Rota_Controller@check')->name('rota.check');
 
 //////////Rota Generate Pattern
@@ -89,5 +101,9 @@ Route::post('admin/special/rota', 'Admin\Special_Rota_Request_Controller@index')
 ///////Monthly rota details
 
 // Route::get('admin/monthly/rota/detail/{id}', 'Admin\Monthly_Rota_Details_Controller@detail')->name('admin.monthly.rota.detail');
+
+
+
+
 
 

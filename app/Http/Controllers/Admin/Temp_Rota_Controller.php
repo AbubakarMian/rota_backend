@@ -12,18 +12,7 @@ class Temp_Rota_Controller extends Controller
 {
 
     public function index($id){
-
-
-        $temp_monthly_rota = Temp_monthly_rota::where('temp_rota_id',$id)
-        ->select(DB::Raw('count(id) as total_duties_assigned'))
-        ->where('doctor_id',20)
-        ->get();
-
         $rota_details = Temp_Rota_detail::with('doctor.user')->where('temp_rota_id',$id)->paginate(10);
-        dd($rota_details);
-
         return view('admin.temp_rota_detail.index', compact('rota_details'));
-
-
     }
 }

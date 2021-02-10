@@ -82,3 +82,13 @@ DELETE FROM `rota_generate_pattern` WHERE `rota_generate_pattern`.`id` != 0;
 DELETE FROM `temp_rota` WHERE `temp_rota`.`id` != 0;
 DELETE FROM `temp_rota_detail` WHERE `temp_rota_detail`.`id` != 0;
 DELETE FROM `temp_monthly_rota_doctors` WHERE `temp_monthly_rota_doctors`.`id` != 0;
+
+
+
+TRUNCATE temp_rota;
+TRUNCATE temp_monthly_rota_doctors;
+TRUNCATE temp_rota_detail;
+TRUNCATE rota_request;
+TRUNCATE leave_request;
+TRUNCATE general_rota_request;
+TRUNCATE special_rota_request;
