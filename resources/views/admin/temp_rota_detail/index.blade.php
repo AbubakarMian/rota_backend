@@ -1,6 +1,6 @@
 @extends('layouts.default_module')
 @section('module_name')
-Temp Rota Details 
+Temp Rota Duties Detail
 @stop
 @section('add_btn')
 
@@ -32,37 +32,41 @@ width="400px" style="table-layout:fixed;"
 <thead>
 	<tr>
 
-        <th>Doctor Id</th>
-        <th>Doctor Name</th>
-        <th>Doctor Required Duties</th>
-		<th>Total Morning</th>
-		<th>Total Evening</th>
-		<th>Total Night</th>
-		<th>Total Duties</th>
-		<th>Total Leaves</th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Actual Total Duties </th>
+        <th>Required Morning</th>
+        <th>Required Evening</th>
+        <th>Required Night</th>
+		<th>Given Morning</th>
+		<th>Given Evening</th>
+		<th>Given Night</th>
+		<th>Total Given Duties</th>
+		<th>Given Leaves</th>
 
-        
+
 
 	</tr>
 </thead>
 <tbody>
-
     @foreach($rota_details as $rd)
+    <?php
+        $general_morning = isset($rd->doctor->general_rota_morning->total_duties)?$rd->doctor->general_rota_morning->total_duties:0;
+        $general_evening = isset($rd->doctor->general_rota_evening->total_duties)?$rd->doctor->general_rota_evening->total_duties:0;
+        $general_night = isset($rd->doctor->general_rota_night->total_duties)?$rd->doctor->general_rota_night->total_duties:0;
+    ?>
 	<tr>
         <td>{!! $rd->doctor_id!!}</td>
         <td>{!! $rd->doctor->user->name!!}</td>
         <td>{!! $rd->doctor->total_duties!!}</td>
-		<td>{!! $rd->total_morning!!}</td>
-        <td>{!! $rd->total_evening!!}</td>
+		<td>{!! $general_morning!!}</td>
+		<td>{!! $general_evening!!}</td>
+		<td>{!! $general_night!!}</td>
+		<td>{!! $rd->total_morning !!}</td>
+		<td>{!! $rd->total_evening !!}</td>
 		<td>{!! $rd->total_night !!}</td>
-		<td>{!! $rd->total_duties!!}</td>
+		<td>{!! $rd->total_duties !!}</td>
 		<td>{!! $rd->total_leaves !!}</td>
-		
-       
-
-
-	
-
 
 	</tr>
 	@endforeach

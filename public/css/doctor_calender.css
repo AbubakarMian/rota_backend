@@ -86,7 +86,7 @@ span.multiselect-native-select select {
 .mybigmorning {
     margin-top: -10px;
     margin-bottom: 5px;
-    font-size: 13px;
+    font-size: 17px;
 }
 
 .mydatearrow {
@@ -110,6 +110,9 @@ span.multiselect-native-select select {
 #calenderdates h5 {
     margin: 0 !important;
     font-size: 9px;
+    color: red;
+    position: relative;
+    top: 4px;
 }
 .multiple_line {
     height: 20px;
@@ -117,4 +120,70 @@ span.multiselect-native-select select {
 }
 #calenderdates .form-control {
     padding: 0px 12px;
+}
+
+.textNightList,
+.textEveningList,
+.textMorningList {
+    line-height: 17px;
+    padding: 4px 0px;
+    word-spacing: -2px;
+    font-size: 14px;
+}
+
+.table-striped>tbody tr:nth-child(odd) td:nth-child(odd) {
+    background-color: #ddd !important;
+  }
+  .table-striped>tbody tr:nth-child(even) td:nth-child(even) {
+     background-color: #ddd !important;
+   }
+
+
+div#mytableareaa {
+    min-height: .01%;
+    overflow-x: auto;
+    width: 99%;
+    height: 88%;
+    margin-left: 9px;
+    /* margin-top: 43px; */
+    padding-top: 17px;
+}
+
+
+
+body {
+    background-color: white;
+    width: 99%;
+    height: 100%;
+    margin-bottom: 59px;
+    padding-top: 0px;
+}
+
+
+    .mydoctortable {
+        color: black;
+        margin-bottom: -74px;
+        padding-top: -22px;
+        /* position: absolute; */
+        position: relative;
+        /* margin-top: -18px; */
+    }
+
+
+h2.bstmonthly {
+    margin-top: -34px;
+    font-size: 38px;
+    font-family: cursive;
+    font-weight: bold;
+    /* text-decoration: underline; */
+    /* text-decoration-style: inherit; */
+    margin-bottom: 43px;
+    text-decoration-color: whitesmoke;
+}
+
+
+#calenderdates .form-control {
+    padding: 0px 12px;
+    font-size: 15px;
+    height: 25px;
 }
