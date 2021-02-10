@@ -44,6 +44,7 @@ class GenerateRota
     public function generate_rota_arr()
     {
         $this->get_doctors_rotareq_details();
+        // dd($this->doctors_arr);
 
         $this->set_min_extra_duties_required();
 
@@ -56,7 +57,6 @@ class GenerateRota
         // foreach ($this->rota_generate_patterns as $rota_generate_pattern_key => $rota_generate_pattern) {
         while ($duty_date <= $last_duty_date) {
             $mkey = $mkey+1;
-
                 $all_assigned = $this->assign_duties_to_consecutive_doctors($duty_date);
 
            if(!$all_assigned){
@@ -199,8 +199,9 @@ class GenerateRota
     {
 
         $req_duties_doctor = General_rota_request::where('doctor_id', $doctor_id)
-                                                ->select(DB::Raw('count(doctor_id) as total_duties', 'shift'))
-                                                ->groupBy('shift')->get();
+                                                ->select(DB::Raw('total_duties', 'shift'))
+                                              ->get();
+
         $req_duties_mor = 0;
         $req_duties_eve = 0;
         $req_duties_night = 0;
@@ -221,6 +222,7 @@ class GenerateRota
         $days = $this->monthly_rota->total_days;
 
         $doctors = Doctor::get();
+        $doctors = $doctors->shuffle();
         $doctors_arr = [];
 
         foreach ($doctors as $d) {
@@ -682,7 +684,11 @@ class GenerateRota
                 ) {
                 return false;
             }
-        } else {
+        }
+        else if ($this->consective_days_allowed  >= $this->duties_arr [$pre_date]['doctors_duty_num_initial'][$doctor_id]) {
+            return false ;
+        }
+         else {
             $duties_allowed = $this->doctors_arr [$doctor_id]['total_duties'] + $this->extra_duties_allowed;
             if ($duties_allowed >= $this->doctors_arr [$doctor_id]['assigned_duties']) {
                 return false ;
