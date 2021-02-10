@@ -15,21 +15,15 @@
 
 
         <select id="select-example" class="form-control"  name="shift"  placeholder="Select shift...">
-
-            <option name="shift">Evening</option>
-            <option name="shift">Morning</option>
-            <option name="shift">Night</option>
-
-
-
+            <option name="shift" value="morning">Morning</option>
+            <option name="shift" value="evening">Evening</option>
+            <option name="shift" value="night">Night</option>
         </select>
 
 
     </div>
 <div class="form-group">
     {!! Form::label('doctor') !!}
-
-
 
 
   <select id="select-example" class="form-control"  name="doctor_id"  placeholder="Select doctor...">

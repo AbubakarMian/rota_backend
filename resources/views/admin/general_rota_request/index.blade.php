@@ -29,12 +29,6 @@ width="400px" style="table-layout:fixed;"
 {!!Form::close() !!}
 {{-- @stop --}}
 
-
-
-
-
-
-
 <thead>
 	<tr>
 
@@ -53,7 +47,7 @@ width="400px" style="table-layout:fixed;"
 
         <td>{!! $gh->doctor->user->name!!}</td>
 
-        <td>{!! $gh->shift!!}</td>
+        <td>{!! ucfirst($gh->shift) !!}</td>
         <td>{!! $gh->total_duties!!}</td>
 
 
