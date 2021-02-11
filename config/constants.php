@@ -133,5 +133,12 @@ return [
             'extra_duties'=> 7,
             'general_shift_requests'=> false,
         ]
+    ],
+    'conditions'=>[
+        'check_general_request'=>true,
+        'special_rota_off'=>true,
+        'regular_leaves'=>true,
+        'duties_equilibrium'=>true,
+        'annual_leaves'=>true,
     ]
 ];
