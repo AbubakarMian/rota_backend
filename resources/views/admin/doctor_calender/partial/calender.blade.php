@@ -9,7 +9,8 @@
 
 <div class="row bstmonthly" style="display: flex; justify-content: center;position: relative;width: 100%;">
     <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
-        <a target="_blank" href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->id ) }}" class="btn btn-info">Details</a>
+        <a target="_blank" href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->id ) }}"
+            class="btn btn-info">Details</a>
     </div>
     <div class="col-sm-8" style="float: left">
         <h2 class="">
@@ -22,17 +23,18 @@
 
 {{-- <div class="row" style="margin-bottom: 30px">
     <div style="margin-left: 10px">
-        <a href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->monthly_rota_id ) }}" class="btn btn-info">Details</a>
-    </div>
-    <div>
-        <center>
-            <h2 class="bstmonthly">
+        <a href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->monthly_rota_id ) }}" class="btn
+btn-info">Details</a>
+</div>
+<div>
+    <center>
+        <h2 class="bstmonthly">
 
-                <div class="mydoctortable"> " DOCTOR's MONTHLY TABLE "</div>
+            <div class="mydoctortable"> " DOCTOR's MONTHLY TABLE "</div>
 
-            </h2>
-        </center>
-    </div>
+        </h2>
+    </center>
+</div>
 </div> --}}
 
 
@@ -249,7 +251,7 @@
 
             ?>
                 @endforeach
-                @for($tds=sizeof($temp_rota->rota_generate_pattern);$tds<32;$tds++) <td>
+                @for(;$tds<8;$tds++) <td>
                     </td>
                     @endfor
 
