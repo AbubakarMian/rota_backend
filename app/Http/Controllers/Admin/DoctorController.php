@@ -42,6 +42,7 @@ class DoctorController extends Controller
     {
         $doctor = new Doctor();
         $user = new User();
+        $user->email = $request->email;
         $this->add_or_update($request, $doctor, $user);
 
         return redirect('admin/doctor');
@@ -72,7 +73,6 @@ class DoctorController extends Controller
     public function add_or_update(Request $request, $doctor, $user)
     {
         $user->name = $request->name;
-        $user->email = $request->email;
         $user->save();
 
         $doctor->user_id = $user->id;

@@ -92,3 +92,13 @@ TRUNCATE rota_request;
 TRUNCATE leave_request;
 TRUNCATE general_rota_request;
 TRUNCATE special_rota_request;
+
+
+            // if($duty_date == 1614643200  ){
+            //     dd($shift);
+            // }
+
+
+            if($duty_date == 1614988800 && sizeof($this->duties_arr[1614988800]['assigned_doctors'])>9 ){
+                dd($this->duties_arr);
+            }
