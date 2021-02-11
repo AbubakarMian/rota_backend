@@ -63,7 +63,7 @@ class Rota_Controller extends Controller
 
         $generated_rota = new GenerateRota($monthly_rota);
         list($generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
-
+// dd($doctors_duties_assigned);
         $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                     ->orderBy('duty_date', 'asc')->get();
 
@@ -78,7 +78,7 @@ class Rota_Controller extends Controller
                 'total_morning'=>$doctor_duties['given_morning'],
                 'total_evening'=>$doctor_duties['given_evening'],
                 'total_night'=>$doctor_duties['given_night'],
-                'total_duties'=>$doctor_duties['total_duties'],
+                'total_duties'=>$doctor_duties['given_morning']+$doctor_duties['given_evening']+$doctor_duties['given_night'],
                 'total_leaves'=>$doctor_duties['total_leaves'],
                 'temp_rota_id'=>$temp_rota_id,
             ];

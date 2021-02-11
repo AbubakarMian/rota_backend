@@ -30,11 +30,8 @@ width="400px" style="table-layout:fixed;"
 
 <thead>
     <tr>
-
         <th>Demo Number</th>
         <th>View</th>
-
-
     </tr>
 </thead>
 <tbody>
