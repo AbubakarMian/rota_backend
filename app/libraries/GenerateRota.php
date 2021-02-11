@@ -497,14 +497,14 @@ class GenerateRota
         $special_rota_want_off = [];
         foreach ($leave_request as $lr) {
             if ($lr->annual_leave == 1) {
-                $annual_leaves[] = $lr->id ;
-                $this->doctors_arr[$lr->id]['yearly_leaves'] = $lr->id ;
+                $annual_leaves[] = $lr->doctor_id ;
+                $this->doctors_arr[$lr->doctor_id]['yearly_leaves'] =  $this->doctors_arr[$lr->doctor_id]['yearly_leaves']+1;
 
             } else {
-                $regular_leaves[] = $lr->id ;
-                $this->doctors_arr[$lr->id]['regular_leaves'] = $lr->id ;
+                $regular_leaves[] = $lr->doctor_id ;
+                $this->doctors_arr[$lr->doctor_id]['regular_leaves'] = $this->doctors_arr[$lr->doctor_id]['regular_leaves']+1 ;
             }
-            $this->doctors_arr[$lr->id]['total_requested_leaves'] = $lr->id ;
+            $this->doctors_arr[$lr->doctor_id]['total_requested_leaves'] = $this->doctors_arr[$lr->doctor_id]['total_requested_leaves']+1;
         }
 
         $all_leaves = array_merge($annual_leaves, $regular_leaves);
@@ -585,8 +585,8 @@ class GenerateRota
         $level_conditions = $this->level;
 
         foreach ($level_conditions as $level_condition) {
-            if (!$level_condition['annual_leave']) {
-                $this->duties_arr[$duty_date]['annual_leave'] = [];
+            if (!$level_condition['annual_leaves']) {
+                $this->duties_arr[$duty_date]['annual_leaves'] = [];
             }
             if (!$level_condition['regular_leaves']) {
                 $this->duties_arr[$duty_date]['regular_leaves'] = [];
@@ -651,7 +651,10 @@ class GenerateRota
         $duties_shift_type = Config::get('constants.duties_shift_type.'.$shift);
         $pre_date = strtotime('-1 day',$duty_date);
         $is_disqualified = in_array($doctor_id, $this->duties_arr [$duty_date]['disqualified_doctors']);
+        $annual_leaves = in_array($doctor_id, $this->duties_arr [$duty_date]['annual_leaves']);
+        $regular_leaves = in_array($doctor_id, $this->duties_arr [$duty_date]['regular_leaves']);
         $dis_qualified_consecutive_doctors = in_array($doctor_id, $this->duties_arr [$duty_date]['dis_qualified_consecutive_doctors']);
+        $special_rota_off_doctors = in_array($doctor_id, $this->duties_arr[$duty_date]['special_rota_off_doctors']);
         $doctor_already_assigned = in_array($doctor_id, $this->duties_arr[$duty_date]['assigned_doctors']);
 
 
@@ -672,13 +675,15 @@ class GenerateRota
             return false;
         }
 
-        if (in_array($doctor_id, $this->duties_arr[$duty_date]['annual_leaves']) === true) {
+        if ($annual_leaves === true) {
             return false;
         }
-        if (in_array($doctor_id, $this->duties_arr[$duty_date]['special_rota_off_doctors']) === true) {
+        if ($regular_leaves === true) {
             return false;
         }
-
+        if ($special_rota_off_doctors === true) {
+            return false;
+        }
 
         // if ($this->duties_arr[$duty_date]['check_general_request']) {
             if ($this->doctors_arr [$doctor_id][$duties_shift_type['required_shift']]<=
@@ -688,7 +693,7 @@ class GenerateRota
                 ) {
                 return false;
             }
-
+        // }
         $duties_allowed = $this->doctors_arr [$doctor_id]['total_duties'] + $this->extra_duties_allowed;
 
         if ($duties_allowed <= $this->doctors_arr [$doctor_id]['assigned_duties']) {
