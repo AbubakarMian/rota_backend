@@ -29,6 +29,7 @@ class GenerateRota
     protected $rota_generate_pattern;
     protected $consective_days_allowed = 4;
     protected $doctors_duty_num_initial=[];
+    protected $all_doctors=[];
     protected $level='';
     protected $extra_duties_allowed=0;
     protected $conditions=[];
@@ -38,6 +39,7 @@ class GenerateRota
         $this->rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                         ->orderBy('duty_date', 'asc')->get();
         $this->doctors_duty_num_initial = Doctor::select(DB::Raw('0 as duties '), 'id')->pluck('duties', 'id')->toArray();
+        $this->all_doctors = array_keys($this->doctors_duty_num_initial);
         $this->shifts = Config::get('constants.duty_type');
         $this->monthly_rota = $monthly_rota;
         $this->conditions = Config::get('constants.conditions');
@@ -56,6 +58,7 @@ class GenerateRota
         while ($duty_date <= $last_duty_date) {
             $mkey = $mkey+1;
                 $all_assigned = $this->assign_duties_to_consecutive_doctors($duty_date);
+                $all_assigned = $this->assign_duties_to_consecutive_leave_doctors($duty_date);
 
            if(!$all_assigned){
             $all_assigned = $this->assign_duties_to_on_going_doc($duty_date);
@@ -94,7 +97,7 @@ class GenerateRota
                         $duty_date = strtotime('-1 day',$duty_date);
                         $this->reset_duties_by_date($duty_date);
                         $this->assign_duties_to_consecutive_doctors($duty_date);
-
+                        $this->assign_duties_to_consecutive_leave_doctors($duty_date);
 
                     }
                     if($problem_date==$duty_date && $all_assigned){
@@ -145,7 +148,7 @@ class GenerateRota
 
     public function find_suitable_doctor($duty_date,$avalible_doctors){
         // $all_doctors = $avalible_doctors; // sort them by duties assigned asc
-        $all_doctors = $this->doctors_arr; // sort them by duties assigned asc
+        $all_doctors = $this->all_doctors; // sort them by duties assigned asc
         $all_doctors = array_column($all_doctors, 'doctor_id');
         shuffle($all_doctors);
 
@@ -170,7 +173,23 @@ class GenerateRota
         return $subset;
 
     }
+    // $this->duties_arr[$duty_date]['consecutive_leave_doctors'] = array_diff($all_doctors,array_merge($day_doctors[0], $day_doctors[1]));
 
+    public function assign_duties_to_consecutive_leave_doctors($duty_date)
+    {
+        $consecutive_leave_doctors = $this->duties_arr[$duty_date]['consecutive_leave_doctors'];
+
+        foreach ($consecutive_leave_doctors as $doctor_id) {
+            $assigned = $this->assign_duty($duty_date, $doctor_id, $this->shifts['morning']);
+            if(!$assigned){
+                $assigned = $this->assign_duty($duty_date, $doctor_id, $this->shifts['evening']);
+            }
+            if(!$assigned){
+                $assigned = $this->assign_duty($duty_date, $doctor_id, $this->shifts['night']);
+            }
+        }
+        return $this->if_all_duties_assigned($duty_date);
+    }
     public function assign_duties_to_consecutive_doctors($duty_date)
     {
         $consecutive_night_doctors = $this->duties_arr[$duty_date]['consecutive_night_doctors'];
@@ -380,7 +399,9 @@ class GenerateRota
 
     public function if_all_duties_assigned($duty_date)
     {
-        return $this->if_shift_doctors_completed($duty_date,'morning') &&$this->if_shift_doctors_completed($duty_date,'evening') &&
+        $consecutive_leave_doctors_assigend = array_diff($this->duties_arr[$duty_date]['consecutive_leave_doctors'],$this->all_doctors);
+        $no_consective_leave_doctor_left = sizeof($consecutive_leave_doctors_assigend) == 0;
+        return $no_consective_leave_doctor_left&&$this->if_shift_doctors_completed($duty_date,'morning') &&$this->if_shift_doctors_completed($duty_date,'evening') &&
         $this->if_shift_doctors_completed($duty_date,'night');
     }
 
@@ -419,6 +440,7 @@ class GenerateRota
         'consecutive_evening_doctors'=>[],
         'consecutive_night_doctors'=>[],
         'doctors_duty_num_initial'=>$this->doctors_duty_num_initial,
+        'consecutive_leave_doctors'=>[],
         'disqualified_morning_doctors'=>[],
         'disqualified_evening_doctors'=>[],
         'disqualified_night_doctors'=>[],
@@ -480,8 +502,10 @@ class GenerateRota
         }
 
         if(isset($day_doctors[1])){
-            $consecutive_doctors = array_diff($day_doctors[0], $day_doctors[1]);
+            $all_doctors = $this->all_doctors;
+            $consecutive_doctors = array_diff($day_doctors[0], $day_doctors[1]); //31dec doctor - 30dec doctor
             $this->duties_arr[$duty_date]['consecutive_doctors'] = $consecutive_doctors;
+            $this->duties_arr[$duty_date]['consecutive_leave_doctors'] = array_diff($all_doctors,array_merge($day_doctors[0], $day_doctors[1]));
         }
         elseif(isset($day_doctors[0])){
             $this->duties_arr[$duty_date]['consecutive_doctors'] = $day_doctors[0];
@@ -489,7 +513,6 @@ class GenerateRota
         else{
             $this->duties_arr[$duty_date]['consecutive_doctors'] = [];
         }
-
         foreach ($day_doctors as $day_doctor) {
             if ($day_doctor->duty_date == $pre_date && in_array($day_doctor->doctor_id, $consecutive_doctors)) {
                 if ($day_doctor->shift == $this->shift['morning']) {
@@ -700,7 +723,6 @@ class GenerateRota
         if (!$this->has_room_for_doctors($duty_date, $doctor_id, $shift)) {
             return false;
         }
-
         if ($doctor_already_assigned === true) {
             return false;
         }
@@ -772,6 +794,9 @@ class GenerateRota
             if ($this->consective_days_allowed <= $this->duties_arr [$duty_date]['doctors_duty_num_initial'][$doctor_id]) {
                 $this->duties_arr [$next_date]['dis_qualified_consecutive_doctors'][] = $doctor_id;
             }
+            $this->duties_arr[$next_date]['consecutive_leave_doctors'] =
+                                            array_diff($this->all_doctors,array_merge($this->duties_arr [$pre_date]['assigned_doctors'],
+                                            $this->duties_arr [$duty_date]['assigned_doctors']));
         }
         return true;
     }
