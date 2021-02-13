@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterUserAddColumns extends Migration
+class AlterDoctorAddColumns extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,9 @@ class AlterUserAddColumns extends Migration
      * @return void
      */
     public function up()
-    {
-
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('fullname',100)->nullable()->default(null);
-        });
+    {        Schema::table('doctor', function (Blueprint $table) {
+                $table->integer('extra_duties')->default(0);
+            });
     }
 
     /**

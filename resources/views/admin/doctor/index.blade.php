@@ -36,7 +36,8 @@ width="400px" style="table-layout:fixed;"
         <th>Short Name</th>
 		<th>Age</th>
         <th>Qualification</th>
-        <th>Total duties </th>
+        <th>Duties </th>
+        <th>Extra Duties </th>
         <th>Doctor type</th>
 		<th>Image</th>
 
@@ -56,6 +57,8 @@ width="400px" style="table-layout:fixed;"
 		<td>{!! $d->age!!}</td>
         <td>{!! $d->qualification !!}</td>
         <td>{!! $d->total_duties !!}</td>
+        <td>{!! $d->extra_duties !!}</td>
+
         <td>{!! ucfirst($d->doctor_type->name) !!}</td>
 		<?php
                 if(!$d->user->avatar){

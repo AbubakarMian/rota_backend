@@ -79,6 +79,7 @@ class DoctorController extends Controller
         $doctor->user_id = $user->id;
         $doctor->age = $request->age;
         $doctor->total_duties = $request->total_duties;
+        $doctor->extra_duties = $request->extra_duties;
 
         $doctor->qualification = $request->qualification;
         $doctor->doctor_type_id = $request->doctor_type_id;
