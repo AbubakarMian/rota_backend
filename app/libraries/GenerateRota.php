@@ -18,6 +18,7 @@ use App\models\Doctor_type;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GenerateRota
 {
@@ -47,9 +48,12 @@ class GenerateRota
 
     public function generate_rota_arr()
     {
+        Log::info('--------------- Generate Rota Start --------------------');
         $this->get_doctors_rotareq_details();
         $this->get_duties_info_and_assign_special_requests();
         $this->set_min_extra_duties_required();
+
+        Log::info('--------------- Extra duties allowed Min set : '.$this->extra_duties_allowed.' --------------------');
         $duty_date = $this->rota_generate_patterns[0]->duty_date;
         $last_duty_date = $this->rota_generate_patterns[sizeof($this->rota_generate_patterns)-1]->duty_date;
         $mkey = 0;
@@ -76,11 +80,19 @@ class GenerateRota
                 $condition_key = array_keys ( $this->conditions );
                 $condition_key_num =0;
                 if($problem_date < $duty_date){
+                Log::info('--------------- Start Problem Date : '.$problem_date.' --------------------');
+
                     $problem_date = $duty_date;
                 }
 
                 while(!$all_assigned){
                     $find_suitable_doctor_key = 0;
+                    Log::info('--------------- Start find_suitable_doctor_key Date : '.$problem_date.' --------------------');
+                    Log::info('---------------  Duties Array  : --------------------');
+                    Log::info(print_r($this->duties_arr,true));
+                    Log::info('--------------- Problem Duty Array  : --------------------');
+                    Log::info(print_r($this->duties_arr[$duty_date],true));
+
                     while($find_suitable_doctor_key < 1000  && !$all_assigned){
                         $avalible_doctors = $this->doctors_with_assigned_duties_left($duty_date);
                         $all_assigned = $this->find_suitable_doctor($duty_date,$avalible_doctors);
@@ -93,24 +105,38 @@ class GenerateRota
                     }
                     $try_num++;
                     if( $try_num > 7 && !$all_assigned){
+                        Log::info('--------------- Start Reset Duty : '.$duty_date.' --------------------');
+
                         $this->reset_duties_by_date($duty_date);
                         $duty_date = strtotime('-1 day',$duty_date);
+                        Log::info('--------------- Next Reset Duty : '.$duty_date.' --------------------');
                         $this->reset_duties_by_date($duty_date);
                         $this->assign_duties_to_consecutive_doctors($duty_date);
                         $this->assign_duties_to_consecutive_leave_doctors($duty_date);
 
+                        if($try_num > 15){
+                            $this->extra_duties_allowed = $this->extra_duties_allowed+1;
+                            Log::info('--------------- Extra duties allowed increment : '.$this->extra_duties_allowed.' --------------------');
+                        }
                     }
-                    if($problem_date==$duty_date && $all_assigned){
+                    if($problem_date == $duty_date && $all_assigned){
+                    Log::info('--------------- End Problem Date : '.$problem_date.' --------------------');
+
                         foreach($this->conditions as $my_key=>$condition){
                             $this->conditions[$my_key] = true;
                             $condition_key_num ++;
                         }
+                            $this->extra_duties_allowed = $this->$this->extra_duties_allowed_basic;
+                            Log::info('--------------- Extra duties allowed reset : '.$this->extra_duties_allowed.' --------------------');
+
                     }
                 }
             }
 
             $duty_date = strtotime('+1 day',$duty_date);
         }
+        Log::info('--------------- Generate Rota End --------------------');
+
         return [$this->duties_arr,$this->doctors_arr];
     }
 
@@ -144,6 +170,8 @@ class GenerateRota
         else{
             $this->extra_duties_allowed = 0;
         }
+        $this->extra_duties_allowed_basic = $this->extra_duties_allowed;
+
     }
 
     public function find_suitable_doctor($duty_date,$avalible_doctors){
