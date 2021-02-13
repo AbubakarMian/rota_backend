@@ -39,6 +39,7 @@ use Illuminate\Support\Facades\Route;
    Route::post('admin/rota/leave/save', 'Admin\Rota_RequestController@save')->name('leave.save');
    Route::get('admin/rota/leave/detail/{id}', 'Admin\Rota_RequestController@detail')->name('admin.leave.detail');
    Route::post('admin/rota/leave/status/{id}', 'Admin\Rota_RequestController@status')->name('admin.leave.status');
+   Route::post('admin/rota/leave/doctor/delete/{id}', 'Admin\Rota_RequestController@destroy_undestroy')->name('admin.leave.delete');
 
    Route::get('admin/temp/rota/detail/{id}', 'Admin\Temp_Rota_Controller@index')->name('temp.rota.detail');
 

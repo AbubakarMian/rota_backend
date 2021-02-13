@@ -34,8 +34,8 @@ width="400px" style="table-layout:fixed;"
 
         <th>Start Date</th>
         <th>End Date</th>
-        <th>Status</th>
-
+        {{-- <th>Status</th> --}}
+        <th>Delete</th>
 
     </tr>
 </thead>
@@ -47,7 +47,7 @@ width="400px" style="table-layout:fixed;"
     <tr>
         <td>{!! date('d F, Y (l)', $lr->start_date) !!}</td>
         <td>{!! date('d F, Y (l)', $lr->end_date )!!}</td>
-        <td id="status_{!!$lr->id!!}">
+        {{-- <td id="status_{!!$lr->id!!}">
             @if($lr->status == 'pending')
             <span class=" badge bg-info "  data-toggle="modal" data-target=".accept_request_{!!$lr->id!!}">
                 Accepted
@@ -61,7 +61,15 @@ width="400px" style="table-layout:fixed;"
             @else
             {!! ucfirst($lr->status)!!}
             @endif
-        </td>
+        </td> --}}
+
+
+        <td>{!! Form::open(['method' => 'POST', 'route' => ['admin.leave.delete', $lr->id]]) !!}
+			<a href="" data-toggle="modal" name="activate_delete" data-target=".delete">
+				<span class="badge bg-info btn-danger ">
+					{!! $lr->deleted_at?'Activate':'Delete' !!}</span></a>
+			{!! Form::close() !!}
+		</td>
     </tr>
     @endforeach
 

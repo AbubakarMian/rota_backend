@@ -54,17 +54,24 @@ class Rota_RequestController extends Controller
 
     }
 
-    public function doctorlist(){
-
-
-        // $leave = Leave_Request::where('doctor_id',$id)->get();
-        //  $doctor = Doctor::find($id);
-
-        //  if(!$leave)
-
-
+    public function destroy_undestroy($id)
+    {
+        $leave = Leave_Request::find($id);
+        // dd($leave);
+        if ($leave) {
+            Leave_Request::destroy($id);
+            $new_value = 'Activate';
+        } else {
+            Leave_Request::withTrashed()->find($id)->restore();
+            $new_value = 'Delete';
+        }
+        $response = Response::json([
+            "status" => true,
+            'action' => Config::get('constants.ajax_action.delete'),
+            'new_value' => $new_value
+        ]);
+        return $response;
     }
-
 
     public function request($id){
 
@@ -167,21 +174,3 @@ class Rota_RequestController extends Controller
     }
 }
 
-////////////////////modal show leave request (details showing)with ajax
-// public function detailmodal($id){
-
-//     $leave_request = Leave_Request::where('doctor_id',$id)->get();
-//     $response = Response::json([
-//         "status" => true,
-//         "msg" => $leave_request
-//     ]);
-//     return $response;
-// } public function detailmodal($id){
-
-//     $leave_request = Leave_Request::where('doctor_id',$id)->get();
-//     $response = Response::json([
-//         "status" => true,
-//         "msg" => $leave_request
-//     ]);
-//     return $response;
-// }

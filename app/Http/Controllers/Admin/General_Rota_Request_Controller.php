@@ -49,9 +49,7 @@ class General_Rota_Request_Controller extends Controller
         $generate ->total_duties=$request->total_duties;
         $generate ->shift=$request->shift;
         $generate ->doctor_id=$request->doctor_id;
-
-
-        $generate ->Save();
+        $generate ->save();
         return Redirect('admin/general/rota');
     }
 

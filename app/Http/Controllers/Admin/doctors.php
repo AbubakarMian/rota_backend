@@ -79,13 +79,12 @@ $duties_arr [$duty_date]= [
 // $2y$10$5khvtNrxHhxHXrySnw5UheJiAmy63iREf1HpFohUUfou0BjMUFfJ.
 
 DELETE FROM `rota_generate_pattern` WHERE `rota_generate_pattern`.`id` != 0;
-DELETE FROM `temp_rota` WHERE `temp_rota`.`id` != 0;
-DELETE FROM `temp_rota_detail` WHERE `temp_rota_detail`.`id` != 0;
 DELETE FROM `temp_monthly_rota_doctors` WHERE `temp_monthly_rota_doctors`.`id` != 0;
 
 
 
 TRUNCATE temp_rota;
+TRUNCATE rota_generate_pattern;
 TRUNCATE temp_monthly_rota_doctors;
 TRUNCATE temp_rota_detail;
 TRUNCATE rota_request;
@@ -102,3 +101,10 @@ TRUNCATE special_rota_request;
             if($duty_date == 1614988800 && sizeof($this->duties_arr[1614988800]['assigned_doctors'])>9 ){
                 dd($this->duties_arr);
             }
+
+
+consective duties max 4
+leave request
+
+$2y$10$Znz.iBnscgguOMl6K49pJOQth14Z0YrePxGLbRe77IoE3k0NI8Hj.
+
