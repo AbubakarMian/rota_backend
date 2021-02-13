@@ -73,6 +73,7 @@ class DoctorController extends Controller
     public function add_or_update(Request $request, $doctor, $user)
     {
         $user->name = $request->name;
+        $user->fullname = $request->fullname;
         $user->save();
 
         $doctor->user_id = $user->id;
@@ -99,9 +100,7 @@ class DoctorController extends Controller
 
 
     public function search(Request $request)
-
     {
-
         $name = $request->name ?? '';
 
         $doctors = Doctor::whereHas('user', function ($query) use ($name) {

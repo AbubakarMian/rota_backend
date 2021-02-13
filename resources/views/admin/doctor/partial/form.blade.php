@@ -1,6 +1,14 @@
 <div class="form-group">
-    {{-- {!! dd($doctor->user->name) !!} --}}
-    {!! Form::label('name','Name') !!}
+    {!! Form::label('fullname','Full Name') !!}
+    <div>
+        {!! Form::text('fullname', $doctor->user->name ?? null, ['class' => 'form-control',
+        'data-parsley-required'=>'true',
+        'data-parsley-trigger'=>'change',
+        'placeholder'=>'fullname','required',
+        'maxlength'=>"100"]) !!}
+    </div>
+<div class="form-group">
+    {!! Form::label('name','Short Name') !!}
     <div>
         {!! Form::text('name', $doctor->user->name ?? null, ['class' => 'form-control',
         'data-parsley-required'=>'true',

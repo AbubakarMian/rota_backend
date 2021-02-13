@@ -32,7 +32,8 @@ width="400px" style="table-layout:fixed;"
 <thead>
 	<tr>
 
-        <th>Name</th>
+        <th>FullName</th>
+        <th>Short Name</th>
 		<th>Age</th>
         <th>Qualification</th>
         <th>Total duties </th>
@@ -50,20 +51,17 @@ width="400px" style="table-layout:fixed;"
 
 	<tr>
 
+        <td>{!! $d->user->fullname !!}</td>
         <td>{!! $d->user->name !!}</td>
 		<td>{!! $d->age!!}</td>
         <td>{!! $d->qualification !!}</td>
         <td>{!! $d->total_duties !!}</td>
         <td>{!! ucfirst($d->doctor_type->name) !!}</td>
-
-
 		<?php
                 if(!$d->user->avatar){
                     $d->user->avatar = asset('images/mediallogo.png');
                 }
             ?>
-
-
 
 		<td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img imgshow"></td>
 

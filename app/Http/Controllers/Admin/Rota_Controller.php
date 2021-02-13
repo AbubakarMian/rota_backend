@@ -71,6 +71,7 @@ class Rota_Controller extends Controller
 
         $temp_rota_details = [];
         foreach($doctors_duties_assigned as $doctor_duties){
+            $total_given_duties = $doctor_duties['given_morning']+$doctor_duties['given_evening']+$doctor_duties['given_night'];
             $temp_rota_detail =  new Temp_Rota_detail();
 
             $temp_rota_details[] = [
@@ -78,8 +79,8 @@ class Rota_Controller extends Controller
                 'total_morning'=>$doctor_duties['given_morning'],
                 'total_evening'=>$doctor_duties['given_evening'],
                 'total_night'=>$doctor_duties['given_night'],
-                'total_duties'=>$doctor_duties['given_morning']+$doctor_duties['given_evening']+$doctor_duties['given_night'],
-                'total_leaves'=>$doctor_duties['total_leaves'],
+                'total_duties'=>$total_given_duties,
+                'total_leaves'=>$temp_rota->monthly_rota->total_days - $total_given_duties,
                 'temp_rota_id'=>$temp_rota_id,
             ];
         }
