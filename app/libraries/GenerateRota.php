@@ -2,7 +2,6 @@
 
 namespace App\Libraries;
 
-use Illuminate\Support\Facades\Log;
 use Response;
 use stdClass;
 use Illuminate\Http\Request;
