@@ -1,19 +1,27 @@
 <div class="form-group">
     {!! Form::label('fullname','Full Name') !!}
     <div>
-        {!! Form::text('fullname', $doctor->user->name ?? null, ['class' => 'form-control',
+        {!! Form::text('fullname', $doctor->user->fullname ?? null, ['class' => 'form-control',
         'data-parsley-required'=>'true',
         'data-parsley-trigger'=>'change',
         'placeholder'=>'fullname','required',
         'maxlength'=>"100"]) !!}
     </div>
-<div class="form-group">
-    {!! Form::label('name','Short Name') !!}
+    <div class="form-group">
+        {!! Form::label('name','Short Name') !!}
+        <div>
+            {!! Form::text('name', $doctor->user->name ?? null, ['class' => 'form-control',
+            'data-parsley-required'=>'true',
+            'data-parsley-trigger'=>'change',
+            'placeholder'=>'Name','required',
+            'maxlength'=>"100"]) !!}
+        </div><div class="form-group">
+    {!! Form::label('extra_duties','Extra duties') !!}
     <div>
-        {!! Form::text('name', $doctor->user->name ?? null, ['class' => 'form-control',
+        {!! Form::text('extra_duties', null, ['class' => 'form-control',
         'data-parsley-required'=>'true',
         'data-parsley-trigger'=>'change',
-        'placeholder'=>'Name','required',
+        'placeholder'=>'Extra duties','required',
         'maxlength'=>"100"]) !!}
     </div>
 
