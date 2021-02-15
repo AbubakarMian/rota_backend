@@ -137,6 +137,7 @@ return [
     'conditions'=>[
         'check_general_request'=>true,
         'special_rota_off'=>true,
+        'special_rota_duties'=>true,
         'regular_leaves'=>true,
         'duties_equilibrium'=>true,
         'annual_leaves'=>true,
