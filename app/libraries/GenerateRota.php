@@ -944,7 +944,7 @@ class GenerateRota
         // $this->duties_arr[$next_date]['dis_qualified_consecutive_doctors'] = [];
     }
 
-    public function reset_duties_by_date(){
+    public function reset_duties_by_date($duty_date){
         $this->reset_assigned_doctors($duty_date);
         $this->reset_assigned_duty($duty_date);
     }
