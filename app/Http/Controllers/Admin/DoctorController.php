@@ -18,7 +18,7 @@ class DoctorController extends Controller
     {
 
 
-        $doctors = Doctor::with(['user','doctor_type'])->paginate(10);
+        $doctors = Doctor::with(['user','doctor_type'])->withTrashed()->paginate(10);
         // $doctors = array_map('ucfirst', 'doctor_type');
 
         return view('admin.doctor.index', compact('doctors'));
@@ -121,11 +121,11 @@ class DoctorController extends Controller
             $new_value = 'Activate';
         } else {
             Doctor::withTrashed()->find($id)->restore();
-            $new_value = 'Delete';
+            $new_value = 'Deactivate';
         }
         $response = Response::json([
             "status" => true,
-            'action' => Config::get('constants.ajax_action.delete'),
+            'action' => Config::get('constants.ajax_action.update'),
             'new_value' => $new_value
         ]);
         return $response;

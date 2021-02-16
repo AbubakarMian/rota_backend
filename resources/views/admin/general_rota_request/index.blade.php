@@ -35,6 +35,7 @@ width="400px" style="table-layout:fixed;"
         <th>Doctor </th>
         <th>Shift </th>
         <th>Total Duties</th>
+        <th>Delete</th>
 
 
 	</tr>
@@ -50,7 +51,12 @@ width="400px" style="table-layout:fixed;"
         <td>{!! ucfirst($gh->shift) !!}</td>
         <td>{!! $gh->total_duties!!}</td>
 
-
+        <td>{!! Form::open(['method' => 'POST', 'route' => ['admin.general_rota_request.delete', $gh->id]]) !!}
+			<a href="" data-toggle="modal" name="activate_delete" data-target=".delete">
+				<span class="badge bg-info btn-danger ">
+					{!! $gh->deleted_at?'Activate':'Delete' !!}</span></a>
+			{!! Form::close() !!}
+		</td>
 
 
 

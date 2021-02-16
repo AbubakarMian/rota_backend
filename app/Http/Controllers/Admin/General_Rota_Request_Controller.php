@@ -60,5 +60,25 @@ public function search(Request $request)
     return view('admin/general/rota');
     }
 
+
+    public function destroy_undestroy($id)
+    {
+
+        $general = General_rota_request::find($id);
+        if ($general) {
+            General_rota_request::destroy($id);
+            $new_value = 'Activate';
+        } else {
+            General_rota_request::withTrashed()->find($id)->restore();
+            $new_value = 'Delete';
+        }
+        $response = Response::json([
+            "status" => true,
+            'action' => Config::get('constants.ajax_action.delete'),
+            'new_value' => $new_value
+        ]);
+        return $response;
+    }
+
 }
 

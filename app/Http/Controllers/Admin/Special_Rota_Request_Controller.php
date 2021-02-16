@@ -87,4 +87,23 @@ class Special_Rota_Request_Controller extends Controller
         }])->paginate(13);
         return view('admin.doctor.index', compact('doctors'));
     }
+
+    public function destroy_undestroy($id)
+    {
+
+        $special = Special_rota_request::find($id);
+        if ($special) {
+            Special_rota_request::destroy($id);
+            $new_value = 'Activate';
+        } else {
+            Special_rota_request::withTrashed()->find($id)->restore();
+            $new_value = 'Delete';
+        }
+        $response = Response::json([
+            "status" => true,
+            'action' => Config::get('constants.ajax_action.delete'),
+            'new_value' => $new_value
+        ]);
+        return $response;
+    }
 }

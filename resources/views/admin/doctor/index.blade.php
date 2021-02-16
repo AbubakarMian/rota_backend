@@ -78,7 +78,7 @@ width="400px" style="table-layout:fixed;"
         <td>{!! Form::open(['method' => 'POST', 'route' => ['doctor.delete', $d->id]]) !!}
 			<a href="" data-toggle="modal" name="activate_delete" data-target=".delete">
 				<span class="badge bg-info btn-danger ">
-					{!! $d->deleted_at?'Activate':'Delete' !!}</span></a>
+					{!! $d->deleted_at?'Activate':'Deactivate' !!}</span></a>
 			{!! Form::close() !!}
 		</td>
 	</tr>

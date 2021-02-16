@@ -38,6 +38,7 @@ width="400px" style="table-layout:fixed;"
         <th>Want OFF </th>
         {{-- <th>Annual leave</th> --}}
         <th>Shift</th>
+        <th>Delete</th>
 
 
     </tr>
@@ -72,7 +73,12 @@ width="400px" style="table-layout:fixed;"
         @endif
 
         <td>{!! $g->shift!!}</td>
-
+        <td>{!! Form::open(['method' => 'POST', 'route' => ['special_rota_request.delete', $g->id]]) !!}
+			<a href="" data-toggle="modal" name="activate_delete" data-target=".delete">
+				<span class="badge bg-info btn-danger ">
+					{!! $g->deleted_at?'Activate':'Delete' !!}</span></a>
+			{!! Form::close() !!}
+		</td>
 
 
 
