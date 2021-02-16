@@ -140,6 +140,7 @@ return [
         'special_rota_duties'=>true,
         'regular_leaves'=>true,
         'duties_equilibrium'=>true,
-        'annual_leaves'=>true,
+        'consecutive_leave_doctors'=>true,
+        // 'annual_leaves'=>true,
     ]
 ];

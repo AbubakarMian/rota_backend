@@ -57,7 +57,6 @@ class Rota_RequestController extends Controller
     public function destroy_undestroy($id)
     {
         $leave = Leave_Request::find($id);
-        // dd($leave);
         if ($leave) {
             Leave_Request::destroy($id);
             $new_value = 'Activate';
