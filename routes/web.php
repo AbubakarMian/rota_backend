@@ -90,6 +90,7 @@ Route::post('admin/general/rota', 'Admin\General_Rota_Request_Controller@index')
 Route::get('admin/general/rota/create', 'Admin\General_Rota_Request_Controller@create')->name('general.rota.create');
 Route::post('admin/general/rota/save', 'Admin\General_Rota_Request_Controller@save')->name('admin.general_rota_request.save');
 // Route::get('admin/general_rota_request/search','Admin\General_Rota_Request_Controller@search')->name('general_rota_request.search');
+Route::post('admin/general/rota/delete/{id}', 'Admin\General_Rota_Request_Controller@destroy_undestroy')->name('admin.general_rota_request.delete');
 
 //////special rota request
 
@@ -98,6 +99,8 @@ Route::get('admin/special/rota/create', 'Admin\Special_Rota_Request_Controller@c
 Route::post('admin/special/rota/save', 'Admin\Special_Rota_Request_Controller@save')->name('admin.special_rota_request.save');
 Route::post('admin/special/rota', 'Admin\Special_Rota_Request_Controller@index')->name('special.rota.search');
 // Route::get('admin/special_rota_request/search','Admin\Special_Rota_Request_Controller@search')->name('special_rota_request.search');
+Route::post('admin/special/rota/delete/{id}', 'Admin\Special_Rota_Request_Controller@destroy_undestroy')->name('special_rota_request.delete');
+
 
 ///////Monthly rota details
 
