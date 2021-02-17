@@ -18,7 +18,7 @@ class DoctorController extends Controller
     {
 
 
-        $doctors = Doctor::with(['user','doctor_type'])->withTrashed()->paginate(10);
+        $doctors = Doctor::with(['user','doctor_type'])->where('is_deleted',0)->withTrashed()->paginate(10);
         // $doctors = array_map('ucfirst', 'doctor_type');
 
         return view('admin.doctor.index', compact('doctors'));
@@ -114,7 +114,6 @@ class DoctorController extends Controller
 
     public function destroy_undestroy($id)
     {
-
         $doctor = Doctor::find($id);
         if ($doctor) {
             Doctor::destroy($id);
@@ -127,6 +126,21 @@ class DoctorController extends Controller
             "status" => true,
             'action' => Config::get('constants.ajax_action.update'),
             'new_value' => $new_value
+        ]);
+        return $response;
+    }
+
+    public function remove($id)
+    {
+
+        $doctor =  Doctor::withTrashed()->find($id);
+        $doctor->is_deleted = 1;
+        $doctor->save();
+        Doctor::destroy($id);
+
+        $response = Response::json([
+            "status" => true,
+            'action' => Config::get('constants.ajax_action.delete')
         ]);
         return $response;
     }

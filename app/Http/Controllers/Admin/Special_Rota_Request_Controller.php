@@ -14,7 +14,7 @@ use App\models\Rota_Request;
 use Illuminate\Support\Facades\Response;
 use LeaveRequest;
 use App\models\Special_rota_request;
-use Config;
+use Illuminate\Support\Facades\Config;
 
 class Special_Rota_Request_Controller extends Controller
 {
@@ -32,7 +32,6 @@ class Special_Rota_Request_Controller extends Controller
 
         })->paginate(10);
 
-
         return \View::make('admin.special_rota_request.index', compact('list','name'));
     }
 
@@ -49,9 +48,6 @@ class Special_Rota_Request_Controller extends Controller
             compact('control', 'special', 'doctor','shifts')
         );
     }
-
-
-
 
     public function save(Request $request)
     {

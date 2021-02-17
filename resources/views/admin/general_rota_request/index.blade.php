@@ -57,27 +57,12 @@ width="400px" style="table-layout:fixed;"
 					{!! $gh->deleted_at?'Activate':'Delete' !!}</span></a>
 			{!! Form::close() !!}
 		</td>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	</tr>
     @endforeach
     {{-- @endforeach --}}
 </tbody>
 @section('pagination')
-{{-- <span class="pagination pagination-md pull-right">{!! $general->render() !!}</span> --}}
+<span class="pagination pagination-md pull-right">{!! $list->render() !!}</span>
 <div class="col-md-3 pull-left">
 	<div class="form-group text-center">
 		<div>

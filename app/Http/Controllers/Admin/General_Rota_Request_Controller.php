@@ -14,13 +14,12 @@ use App\models\Rota_Request;
 use Illuminate\Support\Facades\Response;
 use LeaveRequest;
 use App\models\General_rota_request;
+use Illuminate\Support\Facades\Config;
 
 class General_Rota_Request_Controller extends Controller
 {
     public function index(Request $request)
     {
-    //    $list = General_rota_request::with('doctor')->get();
-
     $name = $request->name ?? '';
     $list =  General_rota_request::whereHas('doctor', function ($query) use ($name) {
     $query->whereHas('user',function($u)use($name){
@@ -81,4 +80,3 @@ public function search(Request $request)
     }
 
 }
-
