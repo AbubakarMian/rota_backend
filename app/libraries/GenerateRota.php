@@ -95,25 +95,31 @@ class GenerateRota
                         $all_assigned = $this->find_suitable_doctor($duty_date);
                         $find_suitable_doctor_key++;
                     }
-
+                    $all_assigned = $this->if_all_duties_assigned($duty_date);
+// dd($duty_date);
                     $try_num = $try_num + 1;
                     $div = $try_num;
+                    $div_condition_key_num = $try_num;
+                    $div_extra_duties_allowed = $try_num;
                     if( $div % 2 == 0 && !$all_assigned){
                         Log::info('--------------- Start Reset Duty : '.$duty_date.' --------------------');
-
+                        // dd($this->all_doctors);
                         $this->reset_duties_by_date($duty_date);
                         $duty_date = strtotime('-1 day',$duty_date);
                         Log::info('--------------- Next Reset Duty : '.$duty_date.' --------------------');
                         $this->reset_duties_by_date_assign_consective_special_request_duties($duty_date);
-                        if($div % 3 == 0){
-                            $this->extra_duties_allowed = $this->extra_duties_allowed+1;
-                            Log::info('--------------- Extra duties allowed increment : '.$this->extra_duties_allowed.' --------------------');
-                        }
-                        if($div % 5 == 0 && isset($condition_key[$condition_key_num ])){
+                        if( isset($condition_key[$condition_key_num ])){//$div_condition_key_num % 3 == 0 &&
+                            // echo $condition_key[$condition_key_num ]." : false  condition set to <br/>";
                             $this->conditions[$condition_key[$condition_key_num ]] = false;
                             $condition_key_num = $condition_key_num + 1;
                         }
                     }
+                    if($div_extra_duties_allowed % 5 == 0){
+                        $this->extra_duties_allowed = $this->extra_duties_allowed+1;
+                        Log::info('--------------- Extra duties allowed increment : '.$this->extra_duties_allowed.' --------------------');
+                    }
+
+
                     if($problem_date == $duty_date && $all_assigned){
                     Log::info('--------------- End Problem Date : '.$problem_date.' --------------------');
 
@@ -126,7 +132,7 @@ class GenerateRota
                     }
                 }
             }
-
+// dd($this->doctors_arr);
             $duty_date = strtotime('+1 day',$duty_date);
         }
         Log::info('--------------- Generate Rota End --------------------');
@@ -252,8 +258,8 @@ class GenerateRota
     public function assign_doctor_duties($duty_date)
     {
         $all_doctors = $this->doctors_arr; // sort them by duties assigned asc
-        $sort_on_column = array_column($all_doctors, 'assigned_duties');
-        array_multisort($sort_on_column, SORT_ASC, $all_doctors);
+        $sort_on_column = array_column($all_doctors, 'total_duties');//assigned_duties
+        array_multisort($sort_on_column, SORT_DESC, $all_doctors);//SORT_ASC
         $all_doctors = array_column($all_doctors, 'doctor_id');
         return $this->assign_duties_to_doctors($duty_date,$all_doctors);
     }
@@ -326,8 +332,8 @@ class GenerateRota
     public function assign_general_duties($duty_date)
     {
         $all_doctors = $this->doctors_arr; // sort them by duties assigned asc
-        $sort_on_column = array_column($all_doctors, 'assigned_duties');
-        array_multisort($sort_on_column, SORT_ASC, $all_doctors);
+        $sort_on_column = array_column($all_doctors, 'total_duties');//assigned_duties
+        array_multisort($sort_on_column, SORT_DESC, $all_doctors);//SORT_ASC
         foreach ($all_doctors as $all_doctor) {
             $assigned= '' ;
             if ($this->doctors_arr[$all_doctor['doctor_id']]['req_morning']>
@@ -415,15 +421,27 @@ class GenerateRota
 
     public function if_all_duties_assigned($duty_date)
     {
+
         $no_consective_leave_doctor_left = true;
         if ($this->conditions['consecutive_leave_doctors'] ) {
+            // echo "no_consective_leave_doctor_left : true";
             $all_avalible_doctors = array_diff($this->all_doctors,array_merge(
                 $this->duties_arr[$duty_date]['annual_leaves'],
                 $this->duties_arr[$duty_date]['regular_leaves']
             ));
             $consecutive_leave_doctors_assigend = array_diff($this->duties_arr[$duty_date]['assigned_doctors'],$all_avalible_doctors);
+
             $no_consective_leave_doctor_left = sizeof($consecutive_leave_doctors_assigend) == 0;
         }
+        else{
+            // echo "<br/>no_consective_leave_doctor_left : false";
+        }
+        //$duty_date == 1614988800   &&
+            if( !$no_consective_leave_doctor_left){ // sizeof($this->duties_arr[$duty_date]['assigned_doctors'])>11
+                // dd($this->duties_arr);
+                // dd($this->duties_arr);
+            }
+
 
         return $no_consective_leave_doctor_left &&
                 $this->if_shift_doctors_completed($duty_date,'morning') &&
@@ -735,29 +753,37 @@ class GenerateRota
         $doctor_already_assigned = in_array($doctor_id, $this->duties_arr[$duty_date]['assigned_doctors']);
 
         if ($is_disqualified === true) {
+            // echo "<br/> is_disqualified : ".$duty_date;
             return false;
         }
         if ($dis_qualified_consecutive_doctors === true) {
+            // echo "<br/> dis_qualified_consecutive_doctors : ".$duty_date;
             return false;
         }
         if(!$this->shift_allowed($shift, $doctor_id, $duty_date)){
+            // echo "<br/> shift_allowed : ".$duty_date;
             return false;
         }
         if (!$this->has_room_for_doctors($duty_date, $doctor_id, $shift)) {
+            // echo "<br/> has_room_for_doctors : ".$duty_date;
             return false;
         }
         if ($doctor_already_assigned === true) {
+            // echo "<br/> doctor_already_assigned : ".$duty_date;
             return false;
         }
 
         if ($this->conditions['annual_leaves'] && $annual_leaves === true) {
+            // echo "<br/> annual_leaves : ".$duty_date;
             return false;
         }
         if ($this->conditions['regular_leaves'] && $regular_leaves === true) {
+            // echo "<br/> regular_leaves : ".$duty_date;
             return false;
         }
 
         if ($this->conditions['special_rota_off'] &&  $special_rota_off_doctors === true) {
+            // echo "<br/> special_rota_off : ".$duty_date;
             return false;
         }
 
@@ -767,6 +793,7 @@ class GenerateRota
                         $this->doctors_arr [$doctor_id]['req_general']<=
                         $this->doctors_arr [$doctor_id]['given_general']
                 ) {
+                    // echo "<br/> check_general_request : ".$duty_date;
                 return false;
             }
         }
