@@ -137,10 +137,10 @@ return [
     'conditions'=>[
         'check_general_request'=>true,
         'special_rota_off'=>true,
+        'consecutive_leave_doctors'=>true,
         'special_rota_duties'=>true,
         'regular_leaves'=>true,
         'duties_equilibrium'=>true,
-        'consecutive_leave_doctors'=>true,
         'annual_leaves'=>true,
     ]
 ];
