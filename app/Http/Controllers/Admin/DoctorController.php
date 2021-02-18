@@ -16,13 +16,8 @@ class DoctorController extends Controller
 {
     public function index(Request $request)
     {
-
-
         $doctors = Doctor::with(['user','doctor_type'])->where('is_deleted',0)->withTrashed()->paginate(10);
-        // $doctors = array_map('ucfirst', 'doctor_type');
-
         return view('admin.doctor.index', compact('doctors'));
-
     }
 
     public function create()

@@ -57,11 +57,14 @@ class GenerateRota
         $last_duty_date = $this->rota_generate_patterns[sizeof($this->rota_generate_patterns)-1]->duty_date;
         $mkey = 0;
         $problem_date = 0;
+        $try_num = 0 ;
+        $condition_key = array_keys ( $this->conditions );
+        $condition_key_num = 0;
 
         while ($duty_date <= $last_duty_date) {
             $mkey = $mkey+1;
-                $all_assigned = $this->assign_duties_to_consecutive_doctors($duty_date);
                 $all_assigned = $this->assign_duties_to_consecutive_leave_doctors($duty_date);
+                $all_assigned = $this->assign_duties_to_consecutive_doctors($duty_date);
 
            if(!$all_assigned){
                 $all_assigned = $this->assign_duties_to_on_going_doc($duty_date);
@@ -74,10 +77,7 @@ class GenerateRota
             }
 
             if(!$all_assigned){
-                $try_num = 0 ;
-                $find_doctor_for = 0;
-                $condition_key = array_keys ( $this->conditions );
-                $condition_key_num =0;
+
                 if($problem_date < $duty_date){
                 Log::info('--------------- Start Problem Date : '.$problem_date.' --------------------');
                     $problem_date = $duty_date;
@@ -91,36 +91,27 @@ class GenerateRota
                     Log::info(print_r($this->duties_arr,true));
                     Log::info('--------------- Problem Duty Array  : --------------------');
                     Log::info(print_r($this->duties_arr[$duty_date],true));
-
-                    while($find_suitable_doctor_key < 1000  && !$all_assigned){
-                        $this->reset_duties_by_date_assign_consective_special_request_duties($duty_date);
+                    while($find_suitable_doctor_key < 5  && !$all_assigned){
                         $all_assigned = $this->find_suitable_doctor($duty_date);
-                        // $this->assign_duties_to_consecutive_doctors($duty_date);
-                        // $this->assign_duties_to_consecutive_leave_doctors($duty_date);
-                        if($all_assigned && $duty_date == 1614643200 ){
-                            dd($this->duties_arr);
-                        }
-
                         $find_suitable_doctor_key++;
                     }
 
-                    if(!$all_assigned){
-                        $this->conditions[$condition_key[$condition_key_num ]] =false;
-                    }
-                    $try_num++;
-                    if( $try_num > 7 && !$all_assigned){
+                    $try_num = $try_num + 1;
+                    $div = $try_num;
+                    if( $div % 2 == 0 && !$all_assigned){
                         Log::info('--------------- Start Reset Duty : '.$duty_date.' --------------------');
 
                         $this->reset_duties_by_date($duty_date);
                         $duty_date = strtotime('-1 day',$duty_date);
                         Log::info('--------------- Next Reset Duty : '.$duty_date.' --------------------');
                         $this->reset_duties_by_date_assign_consective_special_request_duties($duty_date);
-                        // $this->assign_duties_to_consecutive_doctors($duty_date);
-                        // $this->assign_duties_to_consecutive_leave_doctors($duty_date);
-
-                        if($try_num > 15){
+                        if($div % 3 == 0){
                             $this->extra_duties_allowed = $this->extra_duties_allowed+1;
                             Log::info('--------------- Extra duties allowed increment : '.$this->extra_duties_allowed.' --------------------');
+                        }
+                        if($div % 5 == 0 && isset($condition_key[$condition_key_num ])){
+                            $this->conditions[$condition_key[$condition_key_num ]] = false;
+                            $condition_key_num = $condition_key_num + 1;
                         }
                     }
                     if($problem_date == $duty_date && $all_assigned){
@@ -128,9 +119,8 @@ class GenerateRota
 
                         foreach($this->conditions as $my_key=>$condition){
                             $this->conditions[$my_key] = true;
-                            $condition_key_num ++;
                         }
-                            $this->extra_duties_allowed = $this->$this->extra_duties_allowed_basic;
+                            $this->extra_duties_allowed = $this->extra_duties_allowed_basic;
                             Log::info('--------------- Extra duties allowed reset : '.$this->extra_duties_allowed.' --------------------');
 
                     }
@@ -179,11 +169,8 @@ class GenerateRota
     }
 
     public function find_suitable_doctor($duty_date){
-        // $all_doctors = $avalible_doctors; // sort them by duties assigned asc
-        $all_doctors = $this->all_doctors; // sort them by duties assigned asc
-        $all_doctors = array_column($all_doctors, 'doctor_id');
+        $all_doctors = $this->all_doctors;
         shuffle($all_doctors);
-
         return $this->assign_duties_to_doctors($duty_date,$all_doctors);
     }
 
@@ -249,6 +236,7 @@ class GenerateRota
     }
 
     public function assign_duties_to_doctors($duty_date,$all_doctors){
+
         foreach ($all_doctors as $doctor_id) {
             $assigned = $this->assign_duty($duty_date, $doctor_id, 'morning');
             if (!$assigned) {
@@ -427,8 +415,16 @@ class GenerateRota
 
     public function if_all_duties_assigned($duty_date)
     {
-        $consecutive_leave_doctors_assigend = array_diff($this->duties_arr[$duty_date]['consecutive_leave_doctors'],$this->all_doctors);
-        $no_consective_leave_doctor_left = sizeof($consecutive_leave_doctors_assigend) == 0;
+        $no_consective_leave_doctor_left = true;
+        if ($this->conditions['consecutive_leave_doctors'] ) {
+            $all_avalible_doctors = array_diff($this->all_doctors,array_merge(
+                $this->duties_arr[$duty_date]['annual_leaves'],
+                $this->duties_arr[$duty_date]['regular_leaves']
+            ));
+            $consecutive_leave_doctors_assigend = array_diff($this->duties_arr[$duty_date]['assigned_doctors'],$all_avalible_doctors);
+            $no_consective_leave_doctor_left = sizeof($consecutive_leave_doctors_assigend) == 0;
+        }
+
         return $no_consective_leave_doctor_left &&
                 $this->if_shift_doctors_completed($duty_date,'morning') &&
                 $this->if_shift_doctors_completed($duty_date,'evening') &&
@@ -606,10 +602,7 @@ class GenerateRota
                 $this->get_pre_day_duties_arr($duty_date);
             }
             $this->duties_arr[$duty_date] = $this->get_initial_duties_arr();
-            //special_rota_want_off query function
             $special_rota_request = $this->special_rota_request_details($duty_date);
-
-            // Leave_Request query function
             $leave_request = $this->leave_request($duty_date);
 
             $this->duties_arr[$duty_date]['duty_date'] = $duty_date;
@@ -781,7 +774,6 @@ class GenerateRota
         $duties_allowed = $this->doctors_arr [$doctor_id]['total_duties'] + $this->extra_duties_allowed;
 
         if ($this->conditions['duties_equilibrium'] && $duties_allowed <= $this->doctors_arr [$doctor_id]['assigned_duties']) {
-
             return false ;
         }
 

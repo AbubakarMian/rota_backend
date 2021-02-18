@@ -38,9 +38,8 @@ width="400px" style="table-layout:fixed;"
         <th>Qualification</th>
         <th>Duties </th>
         <th>Extra Duties </th>
-        <th>Doctor type</th>
+        <th>Doctor Type</th>
 		<th>Image</th>
-
         <th>Edit</th>
         <th>Action</th>
         <th>Delete</th>

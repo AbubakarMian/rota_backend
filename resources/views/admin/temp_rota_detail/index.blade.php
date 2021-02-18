@@ -35,6 +35,7 @@ width="400px" style="table-layout:fixed;"
         <th>Id</th>
         <th>Name</th>
         <th>Actual Total Duties </th>
+        <th>Extra Request Duties </th>
         <th>Required Morning</th>
         <th>Required Evening</th>
         <th>Required Night</th>
@@ -59,6 +60,7 @@ width="400px" style="table-layout:fixed;"
         <td>{!! $rd->doctor_id!!}</td>
         <td>{!! $rd->doctor->user->name!!}</td>
         <td>{!! $rd->doctor->total_duties!!}</td>
+        <td>{!! $rd->doctor->extra_duties!!}</td>
 		<td>{!! $general_morning!!}</td>
 		<td>{!! $general_evening!!}</td>
 		<td>{!! $general_night!!}</td>
