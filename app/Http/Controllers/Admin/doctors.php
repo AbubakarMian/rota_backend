@@ -109,9 +109,11 @@ TRUNCATE rota_generate_pattern;
 TRUNCATE temp_monthly_rota_doctors;
 TRUNCATE temp_rota_detail;
 TRUNCATE rota_request;
-TRUNCATE leave_request;
-TRUNCATE general_rota_request;
-TRUNCATE special_rota_request;
+TRUNCATE rota;
+TRUNCATE monthly_rota;
+// TRUNCATE leave_request;
+// TRUNCATE general_rota_request;
+// TRUNCATE special_rota_request;
 
 
 TRUNCATE temp_rota;
@@ -119,9 +121,9 @@ TRUNCATE rota_generate_pattern;
 TRUNCATE temp_monthly_rota_doctors;
 TRUNCATE temp_rota_detail;
 TRUNCATE rota_request;
-TRUNCATE leave_request;
-TRUNCATE general_rota_request;
-TRUNCATE special_rota_request;
+// TRUNCATE leave_request;
+// TRUNCATE general_rota_request;
+// TRUNCATE special_rota_request;
 TRUNCATE doctor;
 
 

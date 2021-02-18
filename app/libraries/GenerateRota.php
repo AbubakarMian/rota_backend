@@ -96,7 +96,7 @@ class GenerateRota
                         $find_suitable_doctor_key++;
                     }
                     $all_assigned = $this->if_all_duties_assigned($duty_date);
-// dd($duty_date);
+
                     $try_num = $try_num + 1;
                     $div = $try_num;
                     $div_condition_key_num = $try_num;
@@ -114,7 +114,7 @@ class GenerateRota
                             $condition_key_num = $condition_key_num + 1;
                         }
                     }
-                    if($div_extra_duties_allowed % 5 == 0){
+                    if($div_extra_duties_allowed % 3 == 0){
                         $this->extra_duties_allowed = $this->extra_duties_allowed+1;
                         Log::info('--------------- Extra duties allowed increment : '.$this->extra_duties_allowed.' --------------------');
                     }
@@ -764,7 +764,7 @@ class GenerateRota
             // echo "<br/> is_disqualified : ".$duty_date;
             return false;
         }
-        if ($dis_qualified_consecutive_doctors === true) {
+        if ($shift != $this->shifts['night'] &&$this->conditions['dis_qualified_consecutive_doctors'] && $dis_qualified_consecutive_doctors === true) {
             // echo "<br/> dis_qualified_consecutive_doctors : ".$duty_date;
             return false;
         }

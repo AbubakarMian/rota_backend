@@ -141,6 +141,7 @@ return [
         'special_rota_duties'=>true,
         'regular_leaves'=>true,
         'duties_equilibrium'=>true,
+        'dis_qualified_consecutive_doctors'=>true,
         'annual_leaves'=>true,
     ]
 ];
