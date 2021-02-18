@@ -114,7 +114,7 @@ class GenerateRota
                             $condition_key_num = $condition_key_num + 1;
                         }
                     }
-                    if($div_extra_duties_allowed % 3 == 0){
+                    if($div_extra_duties_allowed % 10 == 0){
                         $this->extra_duties_allowed = $this->extra_duties_allowed+1;
                         Log::info('--------------- Extra duties allowed increment : '.$this->extra_duties_allowed.' --------------------');
                     }
@@ -175,8 +175,9 @@ class GenerateRota
     }
 
     public function find_suitable_doctor($duty_date){
-        $all_doctors = $this->all_doctors;
-        shuffle($all_doctors);
+        // $all_doctors = $this->all_doctors;
+        // shuffle($all_doctors);
+        $all_doctors = $this->sort_doctors();
         return $this->assign_duties_to_doctors($duty_date,$all_doctors);
     }
 
@@ -244,6 +245,7 @@ class GenerateRota
     public function assign_duties_to_doctors($duty_date,$all_doctors){
 
         foreach ($all_doctors as $doctor_id) {
+
             $assigned = $this->assign_duty($duty_date, $doctor_id, 'morning');
             if (!$assigned) {
                 $assigned = $this->assign_duty($duty_date, $doctor_id, 'evening');
@@ -255,12 +257,39 @@ class GenerateRota
         return $this->if_all_duties_assigned($duty_date);
     }
 
+    public function sort_doctors($duty_date=null){
+        $all_doctors = $this->doctors_arr;
+        $doctors_arr_sort =[];
+        $doctors_arr_sorted =[];
+        $doctors_arr_down =[];
+        foreach($all_doctors as $key_id=>$d){
+            $doctors_arr_sort[]=[
+                'sort'=>$d['total_duties'] - $d['assigned_duties'],
+                'total_duties'=>$d['total_duties'],
+                'assigned_duties'=> $d['assigned_duties'],
+                'doctor_id'=>$key_id,
+                'doctor'=>$d,
+            ];
+        }
+
+
+        $sort_on_column = array_column($doctors_arr_sort, 'sort');//assigned_duties
+        array_multisort($sort_on_column, SORT_DESC, $doctors_arr_sort);//SORT_ASC
+        $doctors_arr_sorted = array_column($doctors_arr_sort, 'doctor_id');
+         // dd($this->duties_arr);
+        //  if($duty_date > 1616284800){
+        //     dd($doctors_arr_sort);
+        // }
+        return $doctors_arr_sorted;
+    }
+
     public function assign_doctor_duties($duty_date)
     {
-        $all_doctors = $this->doctors_arr; // sort them by duties assigned asc
-        $sort_on_column = array_column($all_doctors, 'total_duties');//assigned_duties
-        array_multisort($sort_on_column, SORT_DESC, $all_doctors);//SORT_ASC
-        $all_doctors = array_column($all_doctors, 'doctor_id');
+        // $all_doctors = $this->doctors_arr; // sort them by duties assigned asc
+        // $sort_on_column = array_column($all_doctors, 'total_duties');//assigned_duties
+        // array_multisort($sort_on_column, SORT_DESC, $all_doctors);//SORT_ASC
+        // $all_doctors = array_column($all_doctors, 'doctor_id');
+        $all_doctors = $this->sort_doctors($duty_date);
         return $this->assign_duties_to_doctors($duty_date,$all_doctors);
     }
 
@@ -331,20 +360,21 @@ class GenerateRota
 
     public function assign_general_duties($duty_date)
     {
-        $all_doctors = $this->doctors_arr; // sort them by duties assigned asc
-        $sort_on_column = array_column($all_doctors, 'total_duties');//assigned_duties
-        array_multisort($sort_on_column, SORT_DESC, $all_doctors);//SORT_ASC
-        foreach ($all_doctors as $all_doctor) {
+        // $all_doctors = $this->doctors_arr; // sort them by duties assigned asc
+        // $sort_on_column = array_column($all_doctors, 'total_duties');//assigned_duties
+        // array_multisort($sort_on_column, SORT_DESC, $all_doctors);//SORT_ASC
+        $all_doctors = $this->sort_doctors();
+        foreach ($all_doctors as $doctor_id) {
             $assigned= '' ;
-            if ($this->doctors_arr[$all_doctor['doctor_id']]['req_morning']>
-                    $this->doctors_arr[$all_doctor['doctor_id']]['given_morning']) {
-                $assigned = $this->assign_duty($duty_date, $all_doctor['doctor_id'], 'morning');
+            if ($this->doctors_arr[$doctor_id]['req_morning']>
+                    $this->doctors_arr[$doctor_id]['given_morning']) {
+                $assigned = $this->assign_duty($duty_date, $doctor_id, 'morning');
             }
-            if (!$assigned && $this->doctors_arr[$all_doctor['doctor_id']]['req_evening']>$this->doctors_arr[$all_doctor['doctor_id']]['given_evening']) {
-                $assigned = $this->assign_duty($duty_date, $all_doctor['doctor_id'], 'evening');
-            } elseif (!$assigned && $this->doctors_arr[$all_doctor['doctor_id']]['req_night']>
-                                    $this->doctors_arr[$all_doctor['doctor_id']]['given_night']) {
-                $assigned = $this->assign_duty($duty_date, $all_doctor['doctor_id'], 'night');
+            if (!$assigned && $this->doctors_arr[$doctor_id]['req_evening']>$this->doctors_arr[$doctor_id]['given_evening']) {
+                $assigned = $this->assign_duty($duty_date, $doctor_id, 'evening');
+            } elseif (!$assigned && $this->doctors_arr[$doctor_id]['req_night']>
+                                    $this->doctors_arr[$doctor_id]['given_night']) {
+                $assigned = $this->assign_duty($duty_date, $doctor_id, 'night');
             }
         }
     }
@@ -376,11 +406,11 @@ class GenerateRota
             if ($this->doctors_arr[$pre_doctor_id]['given_morning']<$this->doctors_arr[$pre_doctor_id]['req_morning']) {
                 $assigned = $this->assign_duty($duty_date, $pre_doctor_id, 'morning');
             }
-            if(!$assigned){
-                if ($this->doctors_arr[$pre_doctor_id]['given_general']<$this->doctors_arr[$pre_doctor_id]['req_general']) {
-                    $this->assign_duty($duty_date, $pre_doctor_id, 'morning');
-                }
-            }
+            // if(!$assigned){
+            //     if ($this->doctors_arr[$pre_doctor_id]['given_general']<$this->doctors_arr[$pre_doctor_id]['req_general']) {
+            //         $this->assign_duty($duty_date, $pre_doctor_id, 'morning');
+            //     }
+            // }
         }
         $previous_doctors = array_merge(
             $this->duties_arr[$pre_date]['assigned_evening_doctors_res'],
@@ -393,11 +423,11 @@ class GenerateRota
             if ($this->doctors_arr[$pre_doctor_id]['given_evening']<$this->doctors_arr[$pre_doctor_id]['req_evening']) {
                 $assigned = $this->assign_duty($duty_date, $pre_doctor_id, 'evening');
             }
-            if(!$assigned){
-                if ($this->doctors_arr[$pre_doctor_id]['given_general']<$this->doctors_arr[$pre_doctor_id]['req_general']) {
-                    $this->assign_duty($duty_date, $pre_doctor_id, 'evening');
-                }
-            }
+            // if(!$assigned){
+            //     if ($this->doctors_arr[$pre_doctor_id]['given_general']<$this->doctors_arr[$pre_doctor_id]['req_general']) {
+            //         $this->assign_duty($duty_date, $pre_doctor_id, 'evening');
+            //     }
+            // }
         }
 
         $previous_doctors = array_merge(
@@ -410,11 +440,11 @@ class GenerateRota
             if ($this->doctors_arr[$pre_doctor_id]['given_night']<$this->doctors_arr[$pre_doctor_id]['req_night']) {
                 $assigned = $this->assign_duty($duty_date, $pre_doctor_id, 'night');
             }
-            if(!$assigned){
-                if ($this->doctors_arr[$pre_doctor_id]['given_general']<$this->doctors_arr[$pre_doctor_id]['req_general']) {
-                    $this->assign_duty($duty_date, $pre_doctor_id, 'night');
-                }
-            }
+            // if(!$assigned){
+            //     if ($this->doctors_arr[$pre_doctor_id]['given_general']<$this->doctors_arr[$pre_doctor_id]['req_general']) {
+            //         $this->assign_duty($duty_date, $pre_doctor_id, 'night');
+            //     }
+            // }
         }
         return $this->if_all_duties_assigned($duty_date);
     }
@@ -661,10 +691,10 @@ class GenerateRota
         $min_reg = 1;
         $total_assigned_doctors_reg = sizeof($this->duties_arr[$duty_date][$duties_shift_type['assigned_doctors_reg']]);
         $total_assigned_doctors_res = sizeof($this->duties_arr[$duty_date][$duties_shift_type['assigned_doctors_res']]);
+
         if (($total_assigned_doctors_reg+$total_assigned_doctors_res) >= $total_doctors) {
             return false;
         }
-
         if ($this->doctors_arr[$doctor_id]['doctor_type'] == 1) {
 
             if ($min_res>$total_assigned_doctors_res) {
@@ -772,6 +802,7 @@ class GenerateRota
             // echo "<br/> shift_allowed : ".$duty_date;
             return false;
         }
+
         if (!$this->has_room_for_doctors($duty_date, $doctor_id, $shift)) {
             // echo "<br/> has_room_for_doctors : ".$duty_date;
             return false;
@@ -821,7 +852,6 @@ class GenerateRota
 
         $next_date = strtotime('+1 day', $duty_date);
         $pre_date = strtotime('-1 day', $duty_date);
-
         if (!$this->doctor_duty_allowed($shift, $doctor_id, $duty_date)) {
             return false;
         }
