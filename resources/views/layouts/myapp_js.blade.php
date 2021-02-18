@@ -1,6 +1,5 @@
-
 <script>
-$(function(){
+    $(function(){
 console.log('myapp.blade.js');
 @yield('document_ready_jq');
 
@@ -14,10 +13,23 @@ $('a[name="activate_delete"]').on('click', function(e){
     var $form=$(this).closest('form');
     var current =this;
     e.preventDefault();
+    var modal_heading = $(this).attr('modal_heading');
+    var modal_msg = $(this).attr('modal_msg');
+        console.log(modal_heading,modal_msg);
+        if(modal_heading != '' || modal_heading!= undefined){
+            $('#modal-heading').html(modal_heading);
+        }
+        if(modal_msg != '' || modal_msg!= undefined){
+            $('#modal_msg').html(modal_msg);
+        }
     $('#confirm').modal({ backdrop: 'static', keyboard: false })
         .one('click', '#delete', function() {
+        console.log('asd');
+
         var my_url = $form.attr( 'action' );
         var my_method = $form.attr( 'method' );
+
+
 
         $.ajax({
             url: my_url,

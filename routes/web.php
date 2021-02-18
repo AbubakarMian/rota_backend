@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('admin/doctor/edit/{id}', 'Admin\DoctorController@edit')->name('doctor.edit');
     Route::post('admin/doctor/update/{id}', 'Admin\DoctorController@update')->name('doctor.update');
     Route::post('admin/doctor/delete/{id}', 'Admin\DoctorController@destroy_undestroy')->name('doctor.delete');
+    Route::post('admin/doctor/remove/{id}', 'Admin\DoctorController@remove')->name('doctor.remove');
 
 
     Route::post('admin/doctor/save','Admin\DoctorController@save')->name('admin.doctor.save');

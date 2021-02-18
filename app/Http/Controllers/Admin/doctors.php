@@ -31,7 +31,7 @@ $duties_arr [$duty_date]= [
             'has_morning_ucc'=>$rota_generate_pattern->has_morning_ucc,
             'has_evening_ucc'=>$rota_generate_pattern->has_evening_ucc,
             'has_night_ucc'=>$rota_generate_pattern->has_night_ucc,
-            'annual_leave'=>$annual_leaves,
+            'annual_leaves'=>$annual_leaves,
             'regular_leaves'=>$regular_leaves,
             'all_leaves'=>$all_leaves,
             'special_rota_morning_doctors_res'=>[],
@@ -64,6 +64,27 @@ $duties_arr [$duty_date]= [
             'check_general_request'=>true,
 ];
 
+// doctor_duty_allowed
+
+// problem date 1614556800
+
+cons leave
+0 => 2
+1 => 3
+2 => 4
+7 => 13
+8 => 14
+13 => 21
+15 => 24
+
+
+
+
+if($duty_date == 1614902400 && !in_array($doctor_id,[3,4,13,14,2,21])){
+    dd($doctor_id);
+}
+
+
 // update diss_qualified_doctors on assign doctor
 // update doctors_consective_duties_arr on assign doctor
 // update duties_assigned_dates
@@ -93,6 +114,17 @@ TRUNCATE general_rota_request;
 TRUNCATE special_rota_request;
 
 
+TRUNCATE temp_rota;
+TRUNCATE rota_generate_pattern;
+TRUNCATE temp_monthly_rota_doctors;
+TRUNCATE temp_rota_detail;
+TRUNCATE rota_request;
+TRUNCATE leave_request;
+TRUNCATE general_rota_request;
+TRUNCATE special_rota_request;
+TRUNCATE doctor;
+
+
             // if($duty_date == 1614643200  ){
             //     dd($shift);
             // }
@@ -106,5 +138,6 @@ TRUNCATE special_rota_request;
 consective duties max 4
 leave request
 
-$2y$10$Znz.iBnscgguOMl6K49pJOQth14Z0YrePxGLbRe77IoE3k0NI8Hj.
+dev : $2y$10$Znz.iBnscgguOMl6K49pJOQth14Z0YrePxGLbRe77IoE3k0NI8Hj.
+local : $2y$10$5khvtNrxHhxHXrySnw5UheJiAmy63iREf1HpFohUUfou0BjMUFfJ.
 

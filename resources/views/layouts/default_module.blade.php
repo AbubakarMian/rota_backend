@@ -41,16 +41,16 @@
             <div class="modal-content" id="confirm">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title" id="modal-heading">
-                        Delete
+                    <h4 class="modal-title" id="modal-heading" class="confirm_modal_heading">
+                        Alert!
                     </h4>
                 </div>
                 <div class="modal-body">
 
                     <div class="row">
                         <div class="col-xs-12">
-                            <label id="modal_msg">
-                                Do You Want to Delete?
+                            <label id="modal_msg" class="confirm_modal_msg">
+                                Do you want to proceed?
                             </label>
                         </div>
                     </div>

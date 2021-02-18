@@ -38,10 +38,10 @@ width="400px" style="table-layout:fixed;"
         <th>Qualification</th>
         <th>Duties </th>
         <th>Extra Duties </th>
-        <th>Doctor type</th>
+        <th>Doctor Type</th>
 		<th>Image</th>
-
         <th>Edit</th>
+        <th>Action</th>
         <th>Delete</th>
 
 	</tr>
@@ -76,9 +76,16 @@ width="400px" style="table-layout:fixed;"
         </td>
 
         <td>{!! Form::open(['method' => 'POST', 'route' => ['doctor.delete', $d->id]]) !!}
-			<a href="" data-toggle="modal" name="activate_delete" data-target=".delete">
-				<span class="badge bg-info btn-danger ">
+			<a href="" data-toggle="modal" name="activate_delete" data-target=".delete" modal_heading="Alert" modal_msg="Do you want to proceed?">
+				<span class="badge bg-info btn-primary ">
 					{!! $d->deleted_at?'Activate':'Deactivate' !!}</span></a>
+			{!! Form::close() !!}
+		</td>
+
+        <td>{!! Form::open(['method' => 'POST', 'route' => ['doctor.remove', $d->id]]) !!}
+			<a href="" data-toggle="modal" name="activate_delete" data-target=".delete" modal_heading="Alert" modal_msg="Do you want to proceed?">
+				<span class="badge bg-info btn-danger ">
+					Delete</span></a>
 			{!! Form::close() !!}
 		</td>
 	</tr>
