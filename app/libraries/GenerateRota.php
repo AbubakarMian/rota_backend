@@ -575,7 +575,10 @@ class GenerateRota
 
     public function special_rota_request_details($duty_date)
     {
-        $special_rota_request = Special_rota_request::where('duty_date', $duty_date);
+        $special_rota_request = Special_rota_request::where('duty_date', $duty_date)->with(array('doctor' => function($query)
+        {
+             $query->whereNull('doctor.deleted_at');
+        }));
         $special_rota_morning_request = $special_rota_request->where('want_duty', 1)->where('shift', 'morning')->pluck('doctor_id')->toArray();
         $special_rota_evening_request = $special_rota_request->where('want_duty', 1)->where('shift', 'evening')->pluck('doctor_id')->toArray();
         $special_rota_night_request = $special_rota_request->where('want_duty', 1)->where('shift', 'night')->pluck('doctor_id')->toArray();
@@ -594,13 +597,18 @@ class GenerateRota
         $annual_leaves = array();
         $special_rota_want_off = [];
         foreach ($leave_request as $lr) {
+            if(!isset($this->doctors_arr[$lr->doctor_id])){
+                continue;
+            }
             if ($lr->annual_leave == 1) {
                 $annual_leaves[] = $lr->doctor_id ;
                 $this->doctors_arr[$lr->doctor_id]['yearly_leaves'] =  $this->doctors_arr[$lr->doctor_id]['yearly_leaves']+1;
 
             } else {
                 $regular_leaves[] = $lr->doctor_id ;
+
                 $this->doctors_arr[$lr->doctor_id]['regular_leaves'] = $this->doctors_arr[$lr->doctor_id]['regular_leaves']+1 ;
+
             }
             $this->doctors_arr[$lr->doctor_id]['total_requested_leaves'] = $this->doctors_arr[$lr->doctor_id]['total_requested_leaves']+1;
         }
