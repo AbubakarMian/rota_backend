@@ -38,7 +38,11 @@ class Rota_Controller extends Controller
 
     public function save(Request $request)
     {
-        $monthly_rota = new Monthly_rota();
+
+        $monthly_rota = Monthly_rota::where('year', $request->year)->where('month', $request->month)->first();
+        if(!$monthly_rota){
+            $monthly_rota = new Monthly_rota();
+        }
         $this->add_or_update($request, $monthly_rota);
         return redirect('admin/rota/generate/pattern/'.$monthly_rota->id);
     }
