@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Libraries\GenerateRota;
+use Illuminate\Support\Facades\Response;
 
 class Rota_Controller extends Controller
 {
@@ -167,4 +168,34 @@ class Rota_Controller extends Controller
         ];
         return $temp_duty;
     }
+
+    public function destroy_undestroy($id)
+    {
+
+        $rota =  Monthly_rota::find($id);
+        if ($rota) {
+            Monthly_rota::destroy($id);
+            $new_value = 'Activate';
+        }
+        $response = Response::json([
+            "status" => true,
+            'action' => Config::get('constants.ajax_action.delete'),
+            'new_value' => $new_value
+        ]);
+        return $response;
+    }
+
+    public function temprota_destroy($id)
+    {
+
+        $rota =  TempRota::destroy($id);
+
+        $response = Response::json([
+            "status" => true,
+            'action' => Config::get('constants.ajax_action.delete'),
+        ]);
+        return $response;
+    }
+
+
 }

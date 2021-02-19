@@ -32,6 +32,7 @@ width="400px" style="table-layout:fixed;"
     <tr>
         <th>Demo Number</th>
         <th>View</th>
+        <th>Delete</th>
     </tr>
 </thead>
 <tbody>
@@ -43,6 +44,16 @@ width="400px" style="table-layout:fixed;"
         <td>
             <a href="{{ asset('admin/rota/view/'.$t->id) }}" class="badge bg-info" target="_blank">View </a>
         </td>
+
+
+        <td>
+            <a href="" hit_method="post" hit_url="{!!asset('admin/temperoray_rota/delete/'.$t->id)!!}"
+                data-toggle="modal" name="activate_delete_link" data-target=".delete"
+                modal_heading="Alert" modal_msg="Do you want to proceed?">
+				<span class="badge bg-info btn-danger ">
+					Delete</span></a>
+
+		</td>
 
     </tr>
     @endforeach
