@@ -66,7 +66,7 @@ $duties_arr [$duty_date]= [
 
 // doctor_duty_allowed
 
-// problem date 1614556800
+// problem date 1615248000,1615161600
 
 cons leave
 0 => 2
@@ -77,7 +77,9 @@ cons leave
 13 => 21
 15 => 24
 
-
+if($duty_date == 1615161600 ){
+    dd($duty_date);
+}
 
 
 if($duty_date == 1614902400 && !in_array($doctor_id,[3,4,13,14,2,21])){

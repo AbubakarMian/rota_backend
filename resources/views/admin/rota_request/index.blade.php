@@ -34,7 +34,7 @@ width="400px" style="table-layout:fixed;"
         <th>Age</th>
         <th>Qualification</th>
         <th>Total duties </th>
-        <th>Image</th>
+        {{-- <th>Image</th> --}}
         <th>Leave Details</th>
 
         <th>Add Leaves</th>
@@ -62,7 +62,7 @@ width="400px" style="table-layout:fixed;"
 
 
 
-        <td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img imgshow"></td>
+        {{-- <td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img imgshow"></td> --}}
 
         <td>
 

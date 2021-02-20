@@ -6,13 +6,9 @@ Temporary Rota
 {!! Form::open(['method' => 'post', 'route' => ['temprota.new.generate',$monthly_rota_id], 'files'=>true]) !!}
 <span>{!! Form::submit('New', ['class' => 'btn btn-success pull-right']) !!}</span>
 {!! Form::close() !!}
-
-
 @section('table-properties')
 width="400px" style="table-layout:fixed;"
 @endsection
-
-
 <style>
     td {
         white-space: nowrap;
@@ -36,25 +32,19 @@ width="400px" style="table-layout:fixed;"
     </tr>
 </thead>
 <tbody>
-
     @foreach($temp_rota as $t)
-
     <tr>
         <td>Demo-{!! $t->demo_num!!}</td>
         <td>
             <a href="{{ asset('admin/rota/view/'.$t->id) }}" class="badge bg-info" target="_blank">View </a>
         </td>
-
-
         <td>
             <a href="" hit_method="post" hit_url="{!!asset('admin/temperoray_rota/delete/'.$t->id)!!}"
                 data-toggle="modal" name="activate_delete_link" data-target=".delete"
                 modal_heading="Alert" modal_msg="Do you want to proceed?">
 				<span class="badge bg-info btn-danger ">
 					Delete</span></a>
-
 		</td>
-
     </tr>
     @endforeach
 </tbody>
