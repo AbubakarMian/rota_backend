@@ -39,7 +39,7 @@ width="400px" style="table-layout:fixed;"
         <th>Duties </th>
         <th>Extra Duties </th>
         <th>Doctor Type</th>
-		<th>Image</th>
+		{{-- <th>Image</th> --}}
         <th>Edit</th>
         <th>Action</th>
         <th>Delete</th>
@@ -66,7 +66,7 @@ width="400px" style="table-layout:fixed;"
                 }
             ?>
 
-		<td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img imgshow"></td>
+		{{-- <td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img imgshow"></td> --}}
 
 
         <td>

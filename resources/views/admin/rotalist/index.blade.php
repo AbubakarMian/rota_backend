@@ -13,7 +13,6 @@ Doctor Rota List
 width="400px" style="table-layout:fixed;"
 @endsection
 
-
 <style>
 	td {
 		white-space: nowrap;
@@ -31,14 +30,11 @@ width="400px" style="table-layout:fixed;"
 
 <thead>
 	<tr>
-
         <th>Year</th>
         <th>Month</th>
         <th>Temp Rota</th>
         <th> Rota Generate Pattern</th>
         <th> Delete</th>
-
-
 	</tr>
 </thead>
 <tbody>
@@ -51,22 +47,16 @@ width="400px" style="table-layout:fixed;"
         <td>
             <a href="{{ asset('admin/temp_rota/list/'.$l->id) }}" class="badge bg-info">view </a>
         </td>
-
-
-
         <td>
             <a href="{{ asset('admin/rota/generate/pattern/'.$l->id) }}" class="badge bg-info">Edit </a>
         </td>
-
         <td>
             <a href="" hit_method="post" hit_url="{!!asset('admin/rota/delete/'.$l->id)!!}"
                 data-toggle="modal" name="activate_delete_link" data-target=".delete"
                 modal_heading="Alert" modal_msg="Do you want to proceed?">
 				<span class="badge bg-info btn-danger ">
 					Delete</span></a>
-
 		</td>
-
    </tr>
 	@endforeach
 </tbody>
