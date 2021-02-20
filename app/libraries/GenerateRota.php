@@ -28,6 +28,7 @@ class GenerateRota
     protected $doctors_arr=[];
     protected $rota_generate_pattern;
     protected $consective_days_allowed = 5;
+    protected $exetime = 1;
     protected $consective_nights_allowed = 4;
     protected $doctors_duty_num_initial=[];
     protected $extra_duties_allowed_basic = 0;
@@ -36,7 +37,7 @@ class GenerateRota
     protected $extra_duties_allowed=0;
     protected $conditions=[];
 
-    public function __construct($monthly_rota)
+    public function __construct($monthly_rota,$exetime=1)
     {
         $this->rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                         ->orderBy('duty_date', 'asc')->get();
@@ -44,6 +45,7 @@ class GenerateRota
         $this->all_doctors = array_keys($this->doctors_duty_num_initial);
         $this->shifts = Config::get('constants.duty_type');
         $this->monthly_rota = $monthly_rota;
+        $this->exetime = $exetime;
         $this->conditions = Config::get('constants.conditions');
     }
 
@@ -89,7 +91,7 @@ class GenerateRota
                     Log::info(print_r($this->duties_arr,true));
                     Log::info('--------------- Problem Duty Array  : --------------------');
                     Log::info(print_r($this->duties_arr[$duty_date],true));
-                    while($find_suitable_doctor_key < 11  && !$all_assigned){
+                    while($find_suitable_doctor_key < 11+ ($this->exetime*3)  && !$all_assigned){
                         $this->reset_duties_by_date_assign_consective_special_request_duties($duty_date);
 
                         $all_assigned = $this->find_suitable_doctor($duty_date);
@@ -111,7 +113,7 @@ class GenerateRota
                         $this->reset_duties_by_date_assign_consective_special_request_duties($duty_date);
 
                     }
-                    if( $div_condition_key_num % 7 == 0 && isset($condition_key[$condition_key_num ])){//$div_condition_key_num % 3 == 0 &&
+                    if( $div_condition_key_num % (7+$this->exetime) == 0 && isset($condition_key[$condition_key_num ])){//$div_condition_key_num % 3 == 0 &&
                         // echo $condition_key[$condition_key_num ]." : false  condition set to <br/>";
                         // if($condition_key_num < 6){
                             $this->conditions[$condition_key[$condition_key_num ]] = false;
@@ -125,7 +127,7 @@ class GenerateRota
                         // }
 
                     }
-                    if($div_extra_duties_allowed % 5 == 0){
+                    if($div_extra_duties_allowed % (5+$this->exetime) == 0){
                         $this->extra_duties_allowed = $this->extra_duties_allowed+1;
                         Log::info('--------------- Extra duties allowed increment : '.$this->extra_duties_allowed.' --------------------');
                     }

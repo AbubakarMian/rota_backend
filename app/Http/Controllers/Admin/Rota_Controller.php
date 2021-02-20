@@ -57,7 +57,7 @@ class Rota_Controller extends Controller
         return redirect()->back();
     }
 
-    public function create_temp_rota($monthly_rota){
+    public function create_temp_rota($monthly_rota,$exetime){
         $temp_rota_count = TempRota::where('monthly_rota_id', $monthly_rota->id)->count('id');
         $temp_rota_count = $temp_rota_count+1;
         $temp_rota = new TempRota();
@@ -66,7 +66,7 @@ class Rota_Controller extends Controller
         $temp_rota->save();
 
 
-        $generated_rota = new GenerateRota($monthly_rota);
+        $generated_rota = new GenerateRota($monthly_rota,$exetime);
         list($generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
 // dd($doctors_duties_assigned);
         $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
@@ -132,7 +132,7 @@ class Rota_Controller extends Controller
     public function generate(Request $request,$monthly_rota_id) // add new temp rota
     {
         $monthly_rota = Monthly_rota::find($monthly_rota_id);
-        list($temp_rota) = $this->create_temp_rota($monthly_rota);
+        list($temp_rota) = $this->create_temp_rota($monthly_rota,$request->exetime);
         return $this->calender_view_temp_rota($temp_rota->id);
         // $find_doctors_level = Config::get('constants.find_doctors_level');
     }
