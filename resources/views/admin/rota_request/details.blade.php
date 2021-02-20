@@ -34,6 +34,7 @@ width="400px" style="table-layout:fixed;"
 
         <th>Start Date</th>
         <th>End Date</th>
+        <th>Annual</th>
         {{-- <th>Status</th> --}}
         <th>Delete</th>
 
@@ -47,6 +48,7 @@ width="400px" style="table-layout:fixed;"
     <tr>
         <td>{!! date('d F, Y (l)', $lr->start_date) !!}</td>
         <td>{!! date('d F, Y (l)', $lr->end_date )!!}</td>
+        <td>{!!$lr->annual_leave?'True':'False' !!}</td>
         {{-- <td id="status_{!!$lr->id!!}">
             @if($lr->status == 'pending')
             <span class=" badge bg-info "  data-toggle="modal" data-target=".accept_request_{!!$lr->id!!}">

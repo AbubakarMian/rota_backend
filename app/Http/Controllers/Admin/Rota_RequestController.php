@@ -113,7 +113,7 @@ class Rota_RequestController extends Controller
         $rota->end_date = strtotime($request->enddate);
         $rota->doctor_id = $request->doctor_id;
 
-     if ($request->annual == '1') {
+     if ($request->annual == 'on') {
         $rota->annual_leave = $request->annual =1;
      }
 
