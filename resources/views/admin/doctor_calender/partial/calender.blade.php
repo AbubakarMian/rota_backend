@@ -115,7 +115,7 @@ btn-info">Details</a>
                     <div class="mydatearrow">
                         <div class="mydate">{!!($date_index+1)!!}</div>
                         <span class="ucc detail_{!!$item->id!!}" data-toggle="modal" data-target=".detail_{!!$item->id!!}">Detail</span>
-                        @include('admin.doctor_calender.partial.detail_modal',['item'=>$item])
+                        @include('admin.doctor_calender.partial.detail_modal',['item'])
                     </div>
                     <div class="mybigmorning">
                         <div class="morningdoctor">
@@ -126,39 +126,43 @@ btn-info">Details</a>
                                     <div class="multiple_line_text_morning_{!!$item->id!!}"> {!!$all_morning_doctor!!}
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <select id="dates-field2"
-                                        onchange="show_doctors('multiple_line_text_morning_{!!$item->id!!}');"
-                                        class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
-                                        @foreach ($doctors as $doctor)
-                                        <?php
+                                <div class="row" style="margin: 2px">
+                                    <div class="col-sm-6">
+
+                                        <select id="dates-field2"
+                                            onchange="show_doctors('multiple_line_text_night_{!!$item->id!!}');"
+                                            class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2"
+                                            >
+                                            @foreach ($doctors as $doctor)
+                                            <?php
                                             $selected = '';
 
-                                            if(in_array($doctor->id,array_column($morning_doctors,'doctor_id'))){
+                                            if(in_array($doctor->id,array_column($night_doctors,'doctor_id'))){
                                                 $selected = 'selected';
                                             }
                                         ?>
-                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <select id="myucc" class="multiple_line form-control">
-                                        <option value="">Ucc</option>
-                                        @foreach ($doctors as $doctor)
-                                        <?php
-                                            $selected = '';
+                                            <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <select id="myucc" class="multiple_line form-control">
+                                            <option value="">Ucc</option>
+                                            @foreach ($doctors as $doctor)
+                                            <?php
+                                                $selected = '';
 
-                                            if($ucc_morning_doctor==$doctor->id){
+                                                if($ucc_morning_doctor==$doctor->id){
 
-                                                $selected = 'selected';
-                                            }
-                                        ?>
-                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
-                                        </option>
-                                        @endforeach
-                                    </select>
+                                                    $selected = 'selected';
+                                                }
+                                            ?>
+                                            <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -170,6 +174,7 @@ btn-info">Details</a>
                                     <div class="multiple_line_text_evening_{!!$item->id!!}"> {!!$all_evening_doctor!!}
                                     </div>
                                 </div>
+                               <div class="row" style="margin: 2px">
                                 <div class="col-sm-6">
                                     <select id="dates-field2"
                                         onchange="show_doctors('multiple_line_text_evening_{!!$item->id!!}');"
@@ -203,6 +208,7 @@ btn-info">Details</a>
                                         @endforeach
                                     </select>
                                 </div>
+                               </div>
                             </div>
                         </div>
                         <div class="nightdoctor">
@@ -212,9 +218,11 @@ btn-info">Details</a>
                                     <div class="multiple_line_text_night_{!!$item->id!!}"> {!!$all_night_doctor!!}</div>
                                 </div>
                                 <div class="col-sm-6">
+
                                     <select id="dates-field2"
                                         onchange="show_doctors('multiple_line_text_night_{!!$item->id!!}');"
-                                        class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
+                                        class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2"
+                                        >
                                         @foreach ($doctors as $doctor)
                                         <?php
                                         $selected = '';

@@ -1,4 +1,4 @@
-<div class="modal fade in modal detail_{!!$item->id!!}"  tabindex="-1" role="dialog" aria-hidden="false">
+<div class="modal fade  detail_{!!$item->id!!}"  tabindex="-1" role="dialog" aria-hidden="false">
     <div class="modal-dialog modal-mg ">
         <div class="modal-content" id="confirm">
             <div class="modal-header">
