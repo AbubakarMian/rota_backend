@@ -2,10 +2,15 @@
 <link href="{{ asset('css/calender.css') }}" rel="stylesheet">
 <script src="{{ asset('theme/vendor/jquery/dist/jquery.js') }}"></script>
 <script src="{{ asset('cssjs/jQuery-2.1.4.min.js')  }}"></script>
+<script src="{{ asset('cssjs/jquery.slimscroll.min.js')  }}"></script>
 <script src="{{ asset('cssjs/jquery.plugin.js')}}"></script>
 <script src="{{ asset('theme/vendor/fastclick/lib/fastclick.js') }}"></script>
 <script src="{{ asset('cssjs/jquery.timeentry.js')}}"></script>
 <script src="{{ asset('theme/vendor/jquery.placeholder.js') }}"></script>
+
+{{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 <div class="row bstmonthly" style="display: flex; justify-content: center;position: relative;width: 100%;">
     <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
@@ -109,7 +114,8 @@ btn-info">Details</a>
                 <td>
                     <div class="mydatearrow">
                         <div class="mydate">{!!($date_index+1)!!}</div>
-                        <div class="ucc">UCC</div>
+                        <span class="ucc detail_{!!$item->id!!}" data-toggle="modal" data-target=".detail_{!!$item->id!!}">Detail</span>
+                        @include('admin.doctor_calender.partial.detail_modal',['item'=>$item])
                     </div>
                     <div class="mybigmorning">
                         <div class="morningdoctor">
