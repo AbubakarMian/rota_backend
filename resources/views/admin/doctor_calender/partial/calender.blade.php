@@ -16,6 +16,8 @@
     <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
         <a target="_blank" href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->id ) }}"
             class="btn btn-info">Details</a>
+            &nbsp; <button  class="btn btn-warning" id="hide_ucc">Hide UCC</button>
+            &nbsp; <button  class="btn btn-primary" id="hide_regularduites">Hide Regular Duties</button>
     </div>
     <div class="col-sm-8" style="float: left">
         <h2 class="">
@@ -73,6 +75,9 @@ btn-info">Details</a>
                 $ucc_morning_doctor = '';
                 $all_morning_doctor = '';
                 foreach ($morning_doctors as $key => $doctor) {
+                    // if($item->duty_date == 1614816000){
+                    //     dd($morning_doctors);
+                    // }
                                                 if($doctor['is_ucc']){
                                                     $ucc_morning_doctor = $doctor['doctor_id'];
                                                 }
@@ -113,7 +118,7 @@ btn-info">Details</a>
                 @endif
                 <td>
                     <div class="mydatearrow">
-                        <div class="mydate">{!!($date_index+1)!!}</div>
+                        <div class="mydate">{!!($date_index+1)!!} as {!!$item->duty_date!!}</div>
                         <span class="ucc detail_{!!$item->id!!}" data-toggle="modal" data-target=".detail_{!!$item->id!!}">Detail</span>
                         @include('admin.doctor_calender.partial.detail_modal',['item'])
                     </div>
@@ -127,7 +132,7 @@ btn-info">Details</a>
                                     </div>
                                 </div>
                                 <div class="row" style="margin: 2px">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-6 regular_duties">
 
                                         <select id="dates-field2"
                                             onchange="show_doctors('multiple_line_text_night_{!!$item->id!!}');"
@@ -146,8 +151,8 @@ btn-info">Details</a>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <select id="myucc" class="multiple_line form-control">
+                                    <div class="col-sm-6 ucc_class">
+                                        <select id="myucc" class="form-control myucc" class="multiple_line form-control">
                                             <option value="">Ucc</option>
                                             @foreach ($doctors as $doctor)
                                             <?php
@@ -175,7 +180,7 @@ btn-info">Details</a>
                                     </div>
                                 </div>
                                <div class="row" style="margin: 2px">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 regular_duties">
                                     <select id="dates-field2"
                                         onchange="show_doctors('multiple_line_text_evening_{!!$item->id!!}');"
                                         class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
@@ -192,8 +197,8 @@ btn-info">Details</a>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-6">
-                                    <select id="myucc" class="multiple_line form-control">
+                                <div class="col-sm-6 ucc_class">
+                                    <select id="myucc" class="myucc form-control" class="multiple_line form-control">
                                         <option value="">Ucc</option>
                                         @foreach ($doctors as $doctor)
                                         <?php
@@ -217,7 +222,7 @@ btn-info">Details</a>
                                 <div class="col-sm-12 textNightList">
                                     <div class="multiple_line_text_night_{!!$item->id!!}"> {!!$all_night_doctor!!}</div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 regular_duties">
 
                                     <select id="dates-field2"
                                         onchange="show_doctors('multiple_line_text_night_{!!$item->id!!}');"
@@ -236,8 +241,8 @@ btn-info">Details</a>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-6">
-                                    <select id="myucc" class="multiple_line form-control">
+                                <div class="col-sm-6 ucc_class">
+                                    <select id="myucc" class="myucc form-control" class="multiple_line form-control">
                                         @foreach ($doctors as $doctor)
                                         <option value="">Ucc</option>
                                         <?php
@@ -284,5 +289,46 @@ function show_doctors(show_list){
     },2000)
 }
 </script>
+
+<script>
+
+$('#hide_ucc').on('click' , function(){
+
+    $('.myucc').toggle();
+    $('.ucc_class').toggle();
+    $("#hide_ucc").toggleText('Hide UCC', 'Show UCC');
+    $('.regular_duties').toggleClass('col-sm-6').toggleClass('col-sm-12');
+});
+
+
+$('#hide_regularduites').on('click' , function(){
+
+$('.multiselect').toggle();
+
+$("#hide_regularduites").toggleText('Hide Regular Duties', 'Show Regular Duties');
+
+ $('.ucc_class').toggleClass('col-sm-6').toggleClass('col-sm-12');
+
+});
+
+
+
+function closeModal(){
+    $('.modal').modal('hide');
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+}
+
+
+
+
+$.fn.extend({
+    toggleText: function(a, b){
+        return this.text(this.text() == b ? a : b);
+    }
+});
+
+</script>
+
 @include('admin.doctor_calender.partial.calenderjs')
 @endsection

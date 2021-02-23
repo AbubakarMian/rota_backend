@@ -1,4 +1,4 @@
-<div class="modal fade  detail_{!!$item->id!!}"  tabindex="-1" role="dialog" aria-hidden="false">
+<div class="modal   detail_{!!$item->id!!}"  tabindex="-1" role="dialog" aria-hidden="false" data-backdrop="false">
     <div class="modal-dialog modal-mg ">
         <div class="modal-content" id="confirm">
             <div class="modal-header">
@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeModal()">Close</button>
             </div>
         </div>
     </div>
