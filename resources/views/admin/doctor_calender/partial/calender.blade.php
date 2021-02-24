@@ -27,24 +27,6 @@
         </h2>
     </div>
 </div>
-
-{{-- <div class="row" style="margin-bottom: 30px">
-    <div style="margin-left: 10px">
-        <a href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->monthly_rota_id ) }}" class="btn
-btn-info">Details</a>
-</div>
-<div>
-    <center>
-        <h2 class="bstmonthly">
-
-            <div class="mydoctortable"> " DOCTOR's MONTHLY TABLE "</div>
-
-        </h2>
-    </center>
-</div>
-</div> --}}
-
-
 <div class="table-responsive " id="mytableareaa" style="height: auto">
     <table class="table table-striped table table-hover table table-bordered table table-condensed" id="customers">
         <thead class="monday">
@@ -75,17 +57,14 @@ btn-info">Details</a>
                 $ucc_morning_doctor = '';
                 $all_morning_doctor = '';
                 foreach ($morning_doctors as $key => $doctor) {
-                    // if($item->duty_date == 1614816000){
-                    //     dd($morning_doctors);
-                    // }
-                                                if($doctor['is_ucc']){
-                                                    $ucc_morning_doctor = $doctor['doctor_id'];
-                                                }
+                if($doctor['is_ucc']){
+                    $ucc_morning_doctor = $doctor['doctor_id'];
+                }
 
-                                                $all_morning_doctor = $all_morning_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
-                                            }
-                                            $all_morning_doctor = preg_replace('/ , /', '', $all_morning_doctor, 1);
-                                            $ucc_evening_doctor = '';
+                    $all_morning_doctor = $all_morning_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
+                }
+                $all_morning_doctor = preg_replace('/ , /', '', $all_morning_doctor, 1);
+                $ucc_evening_doctor = '';
                 $all_evening_doctor = '';
                 foreach ($evening_doctors as $key => $doctor) {
                                                 if($doctor['is_ucc']){
