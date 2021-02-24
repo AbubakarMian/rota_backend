@@ -94,25 +94,18 @@ class GenerateRota
             $all_assigned = $this->if_all_duties_assigned($duty_date);
                 while(!$all_assigned){
 
-                    if($this->debug_index > 100 ){
+                    if($this->debug_index > 1 && $duty_date == 1614988800){
                         // dd('assignersdasd',$all_assigned0);
-                        dd($this->duties_arr[$duty_date],$this->doctors_arr,$problem_date,$this->duties_arr);
+
                         // return [$this->duties_arr,$this->doctors_arr];
                     }
-
                     $div_condition_key_num = $div_condition_key_num+1;
                     $div_extra_duties_allowed = $div_extra_duties_allowed+1;
                     if($problem_date < $duty_date){
-                        Log::info('--------------- Start Problem Date : '.$problem_date.' --------------------');
                             $problem_date = $duty_date;
                         }
 
                     $find_suitable_doctor_key = 0;
-                    Log::info('--------------- Start find_suitable_doctor_key Date : '.$problem_date.' --------------------');
-                    Log::info('---------------  Duties Array  : --------------------');
-                    Log::info(print_r($this->duties_arr,true));
-                    Log::info('--------------- Problem Duty Array  : --------------------');
-                    Log::info(print_r($this->duties_arr[$duty_date],true));
                     $back_track_date++;
 
                     if(!$all_assigned && $back_track_date > 15){
@@ -198,7 +191,7 @@ class GenerateRota
             $duty_date = strtotime('+1 day',$duty_date);
         }
 // dd($this->doctors_arr);
-dd($this->duties_arr);
+// dd($this->duties_arr);
         Log::info('--------------- Generate Rota End --------------------');
 
         return [$this->duties_arr,$this->doctors_arr];
@@ -233,71 +226,15 @@ dd($this->duties_arr);
     }
     public function find_doctors_from_shift_not_allowed($duty_date){
 
-        // foreach($this->duties_arr[$duty_date]['assigned_doctors'] as $doctor_id){
-        //     $this->remove_assign_doctor ($duty_date, $doctor_id );
-        // }
-        $duties_not_assigned_doctors = array_diff($this->all_doctors,$this->duties_arr[$duty_date]['assigned_doctors']);
-        $duties_allowed_shifts_assigned_doctors = [];
         $all_shifts = ['night','evening','morning']; // since sequice matters in shif assignment
 
         $morning_shift_assigned = $this->if_shift_doctors_completed($duty_date,'morning');
         $evening_shift_assigned = $this->if_shift_doctors_completed($duty_date,'evening');
         $night_shift_assigned = $this->if_shift_doctors_completed($duty_date,'night');
 
-        $duties_shift_type = Config::get('constants.duties_shift_type');
-        $all_morning_assigned_doctors = array_merge($this->duties_arr[$duty_date][$duties_shift_type['morning']['assigned_doctors_res']],
-                                            $this->duties_arr[$duty_date][$duties_shift_type['morning']['assigned_doctors_reg']]);
-                                            $all_morning_assigned_doctors = array_merge($this->duties_arr[$duty_date][$duties_shift_type['morning']['assigned_doctors_res']],
-                                                                                $this->duties_arr[$duty_date][$duties_shift_type['morning']['assigned_doctors_reg']]);
 
-        $all_evening_assigned_doctors = array_merge($this->duties_arr[$duty_date][$duties_shift_type['evening']['assigned_doctors_res']],
-                                            $this->duties_arr[$duty_date][$duties_shift_type['evening']['assigned_doctors_reg']]);
-
-        $all_night_assigned_doctors = array_merge($this->duties_arr[$duty_date][$duties_shift_type['night']['assigned_doctors_res']],
-                                            $this->duties_arr[$duty_date][$duties_shift_type['night']['assigned_doctors_reg']]);
-
-
-        // foreach($duties_not_assigned_doctors as $doctor_id){
-            if(!$night_shift_assigned){
-                if($morning_shift_assigned){
-                    foreach($all_morning_assigned_doctors as $morning_doctor_id){
-
-                        $this->remove_assign_doctor ($duty_date, $morning_doctor_id );
-
-                        $assigned = $this->assign_doctor($this->shifts['night'], $morning_doctor_id, $duty_date);
-
-                        if($assigned){
-                            foreach($duties_not_assigned_doctors as $doctor_unassigned_id){
-                                $assigned = $this->assign_doctor($this->shifts['morning'], $doctor_unassigned_id, $duty_date);
-                                if($assigned){
-                                    // if($this->if_shift_doctors_completed($duty_date,'night')){
-                                        break;
-                                    // }
-                                }
-                            }
-                        }
-                        else{
-                            $assigned = $this->assign_doctor($this->shifts['morning'], $morning_doctor_id, $duty_date);
-                        }
-                    }
-                }
-                if($evening_shift_assigned){
-                    foreach($all_evening_assigned_doctors as $evening_doctor_id){
-                        $this->remove_assign_doctor ($duty_date, $evening_doctor_id );
-                        $assigned = $this->assign_doctor($this->shifts['night'], $evening_doctor_id, $duty_date);
-                        if($assigned){
-                            foreach($duties_not_assigned_doctors as $doctor_unassigned_id){
-                                $assigned = $this->assign_doctor($this->shifts['evening'], $doctor_unassigned_id, $duty_date);
-                                if($assigned){
-                                    break;
-                                }
-                            }
-                        }
-                        else{
-                            $assigned = $this->assign_doctor($this->shifts['evening'], $evening_doctor_id, $duty_date);
-                        }
-                    }
-                }
+            if(!$morning_shift_assigned){
+                $this->assign_doctors_from_shift_not_allowed($this->shifts['morning'],$duty_date);
             }
 
             if(!$evening_shift_assigned){
@@ -376,10 +313,96 @@ dd($this->duties_arr);
 
             }
 
-        // }
-
 
         return  $this->if_all_duties_assigned($duty_date);
+    }
+
+    function assign_doctors_from_shift_not_allowed($incomplete_shift,$duty_date){
+
+        $duties_not_assigned_doctors = array_diff($this->all_doctors,$this->duties_arr[$duty_date]['assigned_doctors']);
+        $duties_shift_type = Config::get('constants.duties_shift_type');
+        $all_assigned_doctors = [
+            $this->shifts['morning']=>[],
+            $this->shifts['evening']=>[],
+            $this->shifts['night']=>[],
+        ];
+
+        foreach($all_assigned_doctors as $key_shift=>$shift_doctors){
+            $all_assigned_doctors[$key_shift] = array_merge($this->duties_arr[$duty_date][$duties_shift_type[$key_shift]['assigned_doctors_res']],
+            $this->duties_arr[$duty_date][$duties_shift_type[$key_shift]['assigned_doctors_reg']]);
+        }
+
+        foreach($duties_not_assigned_doctors as $not_assigned_doctor_id){
+            foreach($this->shifts as $shift){
+                $other_shifts = array_diff($this->shifts,[$shift]);
+                if($this->shift_allowed($shift, $not_assigned_doctor_id, $duty_date)){
+                    //
+                        $doctor_assigned_to_other_shift = false;
+                        foreach($all_assigned_doctors[$shift] as $all_assigned_doctor_id){
+
+                            foreach($other_shifts as $other_shift_key=>$os){
+                                if($this->shift_allowed($other_shift_key, $all_assigned_doctor_id, $duty_date)){
+                                    $this->remove_assign_doctor ($duty_date, $all_assigned_doctor_id );
+                                    $assigned = $this->assign_doctor($shift, $not_assigned_doctor_id, $duty_date);
+                                    $assigned = $this->assign_doctor($other_shift_key, $all_assigned_doctor_id, $duty_date);
+                                    $doctor_assigned_to_other_shift = true;
+                                    break;
+                                }
+                            }
+
+                        }
+
+                        if($doctor_assigned_to_other_shift){
+                            break;
+                        }
+
+
+                }
+            }
+        }
+
+
+        if(!$night_shift_assigned){
+            if($morning_shift_assigned){
+                foreach($all_morning_assigned_doctors as $morning_doctor_id){
+
+                    $this->remove_assign_doctor ($duty_date, $morning_doctor_id );
+
+                    $assigned = $this->assign_doctor($this->shifts['night'], $morning_doctor_id, $duty_date);
+
+                    if($assigned){
+                        foreach($duties_not_assigned_doctors as $doctor_unassigned_id){
+                            $assigned = $this->assign_doctor($this->shifts['morning'], $doctor_unassigned_id, $duty_date);
+                            if($assigned){
+                                // if($this->if_shift_doctors_completed($duty_date,'night')){
+                                    break;
+                                // }
+                            }
+                        }
+                    }
+                    else{
+                        $assigned = $this->assign_doctor($this->shifts['morning'], $morning_doctor_id, $duty_date);
+                    }
+                }
+            }
+            if($evening_shift_assigned){
+                foreach($all_evening_assigned_doctors as $evening_doctor_id){
+                    $this->remove_assign_doctor ($duty_date, $evening_doctor_id );
+                    $assigned = $this->assign_doctor($this->shifts['night'], $evening_doctor_id, $duty_date);
+                    if($assigned){
+                        foreach($duties_not_assigned_doctors as $doctor_unassigned_id){
+                            $assigned = $this->assign_doctor($this->shifts['evening'], $doctor_unassigned_id, $duty_date);
+                            if($assigned){
+                                break;
+                            }
+                        }
+                    }
+                    else{
+                        $assigned = $this->assign_doctor($this->shifts['evening'], $evening_doctor_id, $duty_date);
+                    }
+                }
+            }
+        }
     }
 
     public function if_doctor_duty_will_be_allowed($shift, $doctor_id, $duty_date)
@@ -770,9 +793,6 @@ dd($this->duties_arr);
 
     public function assign_general_duties($duty_date)
     {
-        // $all_doctors = $this->doctors_arr; // sort them by duties assigned asc
-        // $sort_on_column = array_column($all_doctors, 'total_duties');//assigned_duties
-        // array_multisort($sort_on_column, SORT_DESC, $all_doctors);//SORT_ASC
         $all_doctors = $this->sort_doctors();
         foreach ($all_doctors as $doctor_id) {
             $assigned= false ;
@@ -847,7 +867,6 @@ dd($this->duties_arr);
 
     public function if_all_duties_assigned($duty_date)
     {
-
         $no_consective_leave_doctor_left = true;
         if ($this->conditions['consecutive_leave_doctors'] ) {
             // echo "no_consective_leave_doctor_left : true";
