@@ -62,6 +62,12 @@ $duties_arr [$duty_date]= [
             'disqualified_night_doctors'=>[],
             'diss_qualified_doctors'=>$all_diss_qualified_doctors,
             'check_general_request'=>true,
+            'disqualified_has_room_for_doctors'=>[],
+            'disqualified_shift_allowed'=>[],
+            'disqualified_regular_leaves'=>[],
+            'disqualified_annual_leaves'=>[],
+            'disqualified_already_assigned'=>[],
+            'disqualified_consecutive_doctors'=>[],
 ];
 
 // doctor_duty_allowed
@@ -144,4 +150,6 @@ leave request
 
 dev : $2y$10$Znz.iBnscgguOMl6K49pJOQth14Z0YrePxGLbRe77IoE3k0NI8Hj.
 local : $2y$10$5khvtNrxHhxHXrySnw5UheJiAmy63iREf1HpFohUUfou0BjMUFfJ.
+
+1614816000
 

@@ -140,6 +140,7 @@ return [
         'consecutive_leave_doctors'=>true,
         'special_rota_duties'=>true,
         'special_rota_off'=>true,
+        'reg_and_res'=>true,
         'regular_leaves'=>true,
         'duties_equilibrium'=>true,
         'dis_qualified_consecutive_doctors'=>true,
