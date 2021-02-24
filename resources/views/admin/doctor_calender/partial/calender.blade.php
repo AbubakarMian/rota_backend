@@ -67,23 +67,23 @@
                 $ucc_evening_doctor = '';
                 $all_evening_doctor = '';
                 foreach ($evening_doctors as $key => $doctor) {
-                                                if($doctor['is_ucc']){
-                                                    $ucc_evening_doctor = $doctor['doctor_id'];
-                                                }
-                                                $all_evening_doctor = $all_evening_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
+                    if($doctor['is_ucc']){
+                        $ucc_evening_doctor = $doctor['doctor_id'];
+                    }
+                    $all_evening_doctor = $all_evening_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
 
-                                            }
-                                            $all_evening_doctor = preg_replace('/ , /', '', $all_evening_doctor, 1);
+                    }
+                $all_evening_doctor = preg_replace('/ , /', '', $all_evening_doctor, 1);
 
                 $ucc_night_doctor = '';
                 $all_night_doctor = '';
                 foreach ($night_doctors as $key => $doctor) {
-                                                if($doctor['is_ucc']){
-                                                    $ucc_night_doctor = $doctor['doctor_id'];
-                                                }
-                                                 $all_night_doctor = $all_night_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
-                                            }
-                                            $all_night_doctor = preg_replace('/ , /', '', $all_night_doctor, 1);
+                    if($doctor['is_ucc']){
+                        $ucc_night_doctor = $doctor['doctor_id'];
+                    }
+                    $all_night_doctor = $all_night_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
+                }
+                $all_night_doctor = preg_replace('/ , /', '', $all_night_doctor, 1);
 
                 if($tds == 1){
                     echo '<tr class="myboxes">';
@@ -97,7 +97,7 @@
                 @endif
                 <td>
                     <div class="mydatearrow">
-                        <div class="mydate">{!!($date_index+1)!!} as {!!$item->duty_date!!}</div>
+                        <div class="mydate">{!!($date_index+1)!!}</div>
                         <span class="ucc detail_{!!$item->id!!}" data-toggle="modal" data-target=".detail_{!!$item->id!!}">Detail</span>
                         @include('admin.doctor_calender.partial.detail_modal',['item'])
                     </div>

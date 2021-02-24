@@ -137,7 +137,7 @@ return [
     'conditions'=>[
         'check_general_request'=>true,
         'consecutive_duties'=>true,
-        // 'consecutive_leave_doctors'=>true,
+        'consecutive_leave_doctors'=>true,
         'special_rota_duties'=>true,
         'special_rota_off'=>true,
         'reg_and_res'=>true,

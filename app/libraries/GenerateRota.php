@@ -44,6 +44,7 @@ class GenerateRota
 
     public function __construct($monthly_rota,$exetime=1)
     {
+        set_time_limit(0);
         $this->rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                         ->orderBy('duty_date', 'asc')->get();
         $this->doctors_duty_num_initial = Doctor::select(DB::Raw('0 as duties '), 'id')->pluck('duties', 'id')->toArray();
@@ -138,12 +139,12 @@ class GenerateRota
 
                             $check_if_total_doctors_count_applicaple = $this->total_doctor_count_applicable($duty_date);
 // || !$check_if_total_doctors_count_applicaple
-                            if($this->duties_arr[$duty_date][$greatest_index] > 3 ){
-                                if($this->duties_arr[$duty_date][$greatest_index] > 3){
+                            if($this->duties_arr[$duty_date][$greatest_index] > 5 ){
+                                // if($this->duties_arr[$duty_date][$greatest_index] > 3){
                                 $this->duties_arr[$duty_date][$greatest_index] = $this->duties_arr[$duty_date][$greatest_index] - 1;
                                 // echo '<br/> mini mizing duties '.$this->duties_arr[$duty_date][$greatest_index].' duty_date here : '.$duty_date ;
                                 $this->reset_duties_by_date_assign_consective_special_request_duties($duty_date);
-                               }
+                            //    }
                             }
                         }
                         if($setduties_num == 1 && isset($condition_key[$condition_key_num ])){
@@ -267,18 +268,19 @@ class GenerateRota
                 if($this->shift_allowed($shift, $not_assigned_doctor_id, $duty_date)){
                     $doctor_assigned_to_other_shift = false;
                     foreach($all_assigned_doctors[$shift] as $all_assigned_doctor_id){
-                        foreach($other_shifts as $other_shift_key=>$os){
+                        foreach($other_shifts as $other_shift_key){
                             if($this->shift_allowed($other_shift_key, $all_assigned_doctor_id, $duty_date)){
                                 $this->remove_assign_doctor ($duty_date, $all_assigned_doctor_id );
-                                $assigned = $this->assign_doctor($other_shift_key, $all_assigned_doctor_id, $duty_date);
+                                // dd($duty_date);
+                                $assigned = $this->assign_duty_to_any_avalible_shift( $duty_date,$all_assigned_doctor_id);
                                 if($assigned){
-                                    $assigned = $this->assign_doctor($shift, $not_assigned_doctor_id, $duty_date);
+                                    $assigned = $this->assign_duty_to_any_avalible_shift($duty_date,$not_assigned_doctor_id);
                                     if($assigned){
                                         $doctor_assigned_to_other_shift = true;
                                     }
                                 }
                                 else{
-                                    $assigned = $this->assign_doctor($shift, $all_assigned_doctor_id, $duty_date);
+                                    $assigned = $this->assign_duty_to_any_avalible_shift($duty_date,$all_assigned_doctor_id);
                                 }
                                 break;
                             }
@@ -391,7 +393,6 @@ class GenerateRota
         return true;
 
     }
-
     public function assign_duty_to_any_avalible_shift($duty_date,$doctor_id){
         $assigned = $this->assign_duty($duty_date, $doctor_id, $this->shifts['morning']);
         if(!$assigned){
@@ -522,9 +523,9 @@ class GenerateRota
 
     public function assign_duties_to_consecutive_leave_doctors($duty_date)
     {
-        // if(!$this->conditions['consecutive_leave_doctors']){
-        //     return;
-        // }
+        if(!$this->conditions['consecutive_leave_doctors']){
+            return;
+        }
         $consecutive_leave_doctors = $this->duties_arr[$duty_date]['consecutive_leave_doctors'];
 
         foreach ($consecutive_leave_doctors as $doctor_id) {
