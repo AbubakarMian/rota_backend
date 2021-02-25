@@ -124,15 +124,26 @@ TRUNCATE monthly_rota;
 // TRUNCATE special_rota_request;
 
 
-TRUNCATE temp_rota;
-TRUNCATE rota_generate_pattern;
-TRUNCATE temp_monthly_rota_doctors;
-TRUNCATE temp_rota_detail;
-TRUNCATE rota_request;
-// TRUNCATE leave_request;
-// TRUNCATE general_rota_request;
-// TRUNCATE special_rota_request;
-TRUNCATE doctor;
+TRUNCATE `doctor`;
+TRUNCATE `doctor_type`;
+TRUNCATE `duties`;
+TRUNCATE `failed_jobs`;
+TRUNCATE `general_rota_request`;
+TRUNCATE `leave_request`;
+TRUNCATE `migrations`;
+TRUNCATE `monthly_rota`;
+TRUNCATE `monthly_rota_doctors`;
+TRUNCATE `password_resets`;
+TRUNCATE `rota`;
+TRUNCATE `rota_detail`;
+TRUNCATE `rota_generate_pattern`;
+TRUNCATE `rota_request`;
+TRUNCATE `special_rota_request`;
+TRUNCATE `temp_monthly_rota_doctors`;
+TRUNCATE `temp_rota`;
+TRUNCATE `temp_rota_detail`;
+TRUNCATE `users`;
+TRUNCATE `weekday`;
 
 
             // if($duty_date == 1614643200  ){

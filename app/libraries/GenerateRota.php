@@ -228,10 +228,9 @@ class GenerateRota
     public function search_doctor_in_disqualified_list($duty_date){
 
         for($d = 1;$d<=$this->consective_nights_allowed;$d++ ){
-            $all_assigned = $this->find_doctors_from_shift_not_allowed($duty_date);
+            $all_assigned = $this->find_doctor_from_disqualified_list($duty_date,$d);
             if(!$all_assigned){
-
-                $all_assigned = $this->find_doctor_from_disqualified_list($duty_date,$d);
+                $all_assigned = $this->find_doctors_from_shift_not_allowed($duty_date);          
                 
 
             }
@@ -1140,27 +1139,50 @@ class GenerateRota
 
     public function shift_allowed($shift, $doctor_id, $duty_date){
         $pre_date = strtotime('-1 day',$duty_date);
-        if(!isset($this->duties_arr[$pre_date])){
-            return true;
-        }
-        $previous_shift = $this->duties_arr[$pre_date];
-        $morning_doctors = array_merge($previous_shift['assigned_morning_doctors_res'],$previous_shift['assigned_morning_doctors_reg']);
-        $evening_doctors = array_merge($previous_shift['assigned_evening_doctors_res'],$previous_shift['assigned_evening_doctors_reg']);
-        $night_doctors = array_merge($previous_shift['assigned_night_doctors_res'],$previous_shift['assigned_night_doctors_reg']);
-        if($shift == $this->shifts['morning']){
-            if(in_array($doctor_id,$evening_doctors)===true){
-                return false;
+        $next_date = strtotime('+1 day',$duty_date);
+        $duty_allowed = true;
+        if(isset($this->duties_arr[$pre_date])){            
+            $previous_shift = $this->duties_arr[$pre_date];
+            $morning_doctors = array_merge($previous_shift['assigned_morning_doctors_res'],$previous_shift['assigned_morning_doctors_reg']);
+            $evening_doctors = array_merge($previous_shift['assigned_evening_doctors_res'],$previous_shift['assigned_evening_doctors_reg']);
+            $night_doctors = array_merge($previous_shift['assigned_night_doctors_res'],$previous_shift['assigned_night_doctors_reg']);
+            if($shift == $this->shifts['morning']){
+                if(in_array($doctor_id,$evening_doctors)===true){
+                    $duty_allowed = false;
+                }
+                if(in_array($doctor_id,$night_doctors)===true){
+                    $duty_allowed = false;
+                }
             }
-            if(in_array($doctor_id,$night_doctors)===true){
-                return false;
+            if($shift == $this->shifts['evening']){
+                if(in_array($doctor_id,$night_doctors)===true){
+                    $duty_allowed = false;
+                }
             }
-        }
-        if($shift == $this->shifts['evening']){
-            if(in_array($doctor_id,$night_doctors)===true){
-                return false;
+        }        
+        
+        if(isset($this->duties_arr[$next_date])){ 
+            $next_shift = $this->duties_arr[$next_date];
+            $morning_doctors = array_merge($next_shift['assigned_morning_doctors_res'],$next_shift['assigned_morning_doctors_reg']);
+            $evening_doctors = array_merge($next_shift['assigned_evening_doctors_res'],$next_shift['assigned_evening_doctors_reg']);
+            $night_doctors = array_merge($next_shift['assigned_night_doctors_res'],$next_shift['assigned_night_doctors_reg']);
+    
+            if($shift == $this->shifts['night']){
+                if(in_array($doctor_id,$morning_doctors)===true){
+                    $duty_allowed = false;
+                }
+                if(in_array($doctor_id,$evening_doctors)===true){
+                    $duty_allowed = false;
+                }
             }
+            if($shift == $this->shifts['evening']){
+                if(in_array($doctor_id,$morning_doctors)===true){
+                    $duty_allowed = false;
+                }
+            }        
         }
-        return true;
+        
+        return $duty_allowed;
     }
 
     public function doctor_duty_allowed($shift, $doctor_id, $duty_date)
