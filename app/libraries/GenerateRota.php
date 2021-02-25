@@ -407,8 +407,9 @@ class GenerateRota
             }
         }
 
-        if($this->doctors_arr [$doctor_id][ $duties_shift_type['given']] >=
-                $this->doctors_arr [$doctor_id][ $duties_shift_type['required_shift']]){
+        // if($this->doctors_arr [$doctor_id][ $duties_shift_type['given']] >=
+        //         $this->doctors_arr [$doctor_id][ $duties_shift_type['required_shift']] && $this->doctors_arr [$doctor_id]['given_general'] > 1){
+        if($this->doctors_arr [$doctor_id][ $duties_shift_type['given']] < 1){
             $this->doctors_arr [$doctor_id]['given_general']--;
         }
         $this->doctors_arr [$doctor_id][ $duties_shift_type['given']]--;
@@ -428,10 +429,7 @@ class GenerateRota
         if(!$assigned){
             $assigned = $this->assign_duty($duty_date, $doctor_id, $this->shifts['night']);
         }
-                            // if($pre_date==1615161600 && $duty_date == 1615248000 && $shift == 'night'){ 
-                    //     dd($shift,$this->duties_arr,'duty_date : '.$duty_date,'pre date : '.
-                    //     $pre_date," disqualified doctor : ".$dis_qualified_doctor_id."  sa : ",$avalible_doctors);           
-                    // }
+
         if($assigned){
             $temp_duty_date = $duty_date;
             $doctor_found = true;
@@ -467,14 +465,9 @@ class GenerateRota
             foreach($avalible_doctors as$u=> $d_id){
                 
                 $doctor_will_be_allowed = $this->if_doctor_duty_will_be_allowed($shift, $d_id, $duty_date);
-                $already_assigned_pre_date = in_array($dis_qualified_doctor_id,$this->duties_arr[$pre_date]['assigned_doctors']);
-
-               
+                $already_assigned_pre_date = in_array($dis_qualified_doctor_id,$this->duties_arr[$pre_date]['assigned_doctors']);               
                 if($doctor_will_be_allowed && !$already_assigned_pre_date){
-
-                    $this->remove_assign_doctor($pre_date, $d_id );                 
-                    
-                    
+                    $this->remove_assign_doctor($pre_date, $d_id );                    
                     $assigned = $this->assign_duty_to_any_avalible_shift($pre_date, $dis_qualified_doctor_id);
                     if(!$assigned){
                         $assigned = $this->assign_duty_to_any_avalible_shift($pre_date, $d_id);
@@ -484,10 +477,8 @@ class GenerateRota
                         $assigned = $this->assign_duty_to_any_avalible_shift($duty_date, $d_id);
                     }
                     return $assigned;
-                }
-                
+                }                
             }
-
         }
         return false;
     }
