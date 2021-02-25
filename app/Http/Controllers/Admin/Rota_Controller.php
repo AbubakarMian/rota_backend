@@ -16,6 +16,7 @@ use App\models\Doctor_type;
 use App\models\Temp_monthly_rota;
 use App\models\TempRota;
 use App\models\Rota_Generate_Pattern;
+use App\models\Temp_Rota_Date_Details;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +77,7 @@ class Rota_Controller extends Controller
 
         $temp_rota_details = [];
         foreach($doctors_duties_assigned as $doctor_duties){
+            // dd($temp_rota);
             $total_given_duties = $doctor_duties['given_morning']+$doctor_duties['given_evening']+$doctor_duties['given_night'];
             $temp_rota_detail =  new Temp_Rota_detail();
 
@@ -87,8 +89,31 @@ class Rota_Controller extends Controller
                 'total_duties'=>$total_given_duties,
                 'total_leaves'=>$temp_rota->monthly_rota->total_days - $total_given_duties,
                 'temp_rota_id'=>$temp_rota_id,
+
+                // 'anual_leaves'=>concat(',',$rota_by_date['anual_leaves']), $doctors_duties_assigned[5]
+                // 'consective_duties'=>concat(',',$rota_by_date['anual_leaves']),
+                // 'assigned'=>concat(',',$rota_by_date['anual_leaves']),
             ];
         }
+        // Temp_Rota_Date_Details for consecutive and annual leave doctor
+        //  $temp_rota_date_details =new Temp_Rota_Date_Details();
+        //  $temp_rota_date_details->rota_id= '' ;
+        //  $temp_rota_date_details->temp_rota_id= $temp_rota_id ;
+        //  $temp_rota_date_details->date= $generated_rota_arr[$duty_date];
+        //  foreach($generated_rota_arr[$dis_qualified_consecutive_doctors] as $dqc){
+
+        //      $disqualified_doc_merge[] = $dqc ;
+        //  }
+        //  $temp_rota_date_details->consecutive_doctor= json_encode($disqualified_doc_merge);
+
+        //  foreach($generated_rota_arr[$annual_leaves] as $al){
+
+        //     $annual_leave_arr[] = $al ;
+        // }
+
+        // $temp_rota_date_details->anual_leave_doctor= json_encode($annual_leave_arr);
+        // $temp_rota_date_details->save();
+
         Temp_Rota_detail::insert($temp_rota_details);
         $temp_monthly_rota = [];
         foreach ($rota_generate_patterns as $rota_generate_pattern) {
@@ -153,7 +178,7 @@ class Rota_Controller extends Controller
                 $temp_duties[] = $this->get_temp_duty($temp_rota_id, $duty_date, $doctors[$d_id], $shift_key, $is_ucc);
             }
             foreach ($rota_by_date[$selected_shift_reg] as $key=>$d_id) {
-                $is_ucc = 0;
+                $is_ucc = 0;//$rota_by_date,
                 $temp_duties[] = $this->get_temp_duty($temp_rota_id, $duty_date, $doctors[$d_id], $shift_key, $is_ucc);
             }
         }
