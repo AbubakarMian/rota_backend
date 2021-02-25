@@ -134,7 +134,7 @@ class GenerateRota
                         $div_condition_key_num = 0;
                         if($setduties_num == 0){
                             $setduties_num = 1;
-                            $this->minimize_total_duties($duty_date);
+                            // $this->minimize_total_duties($duty_date);
                             $this->reset_duties_by_date_assign_consective_special_request_duties($duty_date);
                         }
                     }

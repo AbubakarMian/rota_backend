@@ -70,6 +70,7 @@ class Rota_Controller extends Controller
         $generated_rota = new GenerateRota($monthly_rota,$exetime);
         list($generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
 // dd($doctors_duties_assigned);
+        $doctors = Doctor::with('user')->get()->pluck('user.name', 'id')->toArray();
         $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                     ->orderBy('duty_date', 'asc')->get();
 
@@ -95,24 +96,7 @@ class Rota_Controller extends Controller
                 // 'assigned'=>concat(',',$rota_by_date['anual_leaves']),
             ];
         }
-        // Temp_Rota_Date_Details for consecutive and annual leave doctor
-        //  $temp_rota_date_details =new Temp_Rota_Date_Details();
-        //  $temp_rota_date_details->rota_id= '' ;
-        //  $temp_rota_date_details->temp_rota_id= $temp_rota_id ;
-        //  $temp_rota_date_details->date= $generated_rota_arr[$duty_date];
-        //  foreach($generated_rota_arr[$dis_qualified_consecutive_doctors] as $dqc){
-
-        //      $disqualified_doc_merge[] = $dqc ;
-        //  }
-        //  $temp_rota_date_details->consecutive_doctor= json_encode($disqualified_doc_merge);
-
-        //  foreach($generated_rota_arr[$annual_leaves] as $al){
-
-        //     $annual_leave_arr[] = $al ;
-        // }
-
-        // $temp_rota_date_details->anual_leave_doctor= json_encode($annual_leave_arr);
-        // $temp_rota_date_details->save();
+        
 
         Temp_Rota_detail::insert($temp_rota_details);
         $temp_monthly_rota = [];
@@ -127,13 +111,40 @@ class Rota_Controller extends Controller
                 $doctors_duties_assigned
             );
             $temp_monthly_rota = array_merge($temp_monthly_rota, $temp_date_rota);
+
+            
+            // Temp_Rota_Date_Details for consecutive and annual leave doctor
+            $temp_rota_date_details =new Temp_Rota_Date_Details();
+            $temp_rota_date_details->rota_id= $monthly_rota->id ;
+            $temp_rota_date_details->temp_rota_id= $temp_rota_id ;
+            $temp_rota_date_details->date= $duty_date;
+            if($rota_by_date['dis_qualified_consecutive_doctors']){
+                $disqualified_doc_merge=[] ;
+
+                foreach($rota_by_date['dis_qualified_consecutive_doctors'] as $dqc_id){
+    
+                    $disqualified_doc_merge[] = $doctors[$dqc_id] ;
+                }
+                $temp_rota_date_details->consecutive_doctor= implode(',',$disqualified_doc_merge);
+            }
+            if($rota_by_date['annual_leaves']){
+                $annual_leave_arr=[] ;
+                    foreach($rota_by_date['annual_leaves'] as $al_id){
+        
+                    $annual_leave_arr[] = $doctors[$al_id] ;
+                }
+                // dd($annual_leave_arr);
+        
+                $temp_rota_date_details->anual_leave_doctor=  implode(',',$annual_leave_arr); 
+            }
+           $temp_rota_date_details->save();
         }
         Temp_monthly_rota::insert($temp_monthly_rota);
         return [$temp_rota];
     }
 
     public function calender_view_temp_rota($temp_rota_id){
-        $temp_rota = TempRota::with('rota_generate_pattern')->find($temp_rota_id);
+        $temp_rota = TempRota::with('rota_generate_pattern','rota_Date_Detail')->find($temp_rota_id);
         $doctors = Doctor::with('user')->get();
         $doctors_by_id = [];
         foreach($doctors as $doctor){
