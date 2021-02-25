@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-mg ">
         <div class="modal-content" id="confirm">
             <div class="modal-header">
-                <h4 class="modal-title">Details detail_{!!$item->id!!}</h4>
+                <h4 class="modal-title">Details detail</h4>
             </div>
             <?php  
             $consecutive_doctor = $rota_detail[$date_index]->consecutive_doctor; 
@@ -24,17 +24,16 @@
                 <div class="row">
                     <div id="" class="col-xs-12">
                     <div> 
-                        <h3>Annual leave doctors </h3> 
-                        <span>Total doctors : {{$total_annual_doctor}} </span> 
+                        <h3 class="Annuaal">Annual leave <span class="total">Total : {{$total_annual_doctor}} </span> </h3> 
+                       
                     </div>
-                        <h4>{{$rota_detail[$date_index]->anual_leave_doctor}}</h4>
+                        <h4 class="myAnnuaal">{{$rota_detail[$date_index]->anual_leave_doctor}}</h4>
                     </div>
                     <div id="" class="col-xs-12">
                         <div>
-                            <h3>Consecutive doctors</h3>
-                            <span>Total doctors : {{$total_consecutive_doctor}} </span>
+                            <h3 class="Consecutive">Consecutive doctors <span class="total">Total :{{$total_consecutive_doctor}} </span></h3>
                         </div>  
-                        <h4>{{$rota_detail[$date_index]->consecutive_doctor}}</h4>
+                        <h4 class="myConsecutive">{{$rota_detail[$date_index]->consecutive_doctor}}</h4>
                         
                     </div>
                 </div>

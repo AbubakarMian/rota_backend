@@ -26,6 +26,34 @@
             background-color:#337ab7;
             color: white;
         }
+        h4.myAnnuaal {
+            margin-top: 20px;
+            margin-left: 14px;
+        }
+
+        h4.myConsecutive {
+            margin-top: 20px;
+            margin-left: 14px;
+        }
+        h3.Annuaal {
+        
+            margin-top: 5px;
+            text-decoration: underline;
+          
+        }
+
+        h3.Consecutive {
+         
+         
+            text-decoration: underline;
+          
+        }
+
+        span.total {
+            
+            float: right;
+            padding-right: 19px;
+        }
         thead.monday {
             font-family: cursive;
         }
