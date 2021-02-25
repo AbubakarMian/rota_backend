@@ -179,8 +179,6 @@ class GenerateRota
 
             $duty_date = strtotime('+1 day',$duty_date);
         }
-// dd($this->doctors_arr);
-// dd($this->duties_arr);
         Log::info('--------------- Generate Rota End --------------------');
 
         return [$this->duties_arr,$this->doctors_arr];
@@ -282,7 +280,6 @@ class GenerateRota
                         foreach($other_shifts as $other_shift_key){
                             if($this->shift_allowed($other_shift_key, $all_assigned_doctor_id, $duty_date)){
                                 $this->remove_assign_doctor ($duty_date, $all_assigned_doctor_id );
-                                // dd($duty_date);
                                 $assigned = $this->assign_duty_to_any_avalible_shift( $duty_date,$all_assigned_doctor_id);
                                 if($assigned){
                                     $assigned = $this->assign_duty_to_any_avalible_shift($duty_date,$not_assigned_doctor_id);
