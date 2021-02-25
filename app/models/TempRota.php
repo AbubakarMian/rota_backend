@@ -25,4 +25,7 @@ class TempRota extends Model
     public function doctors(){
         return $this->hasMany('App\models\Temp_monthly_rota','temp_rota_id','id');
     }
+    public function rota_Date_Detail(){
+        return $this->hasMany('App\models\Temp_Rota_Date_Details','temp_rota_id','id');
+    }
 }

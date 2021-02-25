@@ -16,8 +16,8 @@
     <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
         <a target="_blank" href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->id ) }}"
             class="btn btn-info">Details</a>
-            &nbsp; <button  class="btn btn-warning" id="hide_ucc">Hide UCC</button>
-            &nbsp; <button  class="btn btn-primary" id="hide_regularduites">Hide Regular Duties</button>
+        &nbsp; <button class="btn btn-warning" id="hide_ucc">Hide UCC</button>
+        &nbsp; <button class="btn btn-primary" id="hide_regularduites">Hide Regular Duties</button>
     </div>
     <div class="col-sm-8" style="float: left">
         <h2 class="">
@@ -39,12 +39,12 @@
         <tbody id="calenderdates">
             <tr class="myboxes">
                 <?php $tds = 0;
-                $rota_generate_pattern = $temp_rota->rota_generate_pattern;
+                     $rota_generate_pattern = $temp_rota->rota_generate_pattern;
                 ?>
                 @foreach ($temp_rota->rota_generate_pattern as $date_index=>$item)
 
                 <?php
-
+                    
                 $morning_doctors = $temp_rota->doctors()
                 ->where('shift','morning')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc'])->toArray();
 
@@ -88,6 +88,9 @@
                 if($tds == 1){
                     echo '<tr class="myboxes">';
                 }
+
+                $rota_detail = $temp_rota->rota_Date_Detail->where('date',$item->duty_date);
+                // $temp_rota->rota_Date_Detail->where('date',$item->duty_date))->get(['anual','consective']
             ?>
                 @if($date_index === 0)
                 <?php $tds = $start_weekday; ?>
@@ -98,8 +101,9 @@
                 <td>
                     <div class="mydatearrow">
                         <div class="mydate">{!!($date_index+1)!!}</div>
-                        <span class="ucc detail_{!!$item->id!!}" data-toggle="modal" data-target=".detail_{!!$item->id!!}">Detail</span>
-                        @include('admin.doctor_calender.partial.detail_modal',['item'])
+                        <span class="ucc detail_{!!$item->id!!}" data-toggle="modal"
+                            data-target=".detail_{!!$item->id!!}">Detail</span>
+                        @include('admin.doctor_calender.partial.detail_modal',['rota_detail','date_index'])
                     </div>
                     <div class="mybigmorning">
                         <div class="morningdoctor">
@@ -114,24 +118,25 @@
                                     <div class="col-sm-6 regular_duties">
 
                                         <select id="dates-field2"
-                                            onchange="show_doctors('multiple_line_text_night_{!!$item->id!!}');"
-                                            class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2"
-                                            >
+                                            onchange="show_doctors('multiple_line_text_morning_{!!$item->id!!}');"
+                                            class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
                                             @foreach ($doctors as $doctor)
                                             <?php
                                             $selected = '';
 
-                                            if(in_array($doctor->id,array_column($night_doctors,'doctor_id'))){
+                                            if(in_array($doctor->id,array_column($morning_doctors,'doctor_id'))){
                                                 $selected = 'selected';
                                             }
                                         ?>
-                                            <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                            <option {!! $selected !!} value="{!!$doctor->id!!}">
+                                                {!!$doctor->user->name!!}
                                             </option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-sm-6 ucc_class">
-                                        <select id="myucc" class="form-control myucc" class="multiple_line form-control">
+                                        <select id="myucc" class="form-control myucc"
+                                            class="multiple_line form-control">
                                             <option value="">Ucc</option>
                                             @foreach ($doctors as $doctor)
                                             <?php
@@ -142,7 +147,8 @@
                                                     $selected = 'selected';
                                                 }
                                             ?>
-                                            <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                            <option {!! $selected !!} value="{!!$doctor->id!!}">
+                                                {!!$doctor->user->name!!}
                                             </option>
                                             @endforeach
                                         </select>
@@ -158,41 +164,44 @@
                                     <div class="multiple_line_text_evening_{!!$item->id!!}"> {!!$all_evening_doctor!!}
                                     </div>
                                 </div>
-                               <div class="row" style="margin: 2px">
-                                <div class="col-sm-6 regular_duties">
-                                    <select id="dates-field2"
-                                        onchange="show_doctors('multiple_line_text_evening_{!!$item->id!!}');"
-                                        class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
-                                        @foreach ($doctors as $doctor)
-                                        <?php
+                                <div class="row" style="margin: 2px">
+                                    <div class="col-sm-6 regular_duties">
+                                        <select id="dates-field2"
+                                            onchange="show_doctors('multiple_line_text_evening_{!!$item->id!!}');"
+                                            class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
+                                            @foreach ($doctors as $doctor)
+                                            <?php
                                             $selected = '';
 
                                             if(in_array($doctor->id,array_column($evening_doctors,'doctor_id'))){
                                                 $selected = 'selected';
                                             }
                                         ?>
-                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-sm-6 ucc_class">
-                                    <select id="myucc" class="myucc form-control" class="multiple_line form-control">
-                                        <option value="">Ucc</option>
-                                        @foreach ($doctors as $doctor)
-                                        <?php
+                                            <option {!! $selected !!} value="{!!$doctor->id!!}">
+                                                {!!$doctor->user->name!!}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6 ucc_class">
+                                        <select id="myucc" class="myucc form-control"
+                                            class="multiple_line form-control">
+                                            <option value="">Ucc</option>
+                                            @foreach ($doctors as $doctor)
+                                            <?php
                                             $selected = '';
                                             // if(in_array($ucc_evening_doctor,array_column($evening_doctors,'doctor_id'))){
                                             if($ucc_evening_doctor==$doctor->id){
                                                 $selected = 'selected';
                                             }
                                         ?>
-                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
-                                        </option>
-                                        @endforeach
-                                    </select>
+                                            <option {!! $selected !!} value="{!!$doctor->id!!}">
+                                                {!!$doctor->user->name!!}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                               </div>
                             </div>
                         </div>
                         <div class="nightdoctor">
@@ -205,8 +214,7 @@
 
                                     <select id="dates-field2"
                                         onchange="show_doctors('multiple_line_text_night_{!!$item->id!!}');"
-                                        class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2"
-                                        >
+                                        class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
                                         @foreach ($doctors as $doctor)
                                         <?php
                                         $selected = '';
@@ -240,14 +248,14 @@
                     </div>
                 </td>
                 <?php
-                if($tds == 7){
-                    echo '</tr>';
-                    $tds = 1;
-                }else{
-                    $tds = $tds + 1;
-                }
+                    if($tds == 7){
+                        echo '</tr>';
+                        $tds = 1;
+                    }else{
+                        $tds = $tds + 1;
+                    }
 
-            ?>
+                ?>
                 @endforeach
                 @for(;$tds<8;$tds++) <td>
                     </td>
@@ -270,8 +278,7 @@ function show_doctors(show_list){
 </script>
 
 <script>
-
-$('#hide_ucc').on('click' , function(){
+    $('#hide_ucc').on('click' , function(){
 
     $('.myucc').toggle();
     $('.ucc_class').toggle();
