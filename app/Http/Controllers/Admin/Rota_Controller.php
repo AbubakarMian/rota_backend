@@ -88,7 +88,7 @@ class Rota_Controller extends Controller
                 'temp_rota_id'=>$temp_rota_id,
             ];
         }
-        
+
 
         Temp_Rota_detail::insert($temp_rota_details);
         $temp_monthly_rota = [];
@@ -102,7 +102,7 @@ class Rota_Controller extends Controller
                 $rota_by_date,
                 $doctors_duties_assigned
             );
-            $temp_monthly_rota = array_merge($temp_monthly_rota, $temp_date_rota);            
+            $temp_monthly_rota = array_merge($temp_monthly_rota, $temp_date_rota);
             // Temp_Rota_Date_Details for consecutive and annual leave doctor
             $temp_rota_date_details =new Temp_Rota_Date_Details();
             $temp_rota_date_details->rota_id= $monthly_rota->id ;
@@ -112,7 +112,7 @@ class Rota_Controller extends Controller
                 $disqualified_doc_merge=[] ;
 
                 foreach($rota_by_date['dis_qualified_consecutive_doctors'] as $dqc_id){
-    
+
                     $disqualified_doc_merge[] = $doctors[$dqc_id] ;
                 }
                 $temp_rota_date_details->consecutive_doctor= implode(',',$disqualified_doc_merge);
@@ -120,12 +120,12 @@ class Rota_Controller extends Controller
             if($rota_by_date['annual_leaves']){
                 $annual_leave_arr=[] ;
                     foreach($rota_by_date['annual_leaves'] as $al_id){
-        
+
                     $annual_leave_arr[] = $doctors[$al_id] ;
                 }
                 // dd($annual_leave_arr);
-        
-                $temp_rota_date_details->anual_leave_doctor=  implode(',',$annual_leave_arr); 
+
+                $temp_rota_date_details->anual_leave_doctor=  implode(',',$annual_leave_arr);
             }
            $temp_rota_date_details->save();
         }

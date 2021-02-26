@@ -7,6 +7,25 @@
 <script src="{{ asset('theme/vendor/fastclick/lib/fastclick.js') }}"></script>
 <script src="{{ asset('cssjs/jquery.timeentry.js')}}"></script>
 <script src="{{ asset('theme/vendor/jquery.placeholder.js') }}"></script>
+<style>
+
+.doc{
+    display:inline-block;
+    margin-left: 3px;
+}
+
+
+.rcorners2 {
+  border-radius: 25px;
+  border: 2px solid #73AD21;
+  padding: 2px;
+}
+
+.higlightDutyDate{
+    background:rgba(13, 69, 221, 0.075) !important;
+}
+
+</style>
 
 {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
@@ -56,13 +75,19 @@
 
                 $ucc_morning_doctor = '';
                 $all_morning_doctor = '';
+
                 foreach ($morning_doctors as $key => $doctor) {
                 if($doctor['is_ucc']){
                     $ucc_morning_doctor = $doctor['doctor_id'];
                 }
 
-                    $all_morning_doctor = $all_morning_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
                 }
+
+                $m_doctors = sort_by_name($morning_doctors,$doctors_by_id);
+
+                foreach($m_doctors as $doctor_id=>$md){
+                 $all_morning_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
+                 }
                 $all_morning_doctor = preg_replace('/ , /', '', $all_morning_doctor, 1);
                 $ucc_evening_doctor = '';
                 $all_evening_doctor = '';
@@ -70,9 +95,14 @@
                     if($doctor['is_ucc']){
                         $ucc_evening_doctor = $doctor['doctor_id'];
                     }
-                    $all_evening_doctor = $all_evening_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
+                    // $all_evening_doctor .= ',<div data-id="'.$doctor['doctor_id'].'" class="doc did_'.$doctor['doctor_id'].'">'.$doctors_by_id[$doctor['doctor_id']].'</div>';
 
                     }
+                $e_doctors = sort_by_name($evening_doctors,$doctors_by_id);
+
+                foreach($e_doctors as $doctor_id=>$md){
+                 $all_evening_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
+                 }
                 $all_evening_doctor = preg_replace('/ , /', '', $all_evening_doctor, 1);
 
                 $ucc_night_doctor = '';
@@ -81,8 +111,13 @@
                     if($doctor['is_ucc']){
                         $ucc_night_doctor = $doctor['doctor_id'];
                     }
-                    $all_night_doctor = $all_night_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
+                    // $all_night_doctor .= ',<div data-id="'.$doctor['doctor_id'].'" class=" doc did_'.$doctor['doctor_id'].'">'.$doctors_by_id[$doctor['doctor_id']].'</div>';
                 }
+                $n_doctors = sort_by_name($night_doctors,$doctors_by_id);
+
+                foreach($n_doctors as $doctor_id=>$md){
+                 $all_night_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
+                 }
                 $all_night_doctor = preg_replace('/ , /', '', $all_night_doctor, 1);
 
                 if($tds == 1){
@@ -310,12 +345,33 @@ $("#hide_regularduites").toggleText('Hide Regular Duties', 'Show Regular Duties'
 
 
 
+$(".doc").on('click' , function(){
+
+    var id = $(this).data('id');
+
+     $('.doc').css('color' , '');
+     $('.doc').removeClass('rcorners2');
+
+     $('[data-id="'+id+'"]').css('color' , 'red');
+     $('[data-id="'+id+'"]').addClass('rcorners2');
+
+
+
+  //   $('#customers').find("td[data-id='" + id + "']").parent().css('background' , 'red');
+     $( 'td' ).removeClass('higlightDutyDate');
+     $( '[data-id="'+id+'"]' ).parent().parent().parent().parent().parent().parent().addClass('higlightDutyDate');
+
+
+  //  $('[data-id="'+id+'"]').toggleColor('blue' , 'red');
+
+});
+
+
 function closeModal(){
     $('.modal').modal('hide');
     $('body').removeClass('modal-open');
     $('.modal-backdrop').remove();
 }
-
 
 
 
@@ -325,7 +381,33 @@ $.fn.extend({
     }
 });
 
+$.fn.extend({
+    toggleColor: function(a, b){
+        return this.css( 'color', this.text() == b ? a : b);
+    }
+});
+
 </script>
+
+<?php
+
+function sort_by_name($morning_doctors,$doctors_by_id){
+    $m_doctors = [];
+
+        foreach ($morning_doctors as $key => $doctor) {
+        $m_doctors[$doctors_by_id[$doctor['doctor_id']]] =  [
+                'name'=>$doctors_by_id[$doctor['doctor_id']],
+                'id'=>$doctor['doctor_id']
+
+            ];
+
+        }
+    asort($m_doctors);
+
+    return $m_doctors;
+}
+
+?>
 
 @include('admin.doctor_calender.partial.calenderjs')
 @endsection
