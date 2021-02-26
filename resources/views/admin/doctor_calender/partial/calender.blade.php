@@ -88,7 +88,7 @@
                 foreach($m_doctors as $doctor_id=>$md){
                  $all_morning_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
                  }
-                $all_morning_doctor = preg_replace('/ , /', '', $all_morning_doctor, 1);
+                $all_morning_doctor = ltrim($all_morning_doctor,',') ;
                 $ucc_evening_doctor = '';
                 $all_evening_doctor = '';
                 foreach ($evening_doctors as $key => $doctor) {
@@ -103,7 +103,7 @@
                 foreach($e_doctors as $doctor_id=>$md){
                  $all_evening_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
                  }
-                $all_evening_doctor = preg_replace('/ , /', '', $all_evening_doctor, 1);
+                 $all_evening_doctor = ltrim($all_evening_doctor,',') ;
 
                 $ucc_night_doctor = '';
                 $all_night_doctor = '';
@@ -118,7 +118,8 @@
                 foreach($n_doctors as $doctor_id=>$md){
                  $all_night_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
                  }
-                $all_night_doctor = preg_replace('/ , /', '', $all_night_doctor, 1);
+                // $all_night_doctor = preg_replace('/ , /', '', $all_night_doctor, 1);
+                $all_night_doctor = ltrim($all_night_doctor,',') ;
 
                 if($tds == 1){
                     echo '<tr class="myboxes">';
@@ -324,6 +325,9 @@ function hide_information(){
 </script>
 
 <script>
+
+var prev_id = 0 ;
+
     $('#hide_ucc').on('click' , function(){
     $('.myucc').toggle();
     $('.ucc_class').toggle();
@@ -342,9 +346,6 @@ $("#hide_regularduites").toggleText('Hide Regular Duties', 'Show Regular Duties'
  $('.multiselect').toggle();
 
 });
-
-
-
 $(".doc").on('click' , function(){
 
     var id = $(this).data('id');
@@ -354,26 +355,25 @@ $(".doc").on('click' , function(){
 
      $('[data-id="'+id+'"]').css('color' , 'red');
      $('[data-id="'+id+'"]').addClass('rcorners2');
-
-
-
-  //   $('#customers').find("td[data-id='" + id + "']").parent().css('background' , 'red');
      $( 'td' ).removeClass('higlightDutyDate');
-     $( '[data-id="'+id+'"]' ).parent().parent().parent().parent().parent().parent().addClass('higlightDutyDate');
-
-
-  //  $('[data-id="'+id+'"]').toggleColor('blue' , 'red');
-
+     var td = $( '[data-id="'+id+'"]' ).parent().parent().parent().parent().parent().parent();
+     td.addClass('higlightDutyDate');
+        if( prev_id == id){
+            $( 'td' ).removeClass('higlightDutyDate');
+            $('.doc').css('color' , '');
+            $('.doc').removeClass('rcorners2');
+            prev_id = 0;
+        }
+        else{
+            prev_id = id;
+        }
 });
-
 
 function closeModal(){
     $('.modal').modal('hide');
     $('body').removeClass('modal-open');
     $('.modal-backdrop').remove();
 }
-
-
 
 $.fn.extend({
     toggleText: function(a, b){
@@ -398,12 +398,9 @@ function sort_by_name($morning_doctors,$doctors_by_id){
         $m_doctors[$doctors_by_id[$doctor['doctor_id']]] =  [
                 'name'=>$doctors_by_id[$doctor['doctor_id']],
                 'id'=>$doctor['doctor_id']
-
             ];
-
         }
     asort($m_doctors);
-
     return $m_doctors;
 }
 
