@@ -89,7 +89,6 @@ class Rota_Controller extends Controller
             ];
         }
 
-
         Temp_Rota_detail::insert($temp_rota_details);
         $temp_monthly_rota = [];
         foreach ($rota_generate_patterns as $rota_generate_pattern) {
