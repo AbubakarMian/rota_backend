@@ -158,16 +158,28 @@ body {
     margin-bottom: 59px;
     padding-top: 0px;
 }
+span.demospan {
+    font-weight: 200;
+    font-size: 30px;
+}
 
+.fullbox {
+    min-height: .01% !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+    margin-left: 9px !important;
+    margin-top: 1px !important;
+    /* /* padding-top: 17px; */
+}
 
-    .mydoctortable {
-        color: black;
-        margin-bottom: -74px;
-        padding-top: -22px;
-        /* position: absolute; */
-        position: relative;
-        /* margin-top: -18px; */
-    }
+.mydoctortable {
+    color: white;
+    margin-bottom: -74px;
+    padding-top: -22px;
+    position: relative;
+    font-weight: 700;
+    font-size: 30px;
+}
 
 
 h2.bstmonthly {

@@ -22,12 +22,12 @@
     <div class="col-sm-8" style="float: left">
         <h2 class="">
 
-            <div class="mydoctortable">{!!sizeof($doctors)!!} " DOCTOR's MONTHLY TABLE Demo-{!!$temp_rota->demo_num!!} "</div>
+            <div class="mydoctortable">" {!!sizeof($doctors)!!} DOCTOR's MONTHLY TABLE <span class="demospan">(Demo-{!!$temp_rota->demo_num!!})</span>"</div>
 
         </h2>
     </div>
 </div>
-<div class="table-responsive " id="mytableareaa" style="height: auto">
+<div class="table-responsive fullbox" id="mytableareaa" style="height: auto">
     <table class="table table-striped table table-hover table table-bordered table table-condensed" id="customers">
         <thead class="monday">
             @foreach($weekdays as $weekday)
