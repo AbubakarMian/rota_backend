@@ -22,12 +22,12 @@
     <div class="col-sm-8" style="float: left">
         <h2 class="">
 
-            <div class="mydoctortable"> " DOCTOR's MONTHLY TABLE " Demo-{!!$temp_rota->demo_num!!}</div>
+            <div class="mydoctortable">" {!!sizeof($doctors)!!} DOCTOR's MONTHLY TABLE <span class="demospan">(Demo-{!!$temp_rota->demo_num!!})</span>"</div>
 
         </h2>
     </div>
 </div>
-<div class="table-responsive " id="mytableareaa" style="height: auto">
+<div class="table-responsive fullbox" id="mytableareaa" style="height: auto">
     <table class="table table-striped table table-hover table table-bordered table table-condensed" id="customers">
         <thead class="monday">
             @foreach($weekdays as $weekday)
@@ -44,7 +44,7 @@
                 @foreach ($temp_rota->rota_generate_pattern as $date_index=>$item)
 
                 <?php
-                    
+
                 $morning_doctors = $temp_rota->doctors()
                 ->where('shift','morning')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc'])->toArray();
 
@@ -90,7 +90,6 @@
                 }
 
                 $rota_detail = $temp_rota->rota_Date_Detail->where('date',$item->duty_date);
-                // $temp_rota->rota_Date_Detail->where('date',$item->duty_date))->get(['anual','consective']
             ?>
                 @if($date_index === 0)
                 <?php $tds = $start_weekday; ?>
@@ -267,19 +266,30 @@
 
 @section('app_jquery')
 <script>
-    var selected_doctors = '';
+    $(function(){
+        setTimeout(function(){
+        hide_information();
+    },2000)
+    })
+var selected_doctors = '';
 
 function show_doctors(show_list){
     setTimeout(function(){
         $('.'+show_list).html(selected_doctors);
         console.log('e asdsa',selected_doctors);
+        hide_information();
     },2000)
 }
+
+function hide_information(){
+    $('#hide_ucc').click();
+    $('#hide_regularduites').click();
+}
+
 </script>
 
 <script>
     $('#hide_ucc').on('click' , function(){
-
     $('.myucc').toggle();
     $('.ucc_class').toggle();
     $("#hide_ucc").toggleText('Hide UCC', 'Show UCC');
@@ -289,11 +299,12 @@ function show_doctors(show_list){
 
 $('#hide_regularduites').on('click' , function(){
 
-$('.multiselect').toggle();
+
 
 $("#hide_regularduites").toggleText('Hide Regular Duties', 'Show Regular Duties');
 
  $('.ucc_class').toggleClass('col-sm-6').toggleClass('col-sm-12');
+ $('.multiselect').toggle();
 
 });
 
