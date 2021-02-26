@@ -29,13 +29,12 @@ width="400px" style="table-layout:fixed;"
         {{-- @foreach($leave_request as $lr) --}}
 
 <h3>
-     " Doctor : {!! $doctors->user->name !!}"
+     " Doctor : {!! ucwords($doctors->user->name) !!}"
 </h3>
 
         <th>Start Date</th>
         <th>End Date</th>
         <th>Annual</th>
-        {{-- <th>Status</th> --}}
         <th>Delete</th>
 
     </tr>

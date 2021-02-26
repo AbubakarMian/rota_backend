@@ -954,9 +954,9 @@ class GenerateRota
         }
         foreach ($day_doctors as $day_doctor) {
             if ($day_doctor->duty_date == $pre_date && in_array($day_doctor->doctor_id, $consecutive_doctors)) {
-                if ($day_doctor->shift == $this->shift['morning']) {
+                if ($day_doctor->shift == $this->shifts['morning']) {
                     $this->duties_arr[$duty_date]['consecutive_morning_doctors'] = $day_doctor->doctor_id;
-                } elseif ($day_doctor->shift == $this->shift['evening']) {
+                } elseif ($day_doctor->shift == $this->shifts['evening']) {
                     $this->duties_arr[$duty_date]['consecutive_evening_doctors'] = $day_doctor->doctor_id;
                     $this->duties_arr[$duty_date]['disqualified_morning_doctors'] = $day_doctor->doctor_id;
                 } else {
@@ -1376,7 +1376,7 @@ class GenerateRota
 
         if (isset($special_rota_night_request)) {
             foreach ($special_rota_night_request as $special_req_doctor_id) {
-                $this->assign_duty($duty_date, $special_req_doctor_id, $this->shift['night']);
+                $this->assign_duty($duty_date, $special_req_doctor_id, $this->shifts['night']);
                 if ($this->doctors_arr[$special_req_doctor_id]['doctor_type'] == 1) {
                     $this->duties_arr [$duty_date]['special_rota_night_doctors_res'][] = $special_req_doctor_id;
                 } else {
@@ -1386,7 +1386,7 @@ class GenerateRota
         }
         if (isset($special_rota_evening_request)) {
             foreach ($special_rota_evening_request as $special_req_doctor_id) {
-                $this->assign_duty($duty_date, $special_req_doctor_id, $this->shift['evening']);
+                $this->assign_duty($duty_date, $special_req_doctor_id, $this->shifts['evening']);
                 if ($this->doctors_arr[$special_req_doctor_id]['doctor_type'] == 1) {
                     $this->duties_arr [$duty_date]['special_rota_evening_doctors_res'][] = $special_req_doctor_id;
                 } else {

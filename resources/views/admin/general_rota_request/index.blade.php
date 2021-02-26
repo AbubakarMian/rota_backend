@@ -24,33 +24,23 @@ width="400px" style="table-layout:fixed;"
 	}
 </style>
 @section('table')
-{!! Form::open(['method' => 'get', 'route' => ['general.rota.search'], 'files'=>true]) !!}
+{!! Form::open(['method' => 'post', 'route' => ['general.rota.search'], 'files'=>true]) !!}
 @include('admin.general_rota_request.partial.searchfilters')
 {!!Form::close() !!}
-{{-- @stop --}}
-
 <thead>
 	<tr>
-
         <th>Doctor </th>
         <th>Shift </th>
         <th>Total Duties</th>
         <th>Delete</th>
-
-
 	</tr>
 </thead>
 <tbody>
-
     @foreach($list as $gh)
-    {{-- @foreach($doctor as $g) --}}
 	<tr>
-
-        <td>{!! $gh->doctor->user->name!!}</td>
-
+        <td>{!! ucwords($gh->doctor->user->name)!!}</td>
         <td>{!! ucfirst($gh->shift) !!}</td>
         <td>{!! $gh->total_duties!!}</td>
-
         <td>{!! Form::open(['method' => 'POST', 'route' => ['admin.general_rota_request.delete', $gh->id]]) !!}
 			<a href="" data-toggle="modal" name="activate_delete" data-target=".delete">
 				<span class="badge bg-info btn-danger ">
@@ -59,7 +49,6 @@ width="400px" style="table-layout:fixed;"
 		</td>
 	</tr>
     @endforeach
-    {{-- @endforeach --}}
 </tbody>
 @section('pagination')
 <span class="pagination pagination-md pull-right">{!! $list->render() !!}</span>
