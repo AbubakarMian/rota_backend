@@ -30,29 +30,46 @@
             margin-top: 20px;
             margin-left: 14px;
         }
+        .bblue {
+            background: #337ab7;
+            text-align: center;
+            color: white;
+        }
+        .bblue h4 {
+            font-size: 24px;
+        }
 
         h4.myConsecutive {
             margin-top: 20px;
             margin-left: 14px;
         }
         h3.Annuaal {
-        
-            margin-top: 5px;
-            text-decoration: underline;
-          
+            margin-top: 0px;
+            /* text-decoration: underline; */
+            font-size: 25px;
+            color: #7d7d7d;
+            font-weight: 700;
         }
-
+        .bbwith {
+            width: 800px !important;
+        }
+        .bgdata {
+            padding: 30px 28px !important;
+        }
         h3.Consecutive {
-         
-         
-            text-decoration: underline;
-          
+            /* text-decoration: underline; */
+            font-size: 25px;
+            color: #7d7d7d;
+            font-weight: 700;
+        }
+        ul.point {
+            margin-left: -25px;
         }
 
         span.total {
-            
+
             float: right;
-            padding-right: 19px;
+
         }
         thead.monday {
             font-family: cursive;

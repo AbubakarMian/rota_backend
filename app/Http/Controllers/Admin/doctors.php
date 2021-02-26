@@ -145,6 +145,27 @@ TRUNCATE `temp_rota_detail`;
 TRUNCATE `users`;
 TRUNCATE `weekday`;
 
+drop TABLE `doctor`;
+drop TABLE `doctor_type`;
+drop TABLE `duties`;
+drop TABLE `failed_jobs`;
+drop TABLE `general_rota_request`;
+drop TABLE `leave_request`;
+drop  TABLE `migrations`;
+drop  TABLE `monthly_rota`;
+drop  TABLE `monthly_rota_doctors`;
+drop  TABLE `password_resets`;
+drop  TABLE `rota`;
+drop  TABLE `rota_detail`;
+drop TABLE  `rota_generate_pattern`;
+drop  TABLE `rota_request`;
+drop TABLE  `special_rota_request`;
+drop  TABLE `temp_monthly_rota_doctors`;
+drop TABLE  `temp_rota`;
+drop  TABLE `temp_rota_detail`;
+drop  TABLE `users`;
+drop TABLE  `weekday`;
+
 
             // if($duty_date == 1614643200  ){
             //     dd($shift);
