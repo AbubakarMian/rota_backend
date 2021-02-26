@@ -22,8 +22,6 @@ class Special_Rota_Request_Controller extends Controller
 
     public function index(Request $request)
     {
-       // dd($list[0]->doctor->user);
-        // $doctor = Doctor::with(['user'])->get();
         $name = $request->name ?? '';
         $list = Special_rota_request::whereHas('doctor', function($query) use($name){
        $query->whereHas('user', function($k) use($name){

@@ -20,18 +20,20 @@ use LeaveRequest;
 class Rota_RequestController extends Controller
 {
 
-    public function index()
-    {
+    public function index(Request $request)
+    {      
+        $name = $request->name ?? '';
+        $name = strtolower($name);
 
-       $doctors = Doctor::with(['user'])->paginate(10);
+        $doctors = Doctor::whereHas('user', function ($query) use ($name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        })->with('user')->where('is_deleted',0)->withTrashed()->paginate(10);
         return view('admin.rota_request.index', compact('doctors'));
     }
     public function detail($id){
 
        $leave_request = Leave_Request::where('doctor_id',$id)->paginate(10);
        $doctors = Doctor::with(['user'])->find($id);
-    //    dd($doctors);
-        // $doctors = Doctor::with(['user'])->paginate(13);
         $status = Config::get('constants.ajax_action');
         return view('admin.rota_request.details', compact('leave_request','status','doctors'));
     }

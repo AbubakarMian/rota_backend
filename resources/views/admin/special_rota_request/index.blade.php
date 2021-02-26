@@ -24,7 +24,7 @@ width="400px" style="table-layout:fixed;"
     }
 </style>
 @section('table')
-{!! Form::open(['method' => 'get', 'route' => ['special.rota.search'], 'files'=>true]) !!}
+{!! Form::open(['method' => 'post', 'route' => ['special.rota.search'], 'files'=>true]) !!}
 @include('admin.special_rota_request.partial.searchfilters')
 {!!Form::close() !!}
 {{-- @stop --}}
@@ -48,23 +48,21 @@ width="400px" style="table-layout:fixed;"
     @foreach($list as $g)
 
     <tr>
-        <td>{!! $g->doctor->user->name!!}</td>
-
+        <td>{!! ucwords($g->doctor->user->name) !!}</td>
         <td>{!! date('d F, Y (l)', $g->duty_date)!!}</td>
-
         @if($g->want_duty == 1)
-        <td>true</td>
+        <td>True</td>
         @else
-        <td>false      </td>
+        <td>False      </td>
         @endif
 
         @if($g->want_off==1)
-        <td>true</td>
+        <td>True</td>
         @else
-        <td>false</td>
+        <td>False</td>
         @endif
 
-        <td>{!! $g->shift!!}</td>
+        <td>{!! ucwords($g->shift)!!}</td>
         <td>{!! Form::open(['method' => 'POST', 'route' => ['special_rota_request.delete', $g->id]]) !!}
 			<a href="" data-toggle="modal" name="activate_delete" data-target=".delete">
 				<span class="badge bg-info btn-danger ">
