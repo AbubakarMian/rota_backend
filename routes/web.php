@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 
  ////doctor
     Route::get('admin/doctor', 'Admin\DoctorController@index')->name('doctor.index');
+    Route::post('admin/doctor', 'Admin\DoctorController@index')->name('doctor.search');
     Route::get('admin/doctor/create', 'Admin\DoctorController@create')->name('doctor.create');
     Route::post('admin/doctor/save', 'Admin\DoctorController@save')->name('doctor.save');
 
@@ -31,10 +32,11 @@ use Illuminate\Support\Facades\Route;
 
 
     Route::post('admin/doctor/save','Admin\DoctorController@save')->name('admin.doctor.save');
-    Route::get('admin/doctor/search','Admin\DoctorController@search')->name('doctor.search');
+   //  Route::get('admin/doctor/search','Admin\DoctorController@search')->name('doctor.search');
 
    ////rota request
    Route::get('admin/request', 'Admin\Rota_RequestController@index')->name('rota.doctor.index');
+   Route::post('admin/request', 'Admin\Rota_RequestController@index')->name('doctor.summary.search');
    /////leave request
    Route::get('rota/leave/{id}', 'Admin\Rota_RequestController@leave')->name('rota.leave');
    Route::post('admin/rota/leave/save', 'Admin\Rota_RequestController@save')->name('leave.save');
@@ -101,9 +103,9 @@ Route::post('admin/general/rota/delete/{id}', 'Admin\General_Rota_Request_Contro
 //////special rota request
 
 Route::get('admin/special/rota', 'Admin\Special_Rota_Request_Controller@index')->name('special.rota.index');
+Route::post('admin/special/rota', 'Admin\Special_Rota_Request_Controller@index')->name('special.rota.search');
 Route::get('admin/special/rota/create', 'Admin\Special_Rota_Request_Controller@create')->name('special.rota.create');
 Route::post('admin/special/rota/save', 'Admin\Special_Rota_Request_Controller@save')->name('admin.special_rota_request.save');
-Route::post('admin/special/rota', 'Admin\Special_Rota_Request_Controller@index')->name('special.rota.search');
 // Route::get('admin/special_rota_request/search','Admin\Special_Rota_Request_Controller@search')->name('special_rota_request.search');
 Route::post('admin/special/rota/delete/{id}', 'Admin\Special_Rota_Request_Controller@destroy_undestroy')->name('special_rota_request.delete');
 

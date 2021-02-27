@@ -24,7 +24,7 @@ width="400px" style="table-layout:fixed;"
 	}
 </style>
 @section('table')
-{!! Form::open(['method' => 'get', 'route' => ['doctor.search'], 'files'=>true]) !!}
+{!! Form::open(['method' => 'post', 'route' => ['doctor.search'], 'files'=>true]) !!}
 @include('admin.doctor.partial.searchfilters')
 {!!Form::close() !!}
 {{-- @stop --}}
@@ -52,8 +52,8 @@ width="400px" style="table-layout:fixed;"
 
 	<tr>
 
-        <td>{!! $d->user->fullname !!}</td>
-        <td>{!! $d->user->name !!}</td>
+        <td>{!! ucwords($d->user->fullname) !!}</td>
+        <td>{!! ucwords($d->user->name) !!}</td>
 		<td>{!! $d->age!!}</td>
         <td>{!! $d->qualification !!}</td>
         <td>{!! $d->total_duties !!}</td>

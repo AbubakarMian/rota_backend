@@ -23,7 +23,7 @@ width="400px" style="table-layout:fixed;"
 </style>
 
 @section('table')
-{!! Form::open(['method' => 'get', 'route' => ['doctor.search'], 'files'=>true]) !!}
+{!! Form::open(['method' => 'get', 'route' => ['doctor.summary.search'], 'files'=>true]) !!}
 @include('admin.doctor.partial.searchfilters')
 {!!Form::close() !!}
 @stop
@@ -34,21 +34,16 @@ width="400px" style="table-layout:fixed;"
         <th>Age</th>
         <th>Qualification</th>
         <th>Total duties </th>
-        {{-- <th>Image</th> --}}
         <th>Leave Details</th>
-
         <th>Add Leaves</th>
-        {{-- <th>Add Rota Request</th> --}}
 
     </tr>
 </thead>
 <tbody>
 
     @foreach($doctors as $d)
-
-
     <tr>
-        <td>{!! $d->user->name !!}</td>
+        <td>{!! ucwords($d->user->name) !!}</td>
         <td>{!! $d->age!!}</td>
         <td>{!! $d->qualification !!}</td>
         <td>{!! $d->total_duties !!}</td>
@@ -59,66 +54,18 @@ width="400px" style="table-layout:fixed;"
                 }
             ?>
 
-
-
-
-        {{-- <td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img imgshow"></td> --}}
-
         <td>
 
-            {{-- <a href="">
-                <span class="badge bg-info"
-                    data-url="{!! asset('admin/rota/leave/detailmodal/').'/'.$d->id !!}" name='msgmodal'>
-                    Leave Details</span>
-            </a> --}}
             <a href="{{ url('admin/rota/leave/detail/'.$d->id)  }}" class='badge bg-info'>    Leave Details
                </a>
 
         </td>
 
-        {{-- <td> <a href="{{ url('admin/rota/request/detail/'.$d->id)  }}" class='badge bg-info'> Rota Request
-                Details</a></td> --}}
-        {{-- <td>
-			<a href="" data-toggle="modal" name="activate_delete" data-target=".request_{!! $q->id !!}">
-				<span class=" badge bg-info btn-success">
-                   Rota Request Details</span></a>
-			@include('admin.rota_request.partial.request_modal',['order'=>$q])
-		</td> --}}
-
-
-
         <td> <a href="{{ url('rota/leave/'.$d->id)  }}" class='badge bg-info'>Leave</a></td>
-        {{-- <td> <a href="{{ url('rota/request/'.$d->id) }}" class='badge bg-info'>Rota Request</a></td> --}}
-
-
-        {{-- <td>{!! Form::open(['method' => 'POST', 'route' => ['rota.leave' , $d->id]]) !!}
-			<a href=""  name="leave page" data-target=".leave">
-				<span class="badge bg-info">
-					{!! 'leave page' !!}</span></a>
-			{!! Form::close() !!}
-        </td> --}}
-
-        {{-- <td>
-            {{ route('rota/leave'.$d->id) }}
-        {!! Form::close() !!}
-        </td>
-        </td> --}}
-
-        {{-- <td>{!! Form::open(['method' => 'POST', 'route' => ['rota.leave', $d->id]]) !!}
-			<a href="" name="rota" data-target=".delete">
-				<span class="badge bg-info">
-					{!! $d->deleted_at?'Activate':'Deactivate' !!}</span></a>
-			{!! Form::close() !!}
-        </td> --}}
-
-
-
 
 
     </tr>
     @endforeach
-    {{-- @endforeach
-    @endforeach --}}
 </tbody>
 
 @section('pagination')

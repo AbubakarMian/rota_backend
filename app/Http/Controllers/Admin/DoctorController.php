@@ -16,7 +16,13 @@ class DoctorController extends Controller
 {
     public function index(Request $request)
     {
-        $doctors = Doctor::with(['user','doctor_type'])->where('is_deleted',0)->withTrashed()->paginate(10);
+        $name = $request->name ?? '';
+        $name = strtolower($name);
+
+        $doctors = Doctor::whereHas('user', function ($query) use ($name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        })->with('user')->where('is_deleted',0)->withTrashed()->paginate(10);
+
         return view('admin.doctor.index', compact('doctors'));
     }
 
@@ -67,8 +73,8 @@ class DoctorController extends Controller
 
     public function add_or_update(Request $request, $doctor, $user)
     {
-        $user->name = $request->name;
-        $user->fullname = $request->fullname;
+        $user->name = strtolower($request->name);
+        $user->fullname = strtolower($request->fullname);
         $user->save();
 
         $doctor->user_id = $user->id;
@@ -95,17 +101,17 @@ class DoctorController extends Controller
 
 
 
-    public function search(Request $request)
-    {
-        $name = $request->name ?? '';
+    // public function search(Request $request)
+    // {
+    //     $name = $request->name ?? '';
 
-        $doctors = Doctor::whereHas('user', function ($query) use ($name) {
-            $query->where('name', 'like', '%' . $name . '%');
-        })->with(['user' => function ($query) use ($name) {
-            $query->where('name', 'like', '%' . $name . '%');
-        }])->paginate(10);
-        return view('admin.doctor.index', compact('doctors','name'));
-    }
+    //     $doctors = Doctor::whereHas('user', function ($query) use ($name) {
+    //         $query->where('name', 'like', '%' . $name . '%');
+    //     })->with(['user' => function ($query) use ($name) {
+    //         $query->where('name', 'like', '%' . $name . '%');
+    //     }])->paginate(10);
+    //     return view('admin.doctor.index', compact('doctors','name'));
+    // }
 
     public function destroy_undestroy($id)
     {

@@ -46,6 +46,7 @@ $reports = $admin_common->reports;
     <!-- Modules end -->
 
     <!-- reports start -->
+    @if(sizeof($admin_common->reports))
     <div class="row">
 
         <div class="col-md-12 col-sm-12 col-xs-12">
@@ -67,16 +68,17 @@ $reports = $admin_common->reports;
 
             @if(!($key+1 / 4))
 
-    </div>
-    <div class="row">
-        @endif
+                </div>
+                <div class="row">
+            @endif
 
         @endforeach
     </div>
+    @endif
     <!-- reports end  -->
 
     <!-- Chart -->
-    <section class="panel hidden-xs">
+    {{-- <section class="panel hidden-xs">
         <div class="panel-body">
             <div class="row">
                 <div class="col-sm-12 mb25">
@@ -85,7 +87,7 @@ $reports = $admin_common->reports;
                     <h1 class="mt0">
                         Chart
                     </h1>
-                    <h3>Top Ten Vendors By Rating</h3>
+                    <h3>Top Ten Vendors By Rating</h3> --}}
                     <!-- Chart here -->
 {{--                    <div id="dashboard_chart">--}}
 {{--                        <script>--}}
@@ -113,10 +115,10 @@ $reports = $admin_common->reports;
 {{--                    </div>--}}
                     <!-- Chart here -->
 
-                </div>
+                {{-- </div>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- chart end -->
 
     <!-- Dashboard Components  end  -->

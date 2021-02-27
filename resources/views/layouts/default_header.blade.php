@@ -142,6 +142,7 @@ $admin_common = session()->get('admin_common');
 
 
                         <!-- Reports -->
+                        @if(sizeof($admin_common->reports))
                         <li>
                             <a href="javascript:;">
                                 <i class="toggle-accordion"></i>
@@ -161,6 +162,7 @@ $admin_common = session()->get('admin_common');
                                 @endforeach
                             </ul>
                         </li>
+                        @endif
                         <!-- /Reports -->
                     </ul>
                 </nav>

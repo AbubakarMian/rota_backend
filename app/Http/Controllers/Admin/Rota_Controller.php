@@ -59,17 +59,15 @@ class Rota_Controller extends Controller
     }
 
     public function create_temp_rota($monthly_rota,$exetime){
-        $temp_rota_count = TempRota::where('monthly_rota_id', $monthly_rota->id)->count('id');
+        $temp_rota_count = TempRota::withTrashed()->where('monthly_rota_id', $monthly_rota->id)->count('id');
         $temp_rota_count = $temp_rota_count+1;
         $temp_rota = new TempRota();
         $temp_rota->demo_num = $temp_rota_count;
         $temp_rota->monthly_rota_id = $monthly_rota->id;
         $temp_rota->save();
 
-
         $generated_rota = new GenerateRota($monthly_rota,$exetime);
         list($generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
-// dd($doctors_duties_assigned);
         $doctors = Doctor::with('user')->get()->pluck('user.name', 'id')->toArray();
         $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                     ->orderBy('duty_date', 'asc')->get();
@@ -90,10 +88,6 @@ class Rota_Controller extends Controller
                 'total_duties'=>$total_given_duties,
                 'total_leaves'=>$temp_rota->monthly_rota->total_days - $total_given_duties,
                 'temp_rota_id'=>$temp_rota_id,
-
-                // 'anual_leaves'=>concat(',',$rota_by_date['anual_leaves']), $doctors_duties_assigned[5]
-                // 'consective_duties'=>concat(',',$rota_by_date['anual_leaves']),
-                // 'assigned'=>concat(',',$rota_by_date['anual_leaves']),
             ];
         }
         
@@ -110,9 +104,7 @@ class Rota_Controller extends Controller
                 $rota_by_date,
                 $doctors_duties_assigned
             );
-            $temp_monthly_rota = array_merge($temp_monthly_rota, $temp_date_rota);
-
-            
+            $temp_monthly_rota = array_merge($temp_monthly_rota, $temp_date_rota);            
             // Temp_Rota_Date_Details for consecutive and annual leave doctor
             $temp_rota_date_details =new Temp_Rota_Date_Details();
             $temp_rota_date_details->rota_id= $monthly_rota->id ;
@@ -158,7 +150,6 @@ class Rota_Controller extends Controller
 
     public function get_temp_rota($temp_rota_id){
         $temp_rota = TempRota::find($temp_rota_id);
-        // $monthly_rota = Monthly_rota::find($temp_rota->monthly_rota_id);
         return $this->calender_view_temp_rota($temp_rota_id);
     }
     public function temp_rota($monthly_rota_id){
@@ -170,7 +161,6 @@ class Rota_Controller extends Controller
         $monthly_rota = Monthly_rota::find($monthly_rota_id);
         list($temp_rota) = $this->create_temp_rota($monthly_rota,$request->exetime);
         return $this->calender_view_temp_rota($temp_rota->id);
-        // $find_doctors_level = Config::get('constants.find_doctors_level');
     }
 
     public function get_temp_duties($temp_rota_id, $duty_date, $rota_generate_pattern, $rota_by_date, $doctors)
@@ -211,7 +201,6 @@ class Rota_Controller extends Controller
 
     public function destroy_undestroy($id)
     {
-
         $rota =  Monthly_rota::find($id);
         if ($rota) {
             Monthly_rota::destroy($id);
