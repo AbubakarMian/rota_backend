@@ -76,9 +76,7 @@ class Rota_Controller extends Controller
 
         $temp_rota_details = [];
         foreach($doctors_duties_assigned as $doctor_duties){
-            // dd($temp_rota);
             $total_given_duties = $doctor_duties['given_morning']+$doctor_duties['given_evening']+$doctor_duties['given_night'];
-            $temp_rota_detail =  new Temp_Rota_detail();
 
             $temp_rota_details[] = [
                 'doctor_id'=>$doctor_duties['doctor_id'],
