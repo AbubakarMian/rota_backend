@@ -161,7 +161,7 @@ class GenerateRota
 
                         $find_suitable_doctor_key++;
 
-                    }                    
+                    }
                     $this->debug_index = $this->debug_index+1;
                     $all_assigned = $this->if_all_duties_assigned($duty_date);
                 }
@@ -228,8 +228,8 @@ class GenerateRota
         for($d = 1;$d<=$this->consective_nights_allowed;$d++ ){
             $all_assigned = $this->find_doctor_from_disqualified_list($duty_date,$d);
             if(!$all_assigned){
-                $all_assigned = $this->find_doctors_from_shift_not_allowed($duty_date);          
-                
+                $all_assigned = $this->find_doctors_from_shift_not_allowed($duty_date);
+
 
             }
         }
@@ -429,11 +429,11 @@ class GenerateRota
         if($assigned){
             $temp_duty_date = $duty_date;
             $doctor_found = true;
-            while($doctor_found){                 
-                $num_initial_date = strtotime('+1 day',$temp_duty_date);                
+            while($doctor_found){
+                $num_initial_date = strtotime('+1 day',$temp_duty_date);
                 if(!isset($this->duties_arr [$num_initial_date])){
                     break;
-                }           
+                }
                 if($this->duties_arr [$num_initial_date]['doctors_duty_num_initial'][$doctor_id]!=0){
                     $this->duties_arr [$num_initial_date]['doctors_duty_num_initial'][$doctor_id] =
                                     $this->duties_arr [$temp_duty_date]['doctors_duty_num_initial'][$doctor_id]+1;
@@ -452,18 +452,18 @@ class GenerateRota
 
         $duties_shift_type = Config::get('constants.duties_shift_type.'.$shift);
         $doctor_will_be_allowed = $this->if_doctor_duty_will_be_allowed($shift, $dis_qualified_doctor_id, $pre_date);
-        
-       
+
+
         if($doctor_will_be_allowed){
             $avalible_doctors = array_merge($this->duties_arr[$pre_date][$duties_shift_type['assigned_doctors_res']],
                                                     $this->duties_arr[$pre_date][$duties_shift_type['assigned_doctors_reg']]);
 
             foreach($avalible_doctors as$u=> $d_id){
-                
+
                 $doctor_will_be_allowed = $this->if_doctor_duty_will_be_allowed($shift, $d_id, $duty_date);
-                $already_assigned_pre_date = in_array($dis_qualified_doctor_id,$this->duties_arr[$pre_date]['assigned_doctors']);               
+                $already_assigned_pre_date = in_array($dis_qualified_doctor_id,$this->duties_arr[$pre_date]['assigned_doctors']);
                 if($doctor_will_be_allowed && !$already_assigned_pre_date){
-                    $this->remove_assign_doctor($pre_date, $d_id );                    
+                    $this->remove_assign_doctor($pre_date, $d_id );
                     $assigned = $this->assign_duty_to_any_avalible_shift($pre_date, $dis_qualified_doctor_id);
                     if(!$assigned){
                         $assigned = $this->assign_duty_to_any_avalible_shift($pre_date, $d_id);
@@ -473,7 +473,7 @@ class GenerateRota
                         $assigned = $this->assign_duty_to_any_avalible_shift($duty_date, $d_id);
                     }
                     return $assigned;
-                }                
+                }
             }
         }
         return false;
@@ -496,18 +496,18 @@ class GenerateRota
 
         $assigned = false;
         foreach($disqualified_doctors_arr as $k=>$dis_qualified_doctor_id){
-           
+
             if(!$this->if_shift_doctors_completed($duty_date,$this->shifts['morning'])){
 
                 $assigned = $this->swap_pervious_disqualified_doctor($this->shifts['morning'],$dis_qualified_doctor_id, $duty_date,$pre_date);
             }
-            if(!$assigned && !$this->if_shift_doctors_completed($duty_date,$this->shifts['evening'])){                
+            if(!$assigned && !$this->if_shift_doctors_completed($duty_date,$this->shifts['evening'])){
                 $assigned = $this->swap_pervious_disqualified_doctor($this->shifts['evening'],$dis_qualified_doctor_id, $duty_date,$pre_date);
             }
             if(!$assigned && !$this->if_shift_doctors_completed($duty_date,$this->shifts['night'])){
                 $assigned = $this->swap_pervious_disqualified_doctor($this->shifts['night'],$dis_qualified_doctor_id, $duty_date,$pre_date);
             }
-            
+
         }
         return false;
     }
@@ -828,6 +828,9 @@ class GenerateRota
 
             }
 
+        // $this->duties_arr[$duty_date]['dis_qualified_consecutive_doctors'] =
+        //                     array_unique($this->duties_arr[$duty_date]['dis_qualified_consecutive_doctors']);
+
 
         return $no_consective_leave_doctor_left &&
                 $this->if_shift_doctors_completed($duty_date,'morning') &&
@@ -1138,7 +1141,7 @@ class GenerateRota
         $pre_date = strtotime('-1 day',$duty_date);
         $next_date = strtotime('+1 day',$duty_date);
         $duty_allowed = true;
-        if(isset($this->duties_arr[$pre_date])){            
+        if(isset($this->duties_arr[$pre_date])){
             $previous_shift = $this->duties_arr[$pre_date];
             $morning_doctors = array_merge($previous_shift['assigned_morning_doctors_res'],$previous_shift['assigned_morning_doctors_reg']);
             $evening_doctors = array_merge($previous_shift['assigned_evening_doctors_res'],$previous_shift['assigned_evening_doctors_reg']);
@@ -1156,14 +1159,14 @@ class GenerateRota
                     $duty_allowed = false;
                 }
             }
-        }        
-        
-        if(isset($this->duties_arr[$next_date])){ 
+        }
+
+        if(isset($this->duties_arr[$next_date])){
             $next_shift = $this->duties_arr[$next_date];
             $morning_doctors = array_merge($next_shift['assigned_morning_doctors_res'],$next_shift['assigned_morning_doctors_reg']);
             $evening_doctors = array_merge($next_shift['assigned_evening_doctors_res'],$next_shift['assigned_evening_doctors_reg']);
             $night_doctors = array_merge($next_shift['assigned_night_doctors_res'],$next_shift['assigned_night_doctors_reg']);
-    
+
             if($shift == $this->shifts['night']){
                 if(in_array($doctor_id,$morning_doctors)===true){
                     $duty_allowed = false;
@@ -1176,9 +1179,9 @@ class GenerateRota
                 if(in_array($doctor_id,$morning_doctors)===true){
                     $duty_allowed = false;
                 }
-            }        
+            }
         }
-        
+
         return $duty_allowed;
     }
 
@@ -1336,12 +1339,13 @@ class GenerateRota
                 $this->duties_arr [$next_date]['consecutive_doctors'][] = $doctor_id;
             }
 
-            if($this->shifts['night'] == $shift){
+            if($this->shifts['night'] == $shift && !in_array($doctor_id,$this->duties_arr [$next_date]['dis_qualified_consecutive_doctors'])){
                 if ($this->consective_nights_allowed <= $this->duties_arr [$duty_date]['doctors_duty_num_initial'][$doctor_id]) {
                     $this->duties_arr [$next_date]['dis_qualified_consecutive_doctors'][] = $doctor_id;
                 }
             }
-            elseif ($this->consective_days_allowed <= $this->duties_arr [$duty_date]['doctors_duty_num_initial'][$doctor_id]) {
+            elseif ($this->consective_days_allowed <= $this->duties_arr [$duty_date]['doctors_duty_num_initial'][$doctor_id]
+                    && !in_array($doctor_id,$this->duties_arr [$next_date]['dis_qualified_consecutive_doctors'])) {
                 $this->duties_arr [$next_date]['dis_qualified_consecutive_doctors'][] = $doctor_id;
             }
             $this->duties_arr[$next_date]['consecutive_leave_doctors'] =
