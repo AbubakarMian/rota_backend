@@ -22,7 +22,7 @@
 }
 
 .higlightDutyDate{
-    background:rgba(13, 69, 221, 0.075) !important;
+    background:rgba(218, 221, 13, 0.205) !important;
 }
 
 </style>
@@ -46,7 +46,7 @@
         </h2>
     </div>
 </div>
-<div class="table-responsive fullbox" id="mytableareaa" style="height: auto">
+<div class="table-responsive fullbox" id="mytableareaa" style="height: auto;display:none;">
     <table class="table table-striped table table-hover table table-bordered table table-condensed" id="customers">
         <thead class="monday">
             @foreach($weekdays as $weekday)
@@ -299,12 +299,17 @@
         </tbody>
     </table>
 </div>
+<div id="loader">
+    <center><h1 style="color: red">Generating Rota Please Wait ...</h1></center>
+</div>
 
 @section('app_jquery')
 <script>
     $(function(){
         setTimeout(function(){
-        hide_information();
+            hide_information();
+            $('#mytableareaa').toggle();
+            $('#loader').toggle();
     },2000)
     })
 var selected_doctors = '';
@@ -355,11 +360,15 @@ $(".doc").on('click' , function(){
 
      $('[data-id="'+id+'"]').css('color' , 'red');
      $('[data-id="'+id+'"]').addClass('rcorners2');
-     $( 'td' ).removeClass('higlightDutyDate');
-     var td = $( '[data-id="'+id+'"]' ).parent().parent().parent().parent().parent().parent();
+
+     $('.higlightDutyDate').removeClass('higlightDutyDate');
+
+     var td = $( '[data-id="'+id+'"]' ).parent();//.parent().parent().parent().parent().parent()
+
      td.addClass('higlightDutyDate');
+
         if( prev_id == id){
-            $( 'td' ).removeClass('higlightDutyDate');
+            $('.higlightDutyDate').removeClass('higlightDutyDate');
             $('.doc').css('color' , '');
             $('.doc').removeClass('rcorners2');
             prev_id = 0;
