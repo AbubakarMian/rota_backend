@@ -71,7 +71,7 @@ class Rota_Controller extends Controller
         $doctors = Doctor::with('user')->get()->pluck('user.name', 'id')->toArray();
         $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                     ->orderBy('duty_date', 'asc')->get();
-
+// dd($generated_rota_arr);
         $temp_rota_id = $temp_rota->id;
 
         $temp_rota_details = [];
@@ -86,6 +86,8 @@ class Rota_Controller extends Controller
                 'total_duties'=>$total_given_duties,
                 'total_leaves'=>$temp_rota->monthly_rota->total_days - $total_given_duties,
                 'temp_rota_id'=>$temp_rota_id,
+
+
             ];
         }
 
@@ -94,6 +96,7 @@ class Rota_Controller extends Controller
         foreach ($rota_generate_patterns as $rota_generate_pattern) {
             $duty_date = $rota_generate_pattern->duty_date;
             $rota_by_date = $generated_rota_arr[$duty_date];
+            // dd( $rota_by_date);
             $temp_date_rota = $this->get_temp_duties(
                 $temp_rota_id,
                 $duty_date,
@@ -107,6 +110,8 @@ class Rota_Controller extends Controller
             $temp_rota_date_details->rota_id= $monthly_rota->id ;
             $temp_rota_date_details->temp_rota_id= $temp_rota_id ;
             $temp_rota_date_details->date= $duty_date;
+
+
             if($rota_by_date['dis_qualified_consecutive_doctors']){
                 $disqualified_doc_merge=[] ;
 
@@ -122,10 +127,20 @@ class Rota_Controller extends Controller
 
                     $annual_leave_arr[] = $doctors[$al_id] ;
                 }
-                // dd($annual_leave_arr);
-
+                $temp_rota_date_details->conditions= json_encode( $rota_by_date['conditions']);
                 $temp_rota_date_details->anual_leave_doctor=  implode(',',$annual_leave_arr);
+
             }
+
+            if($rota_by_date['special_rota_off_doctors']){
+                $special_rota_off_arr=[] ;
+                    foreach($rota_by_date['special_rota_off_doctors'] as $sroff_id){
+
+                    $special_rota_off_arr[] = $doctors[$sroff_id] ;
+                }
+                $temp_rota_date_details->special_rota_off=  implode(',',$special_rota_off_arr);
+            }
+
            $temp_rota_date_details->save();
         }
         Temp_monthly_rota::insert($temp_monthly_rota);
@@ -141,7 +156,10 @@ class Rota_Controller extends Controller
         }
         $start_weekday = date('w', $temp_rota->rota_generate_pattern[0]->duty_date)+1; // since our week starts from sunday add 1
         $weekdays = Config::get('constants.weekdays_num');
-        return view('admin.doctor_calender.index', compact('temp_rota', 'start_weekday', 'weekdays', 'doctors','doctors_by_id'));
+
+        $conditions_key_values = Config::get('constants.conditions_key_values');
+
+        return view('admin.doctor_calender.index', compact('temp_rota', 'conditions_key_values','start_weekday', 'weekdays', 'doctors','doctors_by_id'));
     }
     // admin.doctor_calender.index
 
