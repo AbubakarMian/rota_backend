@@ -371,7 +371,7 @@ class GenerateRota
         }
 
         if(!$found){
-            return;
+            return false;
         }
         $duties_shift_type = Config::get('constants.duties_shift_type.'.$shift);
 
