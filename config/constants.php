@@ -142,8 +142,20 @@ return [
         'special_rota_off'=>true,
         'reg_and_res'=>true,
         'regular_leaves'=>true,
-        'duties_equilibrium'=>true,
+        // 'duties_equilibrium'=>true,
         'dis_qualified_consecutive_doctors'=>true,
+        // 'annual_leaves'=>true,
+    ],
+    'conditions_key_values'=>[
+        'check_general_request'=>'General Duties',
+        // 'consecutive_duties'=>true,
+        // 'consecutive_leave_doctors'=>true,
+        'special_rota_duties'=>'Special Duties Requests',
+        'special_rota_off'=>'Special Off Requests',
+        'reg_and_res'=>'Add both Resident and Registrar',
+        'regular_leaves'=>'Regular leaves',
+        // 'duties_equilibrium'=>true,
+        'dis_qualified_consecutive_doctors'=>'Disqualified Consecutive Doctors',
         // 'annual_leaves'=>true,
     ]
 ];

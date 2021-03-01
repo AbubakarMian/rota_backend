@@ -132,10 +132,10 @@ span.multiselect-native-select select {
 }
 
 .table-striped>tbody tr:nth-child(odd) td:nth-child(odd) {
-    background-color: #ddd;
+    background-color: #eee;
   }
   .table-striped>tbody tr:nth-child(even) td:nth-child(even) {
-     background-color: #ddd;
+     background-color: #eee;
    }
 
 
@@ -149,7 +149,9 @@ div#mytableareaa {
     padding-top: 17px;
 }
 
-
+.condition{
+    background-color: #eee;
+}
 
 body {
     background-color: white;
