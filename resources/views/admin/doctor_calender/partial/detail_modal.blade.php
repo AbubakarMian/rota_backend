@@ -36,8 +36,12 @@
 
              }
 
-
-             $condition_ = json_decode(html_entity_decode( $rota_detail[$date_index]->conditions ) , TRUE);
+             if(!$rota_detail[$date_index]->conditions){
+                $condition_ = [];
+             }
+             else{
+                $condition_ = json_decode(html_entity_decode( $rota_detail[$date_index]->conditions ) , TRUE);
+             }
 
              $conditon_s = "";
              $total_true = 0;
