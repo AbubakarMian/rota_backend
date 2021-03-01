@@ -7,6 +7,25 @@
 <script src="{{ asset('theme/vendor/fastclick/lib/fastclick.js') }}"></script>
 <script src="{{ asset('cssjs/jquery.timeentry.js')}}"></script>
 <script src="{{ asset('theme/vendor/jquery.placeholder.js') }}"></script>
+<style>
+
+.doc{
+    display:inline-block;
+    margin-left: 3px;
+}
+
+
+.rcorners2 {
+  border-radius: 25px;
+  border: 2px solid #73AD21;
+  padding: 2px;
+}
+
+.higlightDutyDate{
+    background:rgba(218, 221, 13, 0.205) !important;
+}
+
+</style>
 
 {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
@@ -27,7 +46,7 @@
         </h2>
     </div>
 </div>
-<div class="table-responsive fullbox" id="mytableareaa" style="height: auto">
+<div class="table-responsive fullbox" id="mytableareaa" style="height: auto;display:none;">
     <table class="table table-striped table table-hover table table-bordered table table-condensed" id="customers">
         <thead class="monday">
             @foreach($weekdays as $weekday)
@@ -56,24 +75,35 @@
 
                 $ucc_morning_doctor = '';
                 $all_morning_doctor = '';
+
                 foreach ($morning_doctors as $key => $doctor) {
                 if($doctor['is_ucc']){
                     $ucc_morning_doctor = $doctor['doctor_id'];
                 }
 
-                    $all_morning_doctor = $all_morning_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
                 }
-                $all_morning_doctor = preg_replace('/ , /', '', $all_morning_doctor, 1);
+
+                $m_doctors = sort_by_name($morning_doctors,$doctors_by_id);
+
+                foreach($m_doctors as $doctor_id=>$md){
+                 $all_morning_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
+                 }
+                $all_morning_doctor = ltrim($all_morning_doctor,',') ;
                 $ucc_evening_doctor = '';
                 $all_evening_doctor = '';
                 foreach ($evening_doctors as $key => $doctor) {
                     if($doctor['is_ucc']){
                         $ucc_evening_doctor = $doctor['doctor_id'];
                     }
-                    $all_evening_doctor = $all_evening_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
+                    // $all_evening_doctor .= ',<div data-id="'.$doctor['doctor_id'].'" class="doc did_'.$doctor['doctor_id'].'">'.$doctors_by_id[$doctor['doctor_id']].'</div>';
 
                     }
-                $all_evening_doctor = preg_replace('/ , /', '', $all_evening_doctor, 1);
+                $e_doctors = sort_by_name($evening_doctors,$doctors_by_id);
+
+                foreach($e_doctors as $doctor_id=>$md){
+                 $all_evening_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
+                 }
+                 $all_evening_doctor = ltrim($all_evening_doctor,',') ;
 
                 $ucc_night_doctor = '';
                 $all_night_doctor = '';
@@ -81,9 +111,15 @@
                     if($doctor['is_ucc']){
                         $ucc_night_doctor = $doctor['doctor_id'];
                     }
-                    $all_night_doctor = $all_night_doctor.' , '.$doctors_by_id[$doctor['doctor_id']];
+                    // $all_night_doctor .= ',<div data-id="'.$doctor['doctor_id'].'" class=" doc did_'.$doctor['doctor_id'].'">'.$doctors_by_id[$doctor['doctor_id']].'</div>';
                 }
-                $all_night_doctor = preg_replace('/ , /', '', $all_night_doctor, 1);
+                $n_doctors = sort_by_name($night_doctors,$doctors_by_id);
+
+                foreach($n_doctors as $doctor_id=>$md){
+                 $all_night_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
+                 }
+                // $all_night_doctor = preg_replace('/ , /', '', $all_night_doctor, 1);
+                $all_night_doctor = ltrim($all_night_doctor,',') ;
 
                 if($tds == 1){
                     echo '<tr class="myboxes">';
@@ -263,12 +299,17 @@
         </tbody>
     </table>
 </div>
+<div id="loader">
+    <center><h1 style="color: red">Generating Rota Please Wait ...</h1></center>
+</div>
 
 @section('app_jquery')
 <script>
     $(function(){
         setTimeout(function(){
-        hide_information();
+            hide_information();
+            $('#mytableareaa').toggle();
+            $('#loader').toggle();
     },2000)
     })
 var selected_doctors = '';
@@ -289,6 +330,9 @@ function hide_information(){
 </script>
 
 <script>
+
+var prev_id = 0 ;
+
     $('#hide_ucc').on('click' , function(){
     $('.myucc').toggle();
     $('.ucc_class').toggle();
@@ -307,8 +351,32 @@ $("#hide_regularduites").toggleText('Hide Regular Duties', 'Show Regular Duties'
  $('.multiselect').toggle();
 
 });
+$(".doc").on('click' , function(){
 
+    var id = $(this).data('id');
 
+     $('.doc').css('color' , '');
+     $('.doc').removeClass('rcorners2');
+
+     $('[data-id="'+id+'"]').css('color' , 'red');
+     $('[data-id="'+id+'"]').addClass('rcorners2');
+
+     $('.higlightDutyDate').removeClass('higlightDutyDate');
+
+     var td = $( '[data-id="'+id+'"]' ).parent();//.parent().parent().parent().parent().parent()
+
+     td.addClass('higlightDutyDate');
+
+        if( prev_id == id){
+            $('.higlightDutyDate').removeClass('higlightDutyDate');
+            $('.doc').css('color' , '');
+            $('.doc').removeClass('rcorners2');
+            prev_id = 0;
+        }
+        else{
+            prev_id = id;
+        }
+});
 
 function closeModal(){
     $('.modal').modal('hide');
@@ -316,16 +384,36 @@ function closeModal(){
     $('.modal-backdrop').remove();
 }
 
-
-
-
 $.fn.extend({
     toggleText: function(a, b){
         return this.text(this.text() == b ? a : b);
     }
 });
 
+$.fn.extend({
+    toggleColor: function(a, b){
+        return this.css( 'color', this.text() == b ? a : b);
+    }
+});
+
 </script>
+
+<?php
+
+function sort_by_name($morning_doctors,$doctors_by_id){
+    $m_doctors = [];
+
+        foreach ($morning_doctors as $key => $doctor) {
+        $m_doctors[$doctors_by_id[$doctor['doctor_id']]] =  [
+                'name'=>$doctors_by_id[$doctor['doctor_id']],
+                'id'=>$doctor['doctor_id']
+            ];
+        }
+    asort($m_doctors);
+    return $m_doctors;
+}
+
+?>
 
 @include('admin.doctor_calender.partial.calenderjs')
 @endsection

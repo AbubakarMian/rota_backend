@@ -21,7 +21,7 @@ class DoctorController extends Controller
 
         $doctors = Doctor::whereHas('user', function ($query) use ($name) {
             $query->where('name', 'like', '%' . $name . '%');
-        })->with('user')->where('is_deleted',0)->withTrashed()->paginate(10);
+        })->with('user')->where('is_deleted',0)->orderBy('deleted_at','asc')->orderBy('created_at','desc')->withTrashed()->paginate(10);
 
         return view('admin.doctor.index', compact('doctors'));
     }

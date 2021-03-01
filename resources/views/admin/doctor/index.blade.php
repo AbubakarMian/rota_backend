@@ -50,7 +50,12 @@ width="400px" style="table-layout:fixed;"
 
     @foreach($doctors as $d)
 
-	<tr>
+    <?php $deactivate_doctor_style = '';
+        if($d->deleted_at){
+            $deactivate_doctor_style = 'style="background:grey;color:white"';
+        }
+    ?>
+	<tr {!!$deactivate_doctor_style!!}>
 
         <td>{!! ucwords($d->user->fullname) !!}</td>
         <td>{!! ucwords($d->user->name) !!}</td>
@@ -67,8 +72,6 @@ width="400px" style="table-layout:fixed;"
             ?>
 
 		{{-- <td><img width="100px" src="{!! $d->user->avatar!!}" class="show-product-img imgshow"></td> --}}
-
-
         <td>
 			{!! link_to_action('Admin\DoctorController@edit',
 			'Edit', array($d->id), array('class' => 'badge bg-info')) !!}
