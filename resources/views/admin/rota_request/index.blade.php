@@ -23,7 +23,7 @@ width="400px" style="table-layout:fixed;"
 </style>
 
 @section('table')
-{!! Form::open(['method' => 'get', 'route' => ['doctor.summary.search'], 'files'=>true]) !!}
+{!! Form::open(['method' => 'post', 'route' => ['doctor.summary.search'], 'files'=>true]) !!}
 @include('admin.doctor.partial.searchfilters')
 {!!Form::close() !!}
 @stop
