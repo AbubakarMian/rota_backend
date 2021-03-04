@@ -77,7 +77,7 @@ class GenerateRota
 
 
         while ($duty_date <= $last_duty_date) {
-
+            $problem_date = $duty_date;
             $date_num = $date_num+1;
                 $all_assigned = $this->assign_duties_to_consecutive_leave_doctors($duty_date);
                 $all_assigned = $this->assign_duties_to_consecutive_doctors($duty_date);
@@ -106,9 +106,6 @@ class GenerateRota
 
                     $div_condition_key_num = $div_condition_key_num+1;
                     $div_extra_duties_allowed = $div_extra_duties_allowed+1;
-                    if($problem_date < $duty_date){
-                        $problem_date = $duty_date;
-                    }
 
                     $find_suitable_doctor_key = 0;
                     $back_track_index++;
@@ -134,7 +131,6 @@ class GenerateRota
                         $div_condition_key_num = 0;
                         if($setduties_num == 0){
                             $setduties_num = 1;
-                            // $this->minimize_total_duties($duty_date);
                             $this->reset_duties_by_date_assign_consective_special_request_duties($duty_date);
                         }
                     }
@@ -167,6 +163,7 @@ class GenerateRota
                 }
                 if($problem_date == $duty_date && $all_assigned){
                     Log::info('--------------- End Problem Date : '.$problem_date.' --------------------');
+                    $this->duties_arr[$duty_date]['conditions'] = $this->conditions;
                     $this->debug_index = 0;
                     $back_track_date = 1;
                     foreach($this->conditions as $my_key=>$condition){
@@ -371,7 +368,7 @@ class GenerateRota
         }
 
         if(!$found){
-            return;
+            return false;
         }
         $duties_shift_type = Config::get('constants.duties_shift_type.'.$shift);
 
@@ -889,6 +886,7 @@ class GenerateRota
         'disqualified_already_assigned'=>[],
         'disqualified_consecutive_doctors'=>[],
         'disqualified_special_rota_off'=>[],
+        'conditions'=>[],
         ];
         return $duty_arr;
     }
@@ -1260,9 +1258,9 @@ class GenerateRota
             if(!in_array($doctor_id,$this->duties_arr[$duty_date]['disqualified_special_rota_off'])){
                 $this->duties_arr[$duty_date]['disqualified_special_rota_off'][]= $doctor_id;
             }
-            elseif(!$special_rota_off_doctors){
-                $this->duties_arr[$duty_date]['disqualified_special_rota_off']=[];
-            }
+            // elseif(!$special_rota_off_doctors){
+            //     $this->duties_arr[$duty_date]['disqualified_special_rota_off']=[];
+            // }
             return false;
         }
 

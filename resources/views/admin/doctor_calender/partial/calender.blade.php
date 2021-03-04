@@ -12,13 +12,17 @@
 .doc{
     display:inline-block;
     margin-left: 3px;
+
 }
 
 
 .rcorners2 {
-  border-radius: 25px;
-  border: 2px solid #73AD21;
-  padding: 2px;
+  border-radius: 2px;
+  /* border: 2px solid #73AD21; */
+  padding:0px 4px;
+  cursor: pointer;
+  background: green;
+    color: #fff !important;
 }
 
 .higlightDutyDate{
