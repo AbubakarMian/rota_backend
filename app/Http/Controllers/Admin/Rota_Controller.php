@@ -13,8 +13,10 @@ use App\models\Doctor;
 use App\models\Rota;
 use App\models\Rota_Request;
 use App\models\Doctor_type;
+use App\models\Rota_detail;
 use App\models\Temp_monthly_rota;
 use App\models\TempRota;
+use App\models\Monthly_Rota_doctors;
 use App\models\Rota_Generate_Pattern;
 use App\models\Temp_Rota_Date_Details;
 use Carbon\Carbon;
@@ -145,6 +147,61 @@ class Rota_Controller extends Controller
         }
         Temp_monthly_rota::insert($temp_monthly_rota);
         return [$temp_rota];
+        // dd('Temp_monthly_rota');
+
+    }
+
+    public function save_temp_rota($temp_rota_id){
+
+ $temp_rota = TempRota::find($temp_rota_id);
+
+  
+
+  $temp_monthly_rota = Temp_monthly_rota::where('temp_rota_id',$temp_rota_id)->get();
+
+   $rota = Rota::where('monthly_rota_id',$temp_rota->monthly_rota_id)->delete();
+  $rota = [];
+  foreach($temp_monthly_rota as $monthly_rota_doc){
+
+      $rota[] = [
+          'doctor_id'=>$monthly_rota_doc->doctor_id,
+          'shift'=>$monthly_rota_doc->shift,
+          'duty_date'=>$monthly_rota_doc->duty_date,
+          'doctor_type_id'=>$monthly_rota_doc->doctor_type_id,
+          'is_ucc'=>$monthly_rota_doc->is_ucc,
+          'monthly_rota_id'=>$temp_rota->monthly_rota_id,
+      ];
+  }
+
+  Rota::insert($rota);
+
+$temp_rota_detail = Temp_Rota_detail::where('temp_rota_id',$temp_rota_id)->get();
+
+// $monthly_Rota_doctors = Monthly_Rota_doctors::where('monthly_rota_id' ,$temp_rota->monthly_rota_id )->get();
+// dd($temp_rota_detail);
+$rota_detail = [];
+
+foreach($temp_rota_detail as $temp_rota){
+
+    $rota_detail[] = [
+        'doctor_id'=>$temp_rota->doctor_id,
+        // 'monthly_rota_id'=>$temp_rota_detail->monthly_rota_id,
+        'total_morning'=>$temp_rota->total_morning,
+        'total_evening'=>$temp_rota->total_evening,
+        'total_night'=>$temp_rota->total_night,
+        'total_duties'=>$temp_rota->total_duties,
+        'total_leaves'=>$temp_rota->total_leaves,
+
+    ];
+
+    Rota_detail::insert($rota_detail);
+    
+}
+
+
+
+
+
     }
 
     public function calender_view_temp_rota($temp_rota_id){
