@@ -17,9 +17,9 @@ class CreateMonthlyRotaDoctors extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('doctor_id')->nullable()->default(0);
             $table->bigInteger('monthly_rota_id')->nullable()->default(0);
-            $table->integer('morning_duties')->default(0);
-            $table->integer('evening_duties')->default(0);
-            $table->integer('night_duties')->default(0);
+            $table->integer('total_morning')->default(0);
+            $table->integer('total_evening')->default(0);
+            $table->integer('total_night')->default(0);
             $table->integer('total_duties')->default(0);
             $table->timestamps();
             $table->softDeletes();

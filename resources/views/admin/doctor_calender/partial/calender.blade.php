@@ -50,6 +50,9 @@
     <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
         <a target="_blank" href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->id ) }}"
             class="btn btn-info">Details</a>
+            <a href="{{ url('admin/rota/save/temp/'.$temp_rota->id)  }}" class="btn btn-primary" type="submit" >Save  
+            </a>
+            {{-- <input type="submit" value="save"  class="btn btn-primary"> --}}
         &nbsp; <button class="btn btn-warning" id="hide_ucc">Hide UCC</button>
         &nbsp; <button class="btn btn-primary" id="hide_regularduites">Hide Regular Duties</button>
     </div>
