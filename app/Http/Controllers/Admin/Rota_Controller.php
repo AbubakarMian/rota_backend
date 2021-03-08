@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Libraries\GenerateRota;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Log;
+
 
 class Rota_Controller extends Controller
 {
@@ -150,6 +152,8 @@ class Rota_Controller extends Controller
     public function save_temp_rota($temp_rota_id){
 
     $temp_rota = TempRota::find($temp_rota_id);
+    $temp_rota->status = 'selected';
+    $temp_rota->save();
 
     $temp_monthly_rota = Temp_monthly_rota::where('temp_rota_id',$temp_rota_id)->get();
     $monthly_rota_id = $temp_rota->monthly_rota_id;
@@ -219,6 +223,38 @@ class Rota_Controller extends Controller
         return $this->calender_view_temp_rota($temp_rota->id);
     }
 
+    public function update_temp_rota(Request $request){
+        Log::info('all request ');
+        Log::info($request->all());
+
+        $temp_rota_id = $request->temp_rota_id;
+        $shift = $request->shift;
+        $is_ucc = $request->is_ucc;
+        $duty_date = $request->duty_date;
+        $temp_monthly_rota = Temp_monthly_rota::where('temp_rota_id',$temp_rota_id)
+            ->where('shift',$shift)
+            ->where('is_ucc',$is_ucc)
+            ->where('duty_date',$duty_date)
+            ->delete();
+
+        $temp_monthly_rota_arr = [];
+        $doctors = explode(',',$request->doctors);
+        foreach($doctors as $d){
+            $doctor = Doctor::find($d);
+            $temp_monthly_rota_arr[] = [
+                'doctor_id'=>$d,
+                'temp_rota_id'=>$temp_rota_id,
+                'shift'=>$shift,
+                'duty_date'=>$duty_date,
+                'doctor_type_id'=>$doctor->doctor_type_id,
+                'is_ucc'=>$is_ucc,
+            ];
+        }
+        Temp_monthly_rota::insert($temp_monthly_rota_arr);
+
+        return json_encode($request->all());
+    }
+
     public function get_temp_duties($temp_rota_id, $duty_date, $rota_generate_pattern, $rota_by_date, $doctors)
     {
         $temp_duties = [];
@@ -254,6 +290,34 @@ class Rota_Controller extends Controller
         ];
         return $temp_duty;
     }
+
+    public function status($id){
+
+   $status_check = TempRota::find($id);
+
+    if ($status_check->status)
+      {
+    $status_check->status = 'selected';
+    $new_value = 'unselected';
+
+   }
+
+   else{
+      $status_check->status = 'unselected';
+      $new_value = 'selected';
+   }
+
+   $status_check->save();
+   $response = Response::json([
+    "status" => true,
+    'action' => Config::get('constants.ajax_action.update'),
+    'new_value' => $new_value
+
+    ]);
+    return $response;
+    }
+
+
 
     public function destroy_undestroy($id)
     {

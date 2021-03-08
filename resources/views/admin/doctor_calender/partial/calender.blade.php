@@ -50,7 +50,7 @@
     <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
         <a target="_blank" href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->id ) }}"
             class="btn btn-info">Details</a>
-            <a href="{{ url('admin/rota/save/temp/'.$temp_rota->id)  }}" class="btn btn-primary" type="submit" >Save  
+            <a href="{{ url('admin/rota/save/temp/'.$temp_rota->id)  }}" class="btn btn-primary" type="submit" >Save
             </a>
             {{-- <input type="submit" value="save"  class="btn btn-primary"> --}}
         &nbsp; <button class="btn btn-warning" id="hide_ucc">Hide UCC</button>
@@ -171,7 +171,7 @@
                                     <div class="col-sm-6 regular_duties">
 
                                         <select id="dates-field2"
-                                            onchange="show_doctors('multiple_line_text_morning_{!!$item->id!!}');"
+                                            onchange="show_doctors('multiple_line_text_morning_{!!$item->id!!}','{!!$temp_rota->id!!}','{!!$item->duty_date!!}','morning','0',this);"
                                             class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
                                             @foreach ($doctors as $doctor)
                                             <?php
@@ -182,7 +182,7 @@
                                             }
                                         ?>
                                             <option {!! $selected !!} value="{!!$doctor->id!!}">
-                                                {!!$doctor->user->name!!}
+                                                {!!ucwords($doctor->user->name)!!}
                                             </option>
                                             @endforeach
                                         </select>
@@ -201,7 +201,7 @@
                                                 }
                                             ?>
                                             <option {!! $selected !!} value="{!!$doctor->id!!}">
-                                                {!!$doctor->user->name!!}
+                                                {!!ucwords($doctor->user->name)!!}
                                             </option>
                                             @endforeach
                                         </select>
@@ -220,7 +220,7 @@
                                 <div class="row" style="margin: 2px">
                                     <div class="col-sm-6 regular_duties">
                                         <select id="dates-field2"
-                                            onchange="show_doctors('multiple_line_text_evening_{!!$item->id!!}');"
+                                            onchange="show_doctors('multiple_line_text_evening_{!!$item->id!!}','{!!$temp_rota->id!!}','{!!$item->duty_date!!}','evening','0',this);"
                                             class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
                                             @foreach ($doctors as $doctor)
                                             <?php
@@ -231,7 +231,7 @@
                                             }
                                         ?>
                                             <option {!! $selected !!} value="{!!$doctor->id!!}">
-                                                {!!$doctor->user->name!!}
+                                                {!!ucwords($doctor->user->name)!!}
                                             </option>
                                             @endforeach
                                         </select>
@@ -249,7 +249,7 @@
                                             }
                                         ?>
                                             <option {!! $selected !!} value="{!!$doctor->id!!}">
-                                                {!!$doctor->user->name!!}
+                                                {!!ucwords($doctor->user->name)!!}
                                             </option>
                                             @endforeach
                                         </select>
@@ -266,7 +266,7 @@
                                 <div class="col-sm-6 regular_duties">
 
                                     <select id="dates-field2"
-                                        onchange="show_doctors('multiple_line_text_night_{!!$item->id!!}');"
+                                        onchange="show_doctors('multiple_line_text_night_{!!$item->id!!}','{!!$temp_rota->id!!}','{!!$item->duty_date!!}','night','0',this);"
                                         class="multiselect-ui form-control" multiple="multiple" cols="2" rows="2">
                                         @foreach ($doctors as $doctor)
                                         <?php
@@ -276,7 +276,8 @@
                                             $selected = 'selected';
                                         }
                                     ?>
-                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">
+                                            {!!ucwords($doctor->user->name)!!}
                                         </option>
                                         @endforeach
                                     </select>
@@ -291,7 +292,8 @@
                                                 $selected = 'selected';
                                             }
                                         ?>
-                                        <option {!! $selected !!} value="{!!$doctor->id!!}">{!!$doctor->user->name!!}
+                                        <option {!! $selected !!} value="{!!$doctor->id!!}">
+                                            {!!ucwords($doctor->user->name)!!}
                                         </option>
                                         @endforeach
                                     </select>
@@ -332,12 +334,45 @@
     })
 var selected_doctors = '';
 
-function show_doctors(show_list){
-    setTimeout(function(){
-        $('.'+show_list).html(selected_doctors);
-        console.log('e asdsa',selected_doctors);
-        hide_information();
-    },2000)
+function show_doctors(show_list,temp_rota_id,duty_date,shift,is_ucc,sel){ //,'{!!$temp_rota->id!!}','{!!$item->duty_date!!}','morning','0',this
+var len = sel.options.length;
+var opts = '',opt,text_name='',glue= '';
+
+  for (var i = 0; i < len; i++) {
+    opt = sel.options[i];
+
+    if (opt.selected) {
+      opts = opts+glue+opt.value;
+      console.log('sel are ',opt.value);
+      console.log('text are ',opt.text);
+      text_name = text_name+glue+opt.text;
+      glue = ',';
+    }
+  }
+  console.log('sel opts ',opts);
+
+  $.ajax({
+        url:'{!!asset("admin/temp_rota/calender/update")!!}',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+            '_token' :'{!! csrf_token() !!}',
+            'doctors':opts,
+            temp_rota_id:temp_rota_id,
+            duty_date:duty_date,
+            shift:shift,
+            is_ucc:is_ucc,
+        },
+        success: function(data){
+            console.log('data',data);
+
+        },
+        error: function (data) {
+            console.log('Error:', data);
+        }
+    });
+    console.log('rr asd',show_list,temp_rota_id,duty_date,shift,is_ucc,sel);
+        $('.'+show_list).html(text_name);
 }
 
 function hide_information(){
@@ -423,7 +458,7 @@ function sort_by_name($morning_doctors,$doctors_by_id){
 
         foreach ($morning_doctors as $key => $doctor) {
         $m_doctors[$doctors_by_id[$doctor['doctor_id']]] =  [
-                'name'=>$doctors_by_id[$doctor['doctor_id']],
+                'name'=>ucwords($doctors_by_id[$doctor['doctor_id']]),
                 'id'=>$doctor['doctor_id']
             ];
         }

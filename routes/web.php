@@ -73,10 +73,16 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('admin/temp_rota/list/{monthly_rota_id}', 'Admin\Rota_Controller@temp_rota')->name('temprota.list'); // temp rota
+
+// admin/status/check
+Route::post('admin/status/check/{id}', 'Admin\Rota_Controller@status')->name('status.check'); // admin/status/check
+
+
 ////temp_rotaa.delete
 Route::post('admin/temperoray_rota/delete/{temp_rota_id}', 'Admin\Rota_Controller@temprota_destroy')->name('temperoray_rota.delete'); // temp rota
 
 Route::post('admin/rota/generate/{monthly_rota_id}', 'Admin\Rota_Controller@generate')->name('temprota.new.generate'); // new rota
+Route::post('admin/temp_rota/calender/update', 'Admin\Rota_Controller@update_temp_rota')->name('update.temp.rota'); // update.temp.rota
 Route::get('admin/rota/view/{temp_rota_id}', 'Admin\Rota_Controller@get_temp_rota')->name('temprota.view'); // view previous
 
 

@@ -27,6 +27,7 @@ width="400px" style="table-layout:fixed;"
 <thead>
     <tr>
         <th>Demo Number</th>
+        <th>Status</th>
         <th>View</th>
         <th>Delete</th>
     </tr>
@@ -35,6 +36,7 @@ width="400px" style="table-layout:fixed;"
     @foreach($temp_rota as $t)
     <tr>
         <td>Demo-{!! $t->demo_num!!}</td>
+       <td>{!! ucwords($t->status)!!}</td>
         <td>
             <a href="{{ asset('admin/rota/view/'.$t->id) }}" class="badge bg-info" target="_blank">View </a>
         </td>
