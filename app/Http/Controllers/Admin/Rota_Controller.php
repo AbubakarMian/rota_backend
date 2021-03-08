@@ -73,7 +73,7 @@ class Rota_Controller extends Controller
         $doctors = Doctor::with('user')->get()->pluck('user.name', 'id')->toArray();
         $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                     ->orderBy('duty_date', 'asc')->get();
-// dd($generated_rota_arr);
+
         $temp_rota_id = $temp_rota->id;
 
         $temp_rota_details = [];
@@ -81,15 +81,14 @@ class Rota_Controller extends Controller
             $total_given_duties = $doctor_duties['given_morning']+$doctor_duties['given_evening']+$doctor_duties['given_night'];
 
             $temp_rota_details[] = [
+                'monthly_rota_id'=>$monthly_rota->id,
                 'doctor_id'=>$doctor_duties['doctor_id'],
                 'total_morning'=>$doctor_duties['given_morning'],
                 'total_evening'=>$doctor_duties['given_evening'],
                 'total_night'=>$doctor_duties['given_night'],
                 'total_duties'=>$total_given_duties,
-                'total_leaves'=>$temp_rota->monthly_rota->total_days - $total_given_duties,
+                'total_leaves'=>$monthly_rota->total_days - $total_given_duties,
                 'temp_rota_id'=>$temp_rota_id,
-
-
             ];
         }
 
@@ -98,7 +97,6 @@ class Rota_Controller extends Controller
         foreach ($rota_generate_patterns as $rota_generate_pattern) {
             $duty_date = $rota_generate_pattern->duty_date;
             $rota_by_date = $generated_rota_arr[$duty_date];
-            // dd( $rota_by_date);
             $temp_date_rota = $this->get_temp_duties(
                 $temp_rota_id,
                 $duty_date,
@@ -147,21 +145,18 @@ class Rota_Controller extends Controller
         }
         Temp_monthly_rota::insert($temp_monthly_rota);
         return [$temp_rota];
-        // dd('Temp_monthly_rota');
-
     }
 
     public function save_temp_rota($temp_rota_id){
 
- $temp_rota = TempRota::find($temp_rota_id);
+    $temp_rota = TempRota::find($temp_rota_id);
 
-  
+    $temp_monthly_rota = Temp_monthly_rota::where('temp_rota_id',$temp_rota_id)->get();
+    $monthly_rota_id = $temp_rota->monthly_rota_id;
 
-  $temp_monthly_rota = Temp_monthly_rota::where('temp_rota_id',$temp_rota_id)->get();
-
-   $rota = Rota::where('monthly_rota_id',$temp_rota->monthly_rota_id)->delete();
-  $rota = [];
-  foreach($temp_monthly_rota as $monthly_rota_doc){
+    $rota = Rota::where('monthly_rota_id',$monthly_rota_id)->delete();
+    $rota = [];
+    foreach($temp_monthly_rota as $monthly_rota_doc){
 
       $rota[] = [
           'doctor_id'=>$monthly_rota_doc->doctor_id,
@@ -169,39 +164,29 @@ class Rota_Controller extends Controller
           'duty_date'=>$monthly_rota_doc->duty_date,
           'doctor_type_id'=>$monthly_rota_doc->doctor_type_id,
           'is_ucc'=>$monthly_rota_doc->is_ucc,
-          'monthly_rota_id'=>$temp_rota->monthly_rota_id,
+          'monthly_rota_id'=>$monthly_rota_id,
       ];
   }
 
-  Rota::insert($rota);
+    Rota::insert($rota);
 
-$temp_rota_detail = Temp_Rota_detail::where('temp_rota_id',$temp_rota_id)->get();
+        $temp_rota_detail = Temp_Rota_detail::where('temp_rota_id',$temp_rota_id)->get();
+        $rota_detail = [];
 
-// $monthly_Rota_doctors = Monthly_Rota_doctors::where('monthly_rota_id' ,$temp_rota->monthly_rota_id )->get();
-// dd($temp_rota_detail);
-$rota_detail = [];
+        foreach($temp_rota_detail as $temp_rota){
 
-foreach($temp_rota_detail as $temp_rota){
+        $rota_detail[] = [
+            'doctor_id'=>$temp_rota->doctor_id,
+            'monthly_rota_id'=>$monthly_rota_id,
+            'total_morning'=>$temp_rota->total_morning,
+            'total_evening'=>$temp_rota->total_evening,
+            'total_night'=>$temp_rota->total_night,
+            'total_duties'=>$temp_rota->total_duties,
+            'total_leaves'=>$temp_rota->total_leaves,
 
-    $rota_detail[] = [
-        'doctor_id'=>$temp_rota->doctor_id,
-        // 'monthly_rota_id'=>$temp_rota_detail->monthly_rota_id,
-        'total_morning'=>$temp_rota->total_morning,
-        'total_evening'=>$temp_rota->total_evening,
-        'total_night'=>$temp_rota->total_night,
-        'total_duties'=>$temp_rota->total_duties,
-        'total_leaves'=>$temp_rota->total_leaves,
-
-    ];
-
-    Rota_detail::insert($rota_detail);
-    
-}
-
-
-
-
-
+        ];
+        Rota_detail::insert($rota_detail);
+        }
     }
 
     public function calender_view_temp_rota($temp_rota_id){
@@ -218,7 +203,6 @@ foreach($temp_rota_detail as $temp_rota){
 
         return view('admin.doctor_calender.index', compact('temp_rota', 'conditions_key_values','start_weekday', 'weekdays', 'doctors','doctors_by_id'));
     }
-    // admin.doctor_calender.index
 
     public function get_temp_rota($temp_rota_id){
         $temp_rota = TempRota::find($temp_rota_id);
@@ -297,6 +281,4 @@ foreach($temp_rota_detail as $temp_rota){
         ]);
         return $response;
     }
-
-
 }

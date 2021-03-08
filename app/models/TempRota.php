@@ -11,14 +11,14 @@ class TempRota extends Model
     protected $table='temp_rota';
 
     public function monthly_rota(){
-        return $this->hasOne('App\models\_rota','id','_rota_id');
+        return $this->hasOne('App\models\Monthly_rota','id','rota_id');
     }
 
     public function rota_generate_pattern(){
         return $this->hasMany('App\models\Rota_Generate_Pattern','monthly_rota_id','monthly_rota_id');
     }
 
-    public function temp__rota(){
+    public function temp_monthly_rota(){
         return $this->hasMany('App\models\Temp_monthly_rota','temp_rota_id','id');
     }
 
