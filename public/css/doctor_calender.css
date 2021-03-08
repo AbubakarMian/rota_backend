@@ -131,13 +131,17 @@ span.multiselect-native-select select {
     font-size: 14px;
 }
 
-.table-striped>tbody tr:nth-child(odd) td:nth-child(odd) {
+
+
+#mytableareaa .table-striped>tbody tr:nth-child(odd) td:nth-child(odd) {
     background-color: #eee;
   }
-  .table-striped>tbody tr:nth-child(even) td:nth-child(even) {
+#mytableareaa .table-striped>tbody tr:nth-child(even) td:nth-child(even) {
      background-color: #eee;
    }
-
+.myConsecutive tr {
+    background: #eee;
+}
 
 div#mytableareaa {
     min-height: .01%;

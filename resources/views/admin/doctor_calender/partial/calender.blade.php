@@ -11,10 +11,13 @@
 
 .doc{
     display:inline-block;
-    margin-left: 3px;
-
+    /* margin-left: 3px; */
+    padding: 0px 2px;
 }
-
+.doc:hover {
+    transform: scale(1.12);
+    cursor: pointer;
+}
 
 .rcorners2 {
   border-radius: 2px;
@@ -23,10 +26,18 @@
   cursor: pointer;
   background: green;
     color: #fff !important;
+
+}
+.rcorners2:hover {
+
+    transform: scale(1.12);
 }
 
 .higlightDutyDate{
     background:rgba(218, 221, 13, 0.205) !important;
+}
+.higlightDutyDate:hover {
+
 }
 
 </style>
@@ -370,7 +381,7 @@ $(".doc").on('click' , function(){
 
      $('.higlightDutyDate').removeClass('higlightDutyDate');
 
-     var td = $( '[data-id="'+id+'"]' ).parent();//.parent().parent().parent().parent().parent()
+     var td = $( '[data-id="'+id+'"]' ).parent().parent();//.parent().parent().parent().parent()
 
      td.addClass('higlightDutyDate');
 
