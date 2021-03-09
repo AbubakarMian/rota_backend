@@ -45,6 +45,7 @@ use Illuminate\Support\Facades\Route;
    Route::post('admin/rota/leave/doctor/delete/{id}', 'Admin\Rota_RequestController@destroy_undestroy')->name('admin.leave.delete');
 
    Route::get('admin/temp/rota/detail/{id}', 'Admin\Temp_Rota_Controller@index')->name('temp.rota.detail');
+   Route::get('admin/rota/detail/{id}', 'Admin\Rota_Controller@rota_detail')->name('rota.detail');
    // admin/rota/save/temp/'.$temp_rota->id
 
    Route::get('admin/rota/save/temp/{id}', 'Admin\Rota_Controller@save_temp_rota')->name('rota.temp.save');
@@ -62,6 +63,7 @@ use Illuminate\Support\Facades\Route;
 
     //////////ROTA
    Route::get('admin/rota', 'Admin\Rota_Controller@index')->name('rota.index');
+   Route::get('admin/rota/calender/{monthly_rota_id}', 'Admin\Rota_Controller@show_rota')->name('rota.calender');
    Route::get('admin/list/create', 'Admin\Rota_Controller@create')->name('doctor.list.create');
    ///admin.rota.delete
    Route::post('admin/rota/delete/{id}', 'Admin\Rota_Controller@destroy_undestroy')->name('admin.rota.delete');

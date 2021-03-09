@@ -33,6 +33,7 @@ width="400px" style="table-layout:fixed;"
         <th>Year</th>
         <th>Month</th>
         <th>Temp Rota</th>
+        <th>Rota</th>
         <th> Rota Generate Pattern</th>
         <th> Delete</th>
 	</tr>
@@ -46,6 +47,9 @@ width="400px" style="table-layout:fixed;"
         <td>{!! date("F", mktime(0, 0, 0, $l->month, 10))!!}</td>
         <td>
             <a href="{{ asset('admin/temp_rota/list/'.$l->id) }}" class="badge bg-info">view </a>
+        </td>
+        <td>
+            <a href="{{ asset('admin/rota/calender/'.$l->id) }}" class="badge bg-info">view </a>
         </td>
         <td>
             <a href="{{ asset('admin/rota/generate/pattern/'.$l->id) }}" class="badge bg-info">Edit </a>

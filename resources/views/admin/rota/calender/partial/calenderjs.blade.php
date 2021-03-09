@@ -1,120 +1,11 @@
-
-<style>
-    span.multiselect-native-select {
-        position: relative
-    }
-
-    span.multiselect-native-select select {
-        border: 0 !important;
-        clip: rect(0 0 0 0) !important;
-        height: 1px !important;
-        margin: -1px -1px -1px -3px !important;
-        overflow: hidden !important;
-        padding: 0 !important;
-        position: absolute !important;
-        width: 1px !important;
-        left: 50%;
-        top: 30px
-    }
-
-    .multiselect-container {
-        position: absolute;
-        list-style-type: none;
-        margin: 0;
-        padding: 0
-    }
-
-    .multiselect-container .input-group {
-        margin: 5px
-    }
-
-    .multiselect-container>li {
-        padding: 0
-    }
-
-    .multiselect-container>li>a.multiselect-all label {
-        font-weight: 700
-    }
-
-    .multiselect-container>li.multiselect-group label {
-        margin: 0;
-        padding: 3px 20px 3px 20px;
-        height: 100%;
-        font-weight: 700
-    }
-
-    .multiselect-container>li.multiselect-group-clickable label {
-        cursor: pointer
-    }
-
-    .multiselect-container>li>a {
-        padding: 0
-    }
-
-    .multiselect-container>li>a>label {
-        margin: 0;
-        height: 100%;
-        cursor: pointer;
-        font-weight: 400;
-        padding: 3px 0 3px 30px
-    }
-
-    .multiselect-container>li>a>label.radio,
-    .multiselect-container>li>a>label.checkbox {
-        margin: 0
-    }
-
-    .multiselect-container>li>a>label>input[type=checkbox] {
-        margin-bottom: 5px
-    }
-
-    .btn-group>.btn-group:nth-child(2)>.multiselect.btn {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px
-    }
-
-    .form-inline .multiselect-container label.checkbox,
-    .form-inline .multiselect-container label.radio {
-        padding: 3px 20px 3px 40px
-    }
-
-    .form-inline .multiselect-container li a label.checkbox input[type=checkbox],
-    .form-inline .multiselect-container li a label.radio input[type=radio] {
-        margin-left: -20px;
-        margin-right: 0
-    }
-</style>
-
-<div class="form-group">
-    <label class="col-md-4 control-label" for="rolename">Role Name</label>
-    <div class="col-md-4">
-        <select id="dates-field2" class="multiselect-ui form-control" multiple="multiple">
-            <option value="cheese">Cheese</option>
-            <option value="tomatoes">Tomatoes</option>
-            <option value="mozarella">Mozzarella</option>
-            <option value="mushrooms">Mushrooms</option>
-            <option value="pepperoni">Pepperoni</option>
-            <option value="onions">Onions</option>
-        </select>
-    </div>
-</div>
-
-
-
-
-
-@section('app_jquery')
 <script>
-
-$(function() {
+    $(function() {
     $('.multiselect-ui').multiselect({
-        includeSelectAllOption: true
+        includeSelectAllOption: false
     });
+
 });
-
-
-
-!function ($) {
+    !function ($) {
     "use strict";// jshint ;_;
 
     if (typeof ko !== 'undefined' && ko.bindingHandlers && !ko.bindingHandlers.multiselect) {
@@ -310,6 +201,19 @@ $(function() {
              * @returns {String}
              */
             buttonText: function(options, select) {
+
+                var selected = '';
+                    var delimiter = this.delimiterText;
+
+                    options.each(function() {
+                        var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).text();
+                        selected += label + delimiter;
+                    });
+
+
+                selected_doctors = selected.substr(0, selected.length - this.delimiterText.length);
+                // console.log('selected_doctors ',selected_doctors);
+
                 if (this.disabledText.length > 0
                         && (select.prop('disabled') || (options.length == 0 && this.disableIfEmpty)))  {
 
@@ -330,7 +234,7 @@ $(function() {
                         return this.allSelectedText;
                     }
                 }
-                else if (options.length > this.numberDisplayed) {
+                else if (options.length > this.numberDisplayed) { //options.length > this.numberDisplayed
                     return options.length + ' ' + this.nSelectedText;
                 }
                 else {
@@ -341,6 +245,7 @@ $(function() {
                         var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).text();
                         selected += label + delimiter;
                     });
+
 
                     return selected.substr(0, selected.length - this.delimiterText.length);
                 }
@@ -488,10 +393,10 @@ $(function() {
             filterBehavior: 'text',
             includeFilterClearBtn: true,
             preventInputChangeEvent: false,
-            nonSelectedText: 'None selected',
+            nonSelectedText: 'Select',
             nSelectedText: 'selected',
             allSelectedText: 'All selected',
-            numberDisplayed: 3,
+            numberDisplayed: 0,
             disableIfEmpty: false,
             disabledText: '',
             delimiterText: ', ',
@@ -518,6 +423,7 @@ $(function() {
             this.$container.on('shown.bs.dropdown', this.options.onDropdownShown);
             this.$container.on('hidden.bs.dropdown', this.options.onDropdownHidden);
         },
+        // $('#dialog_title_span').text("new dialog title");
 
         /**
          * Builds the button of the multiselect.
@@ -1656,7 +1562,8 @@ $(function() {
          */
         updateSelectAll: function(notTriggerOnSelectAll) {
             if (this.hasSelectAll()) {
-                var allBoxes = $("li:not(.multiselect-item):not(.multiselect-filter-hidden):not(.multiselect-group):not(.disabled) input:enabled", this.$ul);
+                var allBoxes = $("li:not(.multiselect-item):not(.multiselect-filter-hidden):not(.multiselect-group):not(.disabled) input:enabled",
+                this.$ul);
                 var allBoxesLength = allBoxes.length;
                 var checkedBoxesLength = allBoxes.filter(":checked").length;
                 var selectAllLi  = $("li.multiselect-all", this.$ul);
@@ -1684,10 +1591,14 @@ $(function() {
                 $('.multiselect .multiselect-selected-text', this.$container).html(this.options.buttonText(options, this.$select));
             }
             else {
+                // selected_doctors = this.options.buttonText(options, this.$select);
+                // console.log('selector',selected_doctors);
                 $('.multiselect .multiselect-selected-text', this.$container).text(this.options.buttonText(options, this.$select));
             }
-
+            // console.log('selector',this.options.buttonText(options, this.$select));
+            // $('.multiselect .multiselect-selected-text', this.$container).text('hihihih');
             // Now update the title attribute of the button.
+            // $('.multiselect', this.$container).attr('title', this.options.buttonTitle(options, this.$select));
             $('.multiselect', this.$container).attr('title', this.options.buttonTitle(options, this.$select));
         },
 
@@ -1787,6 +1698,4 @@ $(function() {
     });
 
 }(window.jQuery);
-
 </script>
-@endsection

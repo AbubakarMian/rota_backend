@@ -35,6 +35,24 @@ class Rota_Controller extends Controller
         return \View::make('admin.rotalist.index', compact('list'));
     }
 
+
+    public function rota_detail($id){
+        $rota_details = Rota_detail::with('doctor.user')->where('monthly_rota_id',$id)->paginate(10);
+        return view('admin.temp_rota_detail.index', compact('rota_details'));
+    }
+
+    public function show_rota($monthly_rota_id){
+        $monthly_rota = Monthly_rota::find($monthly_rota_id);
+        $doctors = Doctor::with('user')->get();
+        $doctors_by_id = [];
+        foreach($doctors as $doctor){
+            $doctors_by_id[$doctor->id] = $doctor->user->name;
+        }
+        $start_weekday = date('w', $monthly_rota->rota->rota_generate_pattern[0]->duty_date)+1; // since our week starts from sunday add 1
+        $weekdays = Config::get('constants.weekdays_num');
+        return \View::make('admin.rota.calender.index', compact('monthly_rota','start_weekday','weekdays', 'doctors','doctors_by_id'));
+    }
+
     public function create()
     {
         $control = 'create';
@@ -43,7 +61,6 @@ class Rota_Controller extends Controller
 
     public function save(Request $request)
     {
-
         $monthly_rota = Monthly_rota::where('year', $request->year)->where('month', $request->month)->first();
         if(!$monthly_rota){
             $monthly_rota = new Monthly_rota();
@@ -152,6 +169,8 @@ class Rota_Controller extends Controller
     public function save_temp_rota($temp_rota_id){
 
     $temp_rota = TempRota::find($temp_rota_id);
+    $temp_rota->monthly_rota->temp_rota()->where('status','selected')->update(['status' => 'unselected']);
+
     $temp_rota->status = 'selected';
     $temp_rota->save();
 
