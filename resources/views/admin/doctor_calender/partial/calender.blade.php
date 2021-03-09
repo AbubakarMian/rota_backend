@@ -39,6 +39,9 @@
 .higlightDutyDate:hover {
 
 }
+.ucctext{
+    color: blue
+}
 
 </style>
 
@@ -50,7 +53,7 @@
     <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
         <a target="_blank" href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->id ) }}"
             class="btn btn-info">Details</a>
-            <a href="{{ url('admin/rota/save/temp/'.$temp_rota->id)  }}" class="btn btn-primary" type="submit" >Save
+            <a href="{{ url('admin/rota/save/temp/'.$temp_rota->id)  }}" class="btn btn-primary" type="submit" >Save To Rota
             </a>
             {{-- <input type="submit" value="save"  class="btn btn-primary"> --}}
         &nbsp; <button class="btn btn-warning" id="hide_ucc">Hide UCC</button>
@@ -91,14 +94,16 @@
                 $night_doctors = $temp_rota->doctors()
                 ->where('shift','night')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc'])->toArray();
 
-                $ucc_morning_doctor = '';
+                $ucc_morning_doctor_id = 0;
+                $ucc_morning_doctor_name = '';
                 $all_morning_doctor = '';
 
                 foreach ($morning_doctors as $key => $doctor) {
                 if($doctor['is_ucc']){
-                    $ucc_morning_doctor = $doctor['doctor_id'];
-                }
-
+                        $ucc_morning_doctor_id = $doctor['doctor_id'];
+                        $ucc_morning_doctor_name = ucwords($doctors_by_id[$ucc_morning_doctor_id]);
+                        break;
+                    }
                 }
 
                 $m_doctors = sort_by_name($morning_doctors,$doctors_by_id);
@@ -107,15 +112,17 @@
                  $all_morning_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
                  }
                 $all_morning_doctor = ltrim($all_morning_doctor,',') ;
-                $ucc_evening_doctor = '';
+                $ucc_evening_doctor_id = '';
+                $ucc_evening_doctor_name = '';
                 $all_evening_doctor = '';
                 foreach ($evening_doctors as $key => $doctor) {
-                    if($doctor['is_ucc']){
-                        $ucc_evening_doctor = $doctor['doctor_id'];
-                    }
-                    // $all_evening_doctor .= ',<div data-id="'.$doctor['doctor_id'].'" class="doc did_'.$doctor['doctor_id'].'">'.$doctors_by_id[$doctor['doctor_id']].'</div>';
 
+                    if($doctor['is_ucc']){
+                        $ucc_evening_doctor_id = $doctor['doctor_id'];
+                        $ucc_evening_doctor_name = ucwords($doctors_by_id[$ucc_evening_doctor_id]);
+                        break;
                     }
+                }
                 $e_doctors = sort_by_name($evening_doctors,$doctors_by_id);
 
                 foreach($e_doctors as $doctor_id=>$md){
@@ -123,20 +130,21 @@
                  }
                  $all_evening_doctor = ltrim($all_evening_doctor,',') ;
 
-                $ucc_night_doctor = '';
+                $ucc_night_doctor_id = '';
+                $ucc_night_doctor_name = '';
                 $all_night_doctor = '';
                 foreach ($night_doctors as $key => $doctor) {
                     if($doctor['is_ucc']){
-                        $ucc_night_doctor = $doctor['doctor_id'];
+                        $ucc_night_doctor_id = $doctor['doctor_id'];
+                        $ucc_night_doctor_name = ucwords($doctors_by_id[$ucc_night_doctor_id]);
+                        break;
                     }
-                    // $all_night_doctor .= ',<div data-id="'.$doctor['doctor_id'].'" class=" doc did_'.$doctor['doctor_id'].'">'.$doctors_by_id[$doctor['doctor_id']].'</div>';
                 }
                 $n_doctors = sort_by_name($night_doctors,$doctors_by_id);
 
                 foreach($n_doctors as $doctor_id=>$md){
                  $all_night_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
                  }
-                // $all_night_doctor = preg_replace('/ , /', '', $all_night_doctor, 1);
                 $all_night_doctor = ltrim($all_night_doctor,',') ;
 
                 if($tds == 1){
@@ -164,8 +172,8 @@
                             </h5>
                             <div class="">
                                 <div class="col-sm-12 textMorningList">
-                                    <div class="multiple_line_text_morning_{!!$item->id!!}"> {!!$all_morning_doctor!!}
-                                    </div>
+                                    <div class="multiple_line_text_morning_{!!$item->id!!}"> {!!$all_morning_doctor!!}</div>
+                                    <div class="ucc_morning_{!!$item->id!!} ucctext">{!! $ucc_morning_doctor_name !!}</div>
                                 </div>
                                 <div class="row" style="margin: 2px">
                                     <div class="col-sm-6 regular_duties">
@@ -189,14 +197,14 @@
                                     </div>
                                     <div class="col-sm-6 ucc_class">
                                         <select id="myucc" class="form-control myucc"
+                                        onchange="show_doctors('ucc_morning_{!!$item->id!!}','{!!$temp_rota->id!!}','{!!$item->duty_date!!}','morning','1',this);"
                                             class="multiple_line form-control">
                                             <option value="">Ucc</option>
                                             @foreach ($doctors as $doctor)
                                             <?php
                                                 $selected = '';
 
-                                                if($ucc_morning_doctor==$doctor->id){
-
+                                                if($ucc_morning_doctor_id==$doctor->id){
                                                     $selected = 'selected';
                                                 }
                                             ?>
@@ -214,8 +222,8 @@
                             </h5>
                             <div class="">
                                 <div class="col-sm-12 textEveningList">
-                                    <div class="multiple_line_text_evening_{!!$item->id!!}"> {!!$all_evening_doctor!!}
-                                    </div>
+                                    <div class="multiple_line_text_evening_{!!$item->id!!}"> {!!$all_evening_doctor!!}</div>
+                                    <div class="ucc_evening_{!!$item->id!!} ucctext">{!! $ucc_evening_doctor_name !!}</div>
                                 </div>
                                 <div class="row" style="margin: 2px">
                                     <div class="col-sm-6 regular_duties">
@@ -238,13 +246,14 @@
                                     </div>
                                     <div class="col-sm-6 ucc_class">
                                         <select id="myucc" class="myucc form-control"
+                                            onchange="show_doctors('ucc_evening_{!!$item->id!!}','{!!$temp_rota->id!!}','{!!$item->duty_date!!}','evening','1',this);"
                                             class="multiple_line form-control">
                                             <option value="">Ucc</option>
                                             @foreach ($doctors as $doctor)
                                             <?php
                                             $selected = '';
                                             // if(in_array($ucc_evening_doctor,array_column($evening_doctors,'doctor_id'))){
-                                            if($ucc_evening_doctor==$doctor->id){
+                                            if($ucc_evening_doctor_id==$doctor->id){
                                                 $selected = 'selected';
                                             }
                                         ?>
@@ -262,6 +271,7 @@
                             <div class="">
                                 <div class="col-sm-12 textNightList">
                                     <div class="multiple_line_text_night_{!!$item->id!!}"> {!!$all_night_doctor!!}</div>
+                                    <div class="ucc_night_{!!$item->id!!} ucctext">{!! $ucc_night_doctor_name !!}</div>
                                 </div>
                                 <div class="col-sm-6 regular_duties">
 
@@ -283,12 +293,14 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-6 ucc_class">
-                                    <select id="myucc" class="myucc form-control" class="multiple_line form-control">
-                                        @foreach ($doctors as $doctor)
+                                    <select id="myucc" class="myucc form-control"
+                                        onchange="show_doctors('ucc_night_{!!$item->id!!}','{!!$temp_rota->id!!}','{!!$item->duty_date!!}','night','1',this);"
+                                        class="multiple_line form-control">
                                         <option value="">Ucc</option>
+                                        @foreach ($doctors as $doctor)
                                         <?php
                                             $selected = '';
-                                            if($ucc_night_doctor==$doctor->id){
+                                            if($ucc_night_doctor_id==$doctor->id){
                                                 $selected = 'selected';
                                             }
                                         ?>
@@ -371,7 +383,7 @@ var opts = '',opt,text_name='',glue= '';
             console.log('Error:', data);
         }
     });
-    console.log('rr asd',show_list,temp_rota_id,duty_date,shift,is_ucc,sel);
+
         $('.'+show_list).html(text_name);
 }
 
@@ -389,7 +401,7 @@ var prev_id = 0 ;
     $('#hide_ucc').on('click' , function(){
     $('.myucc').toggle();
     $('.ucc_class').toggle();
-    $("#hide_ucc").toggleText('Hide UCC', 'Show UCC');
+    $("#hide_ucc").toggleText('View UCC', 'Update UCC');
     $('.regular_duties').toggleClass('col-sm-6').toggleClass('col-sm-12');
 });
 
@@ -398,7 +410,7 @@ $('#hide_regularduites').on('click' , function(){
 
 
 
-$("#hide_regularduites").toggleText('Hide Regular Duties', 'Show Regular Duties');
+$("#hide_regularduites").toggleText('View Regular Duties', 'Update Regular Duties');
 
  $('.ucc_class').toggleClass('col-sm-6').toggleClass('col-sm-12');
  $('.multiselect').toggle();
@@ -457,6 +469,9 @@ function sort_by_name($morning_doctors,$doctors_by_id){
     $m_doctors = [];
 
         foreach ($morning_doctors as $key => $doctor) {
+            if($doctor['is_ucc']){
+                    continue;
+                }
         $m_doctors[$doctors_by_id[$doctor['doctor_id']]] =  [
                 'name'=>ucwords($doctors_by_id[$doctor['doctor_id']]),
                 'id'=>$doctor['doctor_id']
