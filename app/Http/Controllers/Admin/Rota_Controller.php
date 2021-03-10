@@ -267,6 +267,7 @@ class Rota_Controller extends Controller
             ->delete();
 
         $temp_monthly_rota_arr = [];
+        $all_doctors = '';
         $doctors = explode(',',$request->doctors);
         foreach($doctors as $d){
             $doctor = Doctor::find($d);
@@ -278,10 +279,25 @@ class Rota_Controller extends Controller
                 'doctor_type_id'=>$doctor->doctor_type_id,
                 'is_ucc'=>$is_ucc,
             ];
-        }
-        Temp_monthly_rota::insert($temp_monthly_rota_arr);
 
-        return json_encode($request->all());
+            $style='';
+            if($is_ucc){
+                $style = 'color:#cd2ad8';
+
+            }
+            elseif($doctor->doctor_type_id == 2 ){
+                $style = 'color:#2e4eec';
+            }
+            $all_doctors .= ',<div style="'.$style.'" data-id="'.$doctor->id.'" class=" doc did_'.$doctor->id.'">'.$doctor->user->name.'</div>';
+        }
+        $all_doctors = ltrim($all_doctors,',') ;
+
+        Temp_monthly_rota::insert($temp_monthly_rota_arr);
+        $res = new \stdClass();
+        $res->status = true;
+        $res->response = $all_doctors;
+
+        return json_encode($res);
     }
 
     public function get_temp_duties($temp_rota_id, $duty_date, $rota_generate_pattern, $rota_by_date, $doctors)

@@ -75,13 +75,11 @@ class GenerateRota
         $back_track_date = 1;
         $back_track_index = 0;
 
-
         while ($duty_date <= $last_duty_date) {
             $problem_date = $duty_date;
             $date_num = $date_num+1;
-            // dd($this->duties_arr);
-                $all_assigned = $this->assign_duties_to_consecutive_doctors($duty_date);
-                $all_assigned = $this->assign_duties_to_consecutive_leave_doctors($duty_date);
+            $all_assigned = $this->assign_duties_to_consecutive_doctors($duty_date);
+            $all_assigned = $this->assign_duties_to_consecutive_leave_doctors($duty_date);
 
         //    if(!$all_assigned){
                 // $all_assigned = $this->assign_duties_to_on_going_doc($duty_date);
@@ -103,7 +101,6 @@ class GenerateRota
             $all_assigned = $this->if_all_duties_assigned($duty_date);
 
                 while(!$all_assigned){
-
 
                     $div_condition_key_num = $div_condition_key_num+1;
                     $div_extra_duties_allowed = $div_extra_duties_allowed+1;
