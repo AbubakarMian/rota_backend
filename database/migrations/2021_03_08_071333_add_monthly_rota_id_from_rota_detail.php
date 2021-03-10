@@ -16,6 +16,11 @@ class AddMonthlyRotaIdFromRotaDetail extends Migration
         Schema::table('rota_detail', function (Blueprint $table) {
             $table->bigInteger('monthly_rota_id')->nullable()->default(0);
         });
+
+        // Schema::table('rota_detail', function (Blueprint $table) {
+        //     $table->dropColumn('status');
+        //     $table->dropColumn('rota_id');
+        // });
     }
 
     /**

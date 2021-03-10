@@ -16,7 +16,7 @@
 </h3>
 
 <div class="table-responsive" id="mytable">
-    
+
     <table class="table table-striped table table-hover table table-bordered table table-condensed" id="customers">
         <thead class="monday">
             @foreach($weekdays as $weekday)

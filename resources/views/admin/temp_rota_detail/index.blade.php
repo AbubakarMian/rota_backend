@@ -1,12 +1,9 @@
 @extends('layouts.default_module')
 @section('module_name')
-Temp Rota Duties Detail
+Rota Duties Detail
 @stop
 @section('add_btn')
 
-{{-- {!! Form::open(['method' => 'get', 'route' => ['doctor.create'], 'files'=>true]) !!}
-<span>{!! Form::submit('Add', ['class' => 'btn btn-success pull-right']) !!}</span>
-{!! Form::close() !!} --}}
 @stop
 
 @section('table-properties')

@@ -14,8 +14,7 @@ class CreateRotaDetailTable extends Migration
     public function up()
     {
         Schema::create('rota_detail', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('rota_id')->nullable()->default(0);
+            $table->bigIncrements('id');
             $table->bigInteger('doctor_id')->nullable()->default(0);
             $table->bigInteger('total_morning')->nullable()->default(0);
             $table->bigInteger('total_evening')->nullable()->default(0);
