@@ -143,13 +143,15 @@ class Rota_Controller extends Controller
             if($rota_by_date['annual_leaves']){
                 $annual_leave_arr=[] ;
                     foreach($rota_by_date['annual_leaves'] as $al_id){
-
                     $annual_leave_arr[] = $doctors[$al_id] ;
                 }
-                $temp_rota_date_details->conditions= json_encode( $rota_by_date['conditions']);
                 $temp_rota_date_details->anual_leave_doctor=  implode(',',$annual_leave_arr);
-
             }
+                // dd($rota_by_date['conditions']);
+                $temp_rota_date_details->conditions= json_encode( $rota_by_date['conditions']);
+
+
+
 
             if($rota_by_date['special_rota_off_doctors']){
                 $special_rota_off_arr=[] ;

@@ -81,7 +81,6 @@ class GenerateRota
             $date_num = $date_num+1;
             $all_assigned = $this->assign_duties_to_consecutive_doctors($duty_date);
             $all_assigned = $this->assign_duties_to_consecutive_leave_doctors($duty_date);
-            // dd($this->duties_arr);
         //    if(!$all_assigned){
                 // $all_assigned = $this->assign_duties_to_on_going_doc($duty_date);
         //    }
@@ -176,7 +175,6 @@ class GenerateRota
             $duty_date = strtotime('+1 day',$duty_date);
         }
         Log::info('--------------- Generate Rota End --------------------');
-
         return [$this->duties_arr,$this->doctors_arr];
     }
 
@@ -900,16 +898,18 @@ class GenerateRota
         for($i=$this->consective_days_allowed;$i>0;$i--){
             $pre_date = strtotime('-'.$i.' day', $duty_date);
             $this->duties_arr[$pre_date] = $this->get_initial_duties_arr();
+        }
+        $this->duties_arr[$duty_date] = $this->get_initial_duties_arr();
+        for($i=$this->consective_days_allowed;$i>0;$i--){
+            $pre_date = strtotime('-'.$i.' day', $duty_date);
             $date_rota = $this->rota_by_date($pre_date);
-
             foreach($date_rota as $date_doctor){
                 $this->assign_doctor($date_doctor->shift, $date_doctor->doctor_id, $date_doctor->duty_date);
             }
-
         }
         $pre_date = strtotime('-1 day', $duty_date);
         foreach($this->duties_arr as $duty_date=> $duty_arr){
-            if( $duty_date != $pre_date){
+            if( $duty_date<$pre_date ){
                 unset($this->duties_arr[$duty_date]);
             }
         }
@@ -1045,7 +1045,9 @@ class GenerateRota
             if ($rota_generate_pattern_key == 0) {
                 $this->get_pre_day_duties_arr($duty_date);
             }
-            $this->duties_arr[$duty_date] = $this->get_initial_duties_arr();
+            else{
+                $this->duties_arr[$duty_date] = $this->get_initial_duties_arr();
+            }
             $special_rota_request = $this->special_rota_request_details($duty_date);
             $leave_request = $this->leave_request($duty_date);
 
@@ -1343,9 +1345,10 @@ class GenerateRota
         }
         $this->doctors_arr [$doctor_id][ $duties_shift_type['given']]++;
 
-        if (isset($this->duties_arr [$next_date])) {
+        if (isset($this->duties_arr [$next_date])) {//
 
             if ($this->duties_arr[$duty_date]['doctors_duty_num_initial'][$doctor_id] == 1) {
+
                 $this->duties_arr [$next_date][$duties_shift_type['consecutive_doctors']][] = $doctor_id; // morning
                 $this->duties_arr [$next_date]['consecutive_doctors'][] = $doctor_id;
             }
