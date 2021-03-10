@@ -79,8 +79,9 @@ class GenerateRota
         while ($duty_date <= $last_duty_date) {
             $problem_date = $duty_date;
             $date_num = $date_num+1;
-                $all_assigned = $this->assign_duties_to_consecutive_leave_doctors($duty_date);
+            // dd($this->duties_arr);
                 $all_assigned = $this->assign_duties_to_consecutive_doctors($duty_date);
+                $all_assigned = $this->assign_duties_to_consecutive_leave_doctors($duty_date);
 
         //    if(!$all_assigned){
                 // $all_assigned = $this->assign_duties_to_on_going_doc($duty_date);
@@ -871,8 +872,6 @@ class GenerateRota
         'consecutive_night_doctors'=>[],
         'doctors_duty_num_initial'=>$this->doctors_duty_num_initial,
         'consecutive_leave_doctors'=>[],
-        'disqualified_morning_doctors'=>[],
-        'disqualified_evening_doctors'=>[],
         'disqualified_night_doctors'=>[],
         'dis_qualified_consecutive_doctors'=>[],
         'disqualified_doctors'=>[],
@@ -901,7 +900,10 @@ class GenerateRota
         }
         $doctors_consective_duties = $doctors_consective_duties->get();
 
-        return $doctors_consective_duties;
+        return [
+                'doctors_id'=>array_column($doctors_consective_duties->toArray(), 'doctor_id'),
+                'detail'=>$doctors_consective_duties
+        ];
     }
 
     public function get_pre_day_duties_arr($duty_date)
@@ -920,7 +922,7 @@ class GenerateRota
         for ($day = 2;$day<=$consective_days_allowed ; $day++) {
             $check_date  = strtotime('-'.$day.' day', $pre_date);
             if (isset($day_doctors[$day-1])) {
-                $pre_doctors = array_column($day_doctors[$day-1]->toArray(), 'doctor_id');
+                $pre_doctors =  $day_doctors[$day-1]['doctors_id'];//$day_doctors[$day-1];//
                 $date_rota = $this->rota_by_date($pre_date, $pre_doctors); // get only those doctors whic exist in pre day
                 if (count($date_rota)) {
                     $day_doctors[] = $date_rota;
@@ -929,43 +931,46 @@ class GenerateRota
         }
         if (isset($day_doctors[$consective_days_allowed])) {
             $last_day_doctors = $day_doctors[$consective_days_allowed];
-            $this->duties_arr[$duty_date]['dis_qualified_consecutive_doctors'] = $last_day_doctors;
+            $this->duties_arr[$duty_date]['dis_qualified_consecutive_doctors'] = $last_day_doctors['doctors_id'];
         }
         else{
             $this->duties_arr[$duty_date]['dis_qualified_consecutive_doctors'] = [];
         }
 
         for ($day = 0;$day<$consective_days_allowed ; $day++) {
-            foreach ($day_doctors as $d) {
-                $this->duties_arr[$pre_date]['doctors_duty_num_initial'][$d->doctor_id]++;
+            foreach ($day_doctors as $doctors) {
+                foreach($doctors['doctors_id'] as $doctor_id){
+                    $this->duties_arr[$pre_date]['doctors_duty_num_initial'][$doctor_id]++;
+                }
             }
         }
 
         if(isset($day_doctors[1])){
             $all_doctors = $this->all_doctors;
-            $consecutive_doctors = array_diff($day_doctors[0], $day_doctors[1]); //31dec doctor - 30dec doctor
+            $consecutive_doctors = array_diff($day_doctors[0]['doctors_id'], $day_doctors[1]['doctors_id']); //31dec doctor - 30dec doctor
             $this->duties_arr[$duty_date]['consecutive_doctors'] = $consecutive_doctors;
             $this->duties_arr[$duty_date]['consecutive_leave_doctors'] = array_diff($all_doctors,array_merge($day_doctors[0], $day_doctors[1]));
         }
         elseif(isset($day_doctors[0])){
-            $this->duties_arr[$duty_date]['consecutive_doctors'] = $day_doctors[0];
+            $this->duties_arr[$duty_date]['consecutive_doctors'] = $day_doctors[0]['doctors_id'];
         }
         else{
             $this->duties_arr[$duty_date]['consecutive_doctors'] = [];
         }
-        foreach ($day_doctors as $day_doctor) {
-            if ($day_doctor->duty_date == $pre_date && in_array($day_doctor->doctor_id, $consecutive_doctors)) {
-                if ($day_doctor->shift == $this->shifts['morning']) {
-                    $this->duties_arr[$duty_date]['consecutive_morning_doctors'] = $day_doctor->doctor_id;
-                } elseif ($day_doctor->shift == $this->shifts['evening']) {
-                    $this->duties_arr[$duty_date]['consecutive_evening_doctors'] = $day_doctor->doctor_id;
-                    $this->duties_arr[$duty_date]['disqualified_morning_doctors'] = $day_doctor->doctor_id;
-                } else {
-                    $this->duties_arr[$duty_date]['consecutive_night_doctors'] = $day_doctor->doctor_id;
-                    $this->duties_arr[$duty_date]['disqualified_morning_doctors'] = $day_doctor->doctor_id;
-                    $this->duties_arr[$duty_date]['disqualified_evening_doctors'] = $day_doctor->doctor_id;
+        foreach ($day_doctors as $daydocs ){
+            // $day_doctor =  $daydoc['detail'];
+            foreach($daydocs['detail'] as $day_doctor){
+                if ($day_doctor->duty_date == $pre_date && in_array($day_doctor->doctor_id, $this->duties_arr[$duty_date]['consecutive_doctors'])) {
+                    if ($day_doctor->shift == $this->shifts['morning']) {
+                        $this->duties_arr[$duty_date]['consecutive_morning_doctors'][] = $day_doctor->doctor_id;
+                    } elseif ($day_doctor->shift == $this->shifts['evening']) {
+                        $this->duties_arr[$duty_date]['consecutive_evening_doctors'][] = $day_doctor->doctor_id;
+                    } else {
+                        $this->duties_arr[$duty_date]['consecutive_night_doctors'][] = $day_doctor->doctor_id;
+                    }
                 }
             }
+
         }
     }
 

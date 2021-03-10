@@ -62,7 +62,7 @@
     <div class="col-sm-8" style="float: left">
         <h2 class="">
 
-            <div class="mydoctortable">" {!!sizeof($doctors)!!} DOCTOR's MONTHLY TABLE <span class="demospan">(Demo-{!!$temp_rota->demo_num!!})</span>"</div>
+            <div class="mydoctortable">" {!!sizeof($doctors)!!} DOCTOR's MONTHLY TABLE {!!date("F", mktime(0, 0, 0, $temp_rota->monthly_rota->month, 10)).' '.$temp_rota->monthly_rota->year!!} <span class="demospan">(Demo-{!!$temp_rota->demo_num!!})</span>"</div>
 
         </h2>
     </div>
