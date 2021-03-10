@@ -48,8 +48,9 @@ width="400px" style="table-layout:fixed;"
         <td>
             <a href="{{ asset('admin/temp_rota/list/'.$l->id) }}" class="badge bg-info">view </a>
         </td>
-        <td>
+        <td> @if($l->rota)
             <a href="{{ asset('admin/rota/calender/'.$l->id) }}" class="badge bg-info">view </a>
+            @endif
         </td>
         <td>
             <a href="{{ asset('admin/rota/generate/pattern/'.$l->id) }}" class="badge bg-info">Edit </a>

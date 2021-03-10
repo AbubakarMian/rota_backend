@@ -51,7 +51,7 @@
 
 <div class="row bstmonthly" style="display: flex; justify-content: center;position: relative;width: 100%;">
     <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
-        <a target="_blank" href="{{ asset('/admin/temp/rota/detail/'. $monthly_rota->id ) }}"
+        <a target="_blank" href="{{ asset('/admin/rota/detail/'. $monthly_rota->id ) }}"
             class="btn btn-info">Details</a>
             {{-- <input type="submit" value="save"  class="btn btn-primary"> --}}
         &nbsp; <button style="display: none" class="btn btn-warning" id="hide_ucc">Hide UCC</button>
