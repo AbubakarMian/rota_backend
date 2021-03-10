@@ -40,7 +40,7 @@
 
 }
 .ucctext{
-    color: blue
+    color: #cd2ad8
 }
 
 </style>
@@ -62,7 +62,7 @@
     <div class="col-sm-8" style="float: left">
         <h2 class="">
 
-            <div class="mydoctortable">" {!!sizeof($doctors)!!} DOCTOR's MONTHLY TABLE {!!date("F", mktime(0, 0, 0, $temp_rota->monthly_rota->month, 10)).' '.$temp_rota->monthly_rota->year!!} <span class="demospan">(Demo-{!!$temp_rota->demo_num!!})</span>"</div>
+            <div class="mydoctortable">" {!!sizeof($doctors)!!} DOCTOR's ROTA {!!date("F", mktime(0, 0, 0, $temp_rota->monthly_rota->month, 10)).' '.$temp_rota->monthly_rota->year!!} <span class="demospan">(Demo-{!!$temp_rota->demo_num!!})</span>"</div>
 
         </h2>
     </div>
@@ -86,66 +86,16 @@
                 <?php
 
                 $morning_doctors = $temp_rota->doctors()
-                ->where('shift','morning')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc'])->toArray();
+                ->where('shift','morning')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc','doctor_type_id'])->toArray();
 
                 $evening_doctors = $temp_rota->doctors()
-                ->where('shift','evening')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc'])->toArray();
+                ->where('shift','evening')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc','doctor_type_id'])->toArray();
 
                 $night_doctors = $temp_rota->doctors()
-                ->where('shift','night')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc'])->toArray();
-
-                $ucc_morning_doctor_id = 0;
-                $ucc_morning_doctor_name = '';
-                $all_morning_doctor = '';
-
-                foreach ($morning_doctors as $key => $doctor) {
-                if($doctor['is_ucc']){
-                        $ucc_morning_doctor_id = $doctor['doctor_id'];
-                        $ucc_morning_doctor_name = ucwords($doctors_by_id[$ucc_morning_doctor_id]);
-                        break;
-                    }
-                }
-
-                $m_doctors = sort_by_name($morning_doctors,$doctors_by_id);
-
-                foreach($m_doctors as $doctor_id=>$md){
-                 $all_morning_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
-                 }
-                $all_morning_doctor = ltrim($all_morning_doctor,',') ;
-                $ucc_evening_doctor_id = '';
-                $ucc_evening_doctor_name = '';
-                $all_evening_doctor = '';
-                foreach ($evening_doctors as $key => $doctor) {
-
-                    if($doctor['is_ucc']){
-                        $ucc_evening_doctor_id = $doctor['doctor_id'];
-                        $ucc_evening_doctor_name = ucwords($doctors_by_id[$ucc_evening_doctor_id]);
-                        break;
-                    }
-                }
-                $e_doctors = sort_by_name($evening_doctors,$doctors_by_id);
-
-                foreach($e_doctors as $doctor_id=>$md){
-                 $all_evening_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
-                 }
-                 $all_evening_doctor = ltrim($all_evening_doctor,',') ;
-
-                $ucc_night_doctor_id = '';
-                $ucc_night_doctor_name = '';
-                $all_night_doctor = '';
-                foreach ($night_doctors as $key => $doctor) {
-                    if($doctor['is_ucc']){
-                        $ucc_night_doctor_id = $doctor['doctor_id'];
-                        $ucc_night_doctor_name = ucwords($doctors_by_id[$ucc_night_doctor_id]);
-                        break;
-                    }
-                }
-                $n_doctors = sort_by_name($night_doctors,$doctors_by_id);
-
-                foreach($n_doctors as $doctor_id=>$md){
-                 $all_night_doctor .= ',<div  data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
-                 }
-                $all_night_doctor = ltrim($all_night_doctor,',') ;
+                ->where('shift','night')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc','doctor_type_id'])->toArray();
+                list($ucc_morning_doctor_id,$ucc_morning_doctor_name,$all_morning_doctor) = sort_by_name_get_ucc($morning_doctors,$doctors_by_id);
+                list($ucc_evening_doctor_id,$ucc_evening_doctor_name,$all_evening_doctor) = sort_by_name_get_ucc($evening_doctors,$doctors_by_id);
+                list($ucc_night_doctor_id,$ucc_night_doctor_name,$all_night_doctor) = sort_by_name_get_ucc($night_doctors,$doctors_by_id);
 
                 if($tds == 1){
                     echo '<tr class="myboxes">';
@@ -361,7 +311,6 @@ var opts = '',opt,text_name='',glue= '';
       glue = ',';
     }
   }
-  console.log('sel opts ',opts);
 
   $.ajax({
         url:'{!!asset("admin/temp_rota/calender/update")!!}',
@@ -376,15 +325,14 @@ var opts = '',opt,text_name='',glue= '';
             is_ucc:is_ucc,
         },
         success: function(data){
-            console.log('data',data);
-
+            $('.'+show_list).html(data.response);
         },
         error: function (data) {
             console.log('Error:', data);
         }
     });
 
-        $('.'+show_list).html(text_name);
+        // $('.'+show_list).html(text_name);
 }
 
 function hide_information(){
@@ -407,26 +355,20 @@ var prev_id = 0 ;
 
 
 $('#hide_regularduites').on('click' , function(){
-
-
-
-$("#hide_regularduites").toggleText('View Regular Duties', 'Update Regular Duties');
-
- $('.ucc_class').toggleClass('col-sm-6').toggleClass('col-sm-12');
- $('.multiselect').toggle();
-
+    $("#hide_regularduites").toggleText('View Regular Duties', 'Update Regular Duties');
+    $('.ucc_class').toggleClass('col-sm-6').toggleClass('col-sm-12');
+    $('.multiselect').toggle();
 });
 $(".doc").on('click' , function(){
-
     var id = $(this).data('id');
 
-     $('.doc').css('color' , '');
-     $('.doc').removeClass('rcorners2');
+    //  $('[data-id="'+prev_id+'"]').css('color' , '');
+     $('.higlightDutyDate').removeClass('higlightDutyDate');
+     $('[data-id="'+prev_id+'"]').removeClass('rcorners2');
 
-     $('[data-id="'+id+'"]').css('color' , 'red');
+    //  $('[data-id="'+id+'"]').css('color' , 'red');
      $('[data-id="'+id+'"]').addClass('rcorners2');
 
-     $('.higlightDutyDate').removeClass('higlightDutyDate');
 
      var td = $( '[data-id="'+id+'"]' ).parent().parent();//.parent().parent().parent().parent()
 
@@ -434,8 +376,7 @@ $(".doc").on('click' , function(){
 
         if( prev_id == id){
             $('.higlightDutyDate').removeClass('higlightDutyDate');
-            $('.doc').css('color' , '');
-            $('.doc').removeClass('rcorners2');
+            $('[data-id="'+prev_id+'"]').removeClass('rcorners2');
             prev_id = 0;
         }
         else{
@@ -465,20 +406,34 @@ $.fn.extend({
 
 <?php
 
-function sort_by_name($morning_doctors,$doctors_by_id){
+function sort_by_name_get_ucc($doctors,$doctors_by_id){
     $m_doctors = [];
-
-        foreach ($morning_doctors as $key => $doctor) {
-            if($doctor['is_ucc']){
-                    continue;
-                }
-        $m_doctors[$doctors_by_id[$doctor['doctor_id']]] =  [
-                'name'=>ucwords($doctors_by_id[$doctor['doctor_id']]),
-                'id'=>$doctor['doctor_id']
+    $ucc_doctor_id = 0;
+    $ucc_doctor_name = '';
+    foreach ($doctors as $key => $doctor) {
+        if($doctor['is_ucc']){
+                $ucc_doctor_id = $doctor['doctor_id'];
+                $ucc_doctor_name = ucwords($doctors_by_id[$ucc_doctor_id]);
+        }
+        else{
+            $m_doctors[$doctors_by_id[$doctor['doctor_id']]] =  [
+            'name'=>ucwords($doctors_by_id[$doctor['doctor_id']]),
+            'doctor_type_id'=>$doctor['doctor_type_id'],
+            'id'=>$doctor['doctor_id'],
             ];
         }
+    }
     asort($m_doctors);
-    return $m_doctors;
+    $all_doctors = '';
+    foreach($m_doctors as $doctor_id=>$md){
+        $style='';
+        if($md['doctor_type_id'] == 2){
+            $style = 'color:#2e4eec';
+        }
+        $all_doctors .= ',<div style="'.$style.'" data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
+    }
+    $all_doctors = ltrim($all_doctors,',');
+    return [$ucc_doctor_id,$ucc_doctor_name,$all_doctors];
 }
 
 ?>
