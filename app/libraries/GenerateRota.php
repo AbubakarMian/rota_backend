@@ -669,6 +669,34 @@ class GenerateRota
         return [$req_duties_mor,$req_duties_eve,$req_duties_night];
     }
 
+    public function get_doctor_basic_detail($doctor_id){
+        $doctor = Doctor::withTrashed()->find($doctor_id);
+        list($req_duties_mor, $req_duties_eve, $req_duties_night) = $this->get_general_rota_request_doctor_detail($doctor->id);
+        return [
+            'doctor_id'=>$doctor_id,
+            'doctor'=>$doctor,
+            'doctor_type'=>$doctor->doctor_type_id,
+            'total_duties'=>$doctor->total_duties + $doctor->extra_duties,
+            'extra'=>0,
+            'given_morning'=>0,
+            'given_evening'=>0,
+            'given_night'=>0,
+            'given_general'=>0,
+            'req_morning'=>$req_duties_mor,
+            'req_evening'=>$req_duties_eve,
+            'req_night'=>$req_duties_night,
+            'req_general'=>($doctor->total_duties + $this->extra_duties_allowed - ($req_duties_mor+$req_duties_eve+$req_duties_night)),
+            'total_leaves'=>0,//($days - ($doctor->total_duties+$doctor->extra_duties)),
+            'yearly_leaves'=>0,
+            'regular_leaves'=>0,
+            'total_requested_leaves'=>0,
+            'duties_assigned_dates'=>[],
+            'assigned_duties'=>0,
+            'assigned_leaves'=>0,
+            'holiday_leaves'=>0 // if he already got sat sun off
+        ];
+    }
+
     public function get_doctors_rotareq_details()
     {
         $days = $this->monthly_rota->total_days;
@@ -678,31 +706,7 @@ class GenerateRota
         $doctors_arr = [];
 
         foreach ($doctors as $d) {
-            list($req_duties_mor, $req_duties_eve, $req_duties_night) = $this->get_general_rota_request_doctor_detail($d->id);
-
-            $this->doctors_arr[$d->id] = [
-            'doctor_id'=>$d->id,
-            'doctor'=>$d,
-            'doctor_type'=>$d->doctor_type_id,
-            'total_duties'=>$d->total_duties + $d->extra_duties,
-            'extra'=>0,
-            'given_morning'=>0,
-            'given_evening'=>0,
-            'given_night'=>0,
-            'given_general'=>0,
-            'req_morning'=>$req_duties_mor,
-            'req_evening'=>$req_duties_eve,
-            'req_night'=>$req_duties_night,
-            'req_general'=>($d->total_duties + $this->extra_duties_allowed - ($req_duties_mor+$req_duties_eve+$req_duties_night)),
-            'total_leaves'=>($days - ($d->total_duties+$d->extra_duties)),
-            'yearly_leaves'=>0,
-            'regular_leaves'=>0,
-            'total_requested_leaves'=>0,
-            'duties_assigned_dates'=>[],
-            'assigned_duties'=>0,
-            'assigned_leaves'=>0,
-            'holiday_leaves'=>0 // if he already got sat sun off
-            ];
+            $this->doctors_arr[$d->id] = $this->get_doctor_basic_detail($d->id);
         }
         $this->doctors_arr;
     }
@@ -903,7 +907,11 @@ class GenerateRota
         for($i=$this->consective_days_allowed;$i>0;$i--){
             $pre_date = strtotime('-'.$i.' day', $duty_date);
             $date_rota = $this->rota_by_date($pre_date);
+            $deleted_doctors = [];
             foreach($date_rota as $date_doctor){
+                if(!isset($this->doctors_arr[$date_doctor->doctor_id])){
+                    continue;
+                }
                 $this->assign_doctor($date_doctor->shift, $date_doctor->doctor_id, $date_doctor->duty_date);
             }
         }
@@ -913,6 +921,11 @@ class GenerateRota
                 unset($this->duties_arr[$duty_date]);
             }
         }
+        // foreach($deleted_doctors as $doctor_id){
+        //     if( in_array($deleted_doctors) ){
+        //         unset($this->doctors_arr[$doctor_id]);
+        //     }
+        // }
         $this->check_duty_allowed = true;
         return;
 
@@ -1210,9 +1223,6 @@ class GenerateRota
         $doctor_already_assigned = in_array($doctor_id, $this->duties_arr[$duty_date]['assigned_doctors']);
 
         $this->print_log = false;
-        if($duty_date == 1614988800){
-            // $this->print_log = true;
-        }
         if ($is_disqualified === true) {
             if($this->print_log){
                 echo "<br/> is_disqualified : ".$duty_date ." doctor_id : ".$doctor_id;
@@ -1326,7 +1336,7 @@ class GenerateRota
 
         $next_date = strtotime('+1 day', $duty_date);
         $pre_date = strtotime('-1 day', $duty_date);
-        if (!$this->doctor_duty_allowed($shift, $doctor_id, $duty_date)&& $this->check_duty_allowed) {
+        if ($this->check_duty_allowed && !$this->doctor_duty_allowed($shift, $doctor_id, $duty_date)) {
             return false;
         }
         $this->doctors_arr [$doctor_id]['duties_assigned_dates'][] = $duty_date ;

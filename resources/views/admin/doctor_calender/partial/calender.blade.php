@@ -75,7 +75,6 @@
             @endforeach
         </thead>
 
-
         <tbody id="calenderdates">
             <tr class="myboxes">
                 <?php $tds = 0;
@@ -84,7 +83,6 @@
                 @foreach ($temp_rota->rota_generate_pattern as $date_index=>$item)
 
                 <?php
-
                 $morning_doctors = $temp_rota->doctors()
                 ->where('shift','morning')->where('duty_date',$item->duty_date)->get(['doctor_id','is_ucc','doctor_type_id'])->toArray();
 
@@ -114,7 +112,7 @@
                         <div class="mydate">{!!($date_index+1)!!}</div>
                         <span class="ucc detail_{!!$item->id!!}" data-toggle="modal"
                             data-target=".detail_{!!$item->id!!}">Detail</span>
-                        @include('admin.doctor_calender.partial.detail_modal',['rota_detail','date_index'])
+                        @include('admin.doctor_calender.partial.detail_modal')
                     </div>
                     <div class="mybigmorning">
                         <div class="morningdoctor">
