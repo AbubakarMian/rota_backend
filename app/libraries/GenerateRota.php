@@ -59,12 +59,11 @@ class GenerateRota
     public function generate_rota_arr()
     {
         Log::info('--------------- Generate Rota Start --------------------');
-        $this->get_doctors_rotareq_details();
-        $this->get_duties_info_and_assign_special_requests();
-        // $this->set_min_extra_duties_required();
+        $this->set_basic_duties_doctors_arr();
 
         Log::info('--------------- Extra duties allowed Min set : '.$this->extra_duties_allowed.' --------------------');
-        $duty_date = $this->rota_generate_patterns[0]->duty_date;
+        $first_date = $this->rota_generate_patterns[0]->duty_date;
+        $duty_date = $first_date;
         $last_duty_date = $this->rota_generate_patterns[sizeof($this->rota_generate_patterns)-1]->duty_date;
         $date_num = 1;
         $problem_date = 0;
@@ -75,6 +74,7 @@ class GenerateRota
         $setduties_num = 0;
         $back_track_date = 1;
         $back_track_index = 0;
+        $try_num = 0;
 
         while ($duty_date <= $last_duty_date) {
             $problem_date = $duty_date;
@@ -102,27 +102,31 @@ class GenerateRota
 
                 while(!$all_assigned){
 
+                    if($try_num > 15){
+                        return [false,[],[]];
+                    }
                     $div_condition_key_num = $div_condition_key_num+1;
                     $div_extra_duties_allowed = $div_extra_duties_allowed+1;
 
                     $find_suitable_doctor_key = 0;
                     $back_track_index++;
+                    $try_num++;
 
                     if(!$all_assigned && $back_track_index > 3&& false){
-                        $back_track_index = 0;
-                        Log::info('--------------- Start Reset Duty : '.$duty_date.' --------------------');
-                        for($i=1;$i<=$back_track_date;$i++){
-                            $this->reset_duties_by_date($duty_date);
-                            $new_duty_date = strtotime('-'.$i.' day',$duty_date);
-                            if(!isset($this->duties_arr[$new_duty_date])){
-                                break;
-                            }
-                            $duty_date = $new_duty_date;
+                        // $back_track_index = 0;
+                        // Log::info('--------------- Start Reset Duty : '.$duty_date.' --------------------');
+                        // for($i=1;$i<=$back_track_date;$i++){
+                        //     $this->reset_duties_by_date($duty_date);
+                        //     $new_duty_date = strtotime('-'.$i.' day',$duty_date);
+                        //     if(!isset($this->duties_arr[$new_duty_date])){
+                        //         break;
+                        //     }
+                        //     $duty_date = $new_duty_date;
 
-                        }
-                        $this->reset_duties_by_date_assign_consective_special_request_duties($duty_date);
-                        $back_track_date++;
-                        Log::info('--------------- Next Reset Duty : '.$duty_date.' --------------------');
+                        // }
+                        // $this->reset_duties_by_date_assign_consective_special_request_duties($duty_date);
+                        // $back_track_date++;
+                        // Log::info('--------------- Next Reset Duty : '.$duty_date.' --------------------');
                     }
 
                     if( $div_condition_key_num > 2 && !$all_assigned ){
@@ -164,6 +168,7 @@ class GenerateRota
                     $this->duties_arr[$duty_date]['conditions'] = $this->conditions;
                     $this->debug_index = 0;
                     $back_track_date = 1;
+                    $try_num = 0;
                     foreach($this->conditions as $my_key=>$condition){
                         $this->conditions[$my_key] = true;
                     }
@@ -175,9 +180,15 @@ class GenerateRota
             $duty_date = strtotime('+1 day',$duty_date);
         }
         Log::info('--------------- Generate Rota End --------------------');
-        return [$this->duties_arr,$this->doctors_arr];
+        return [true,$this->duties_arr,$this->doctors_arr];
     }
 
+    public function set_basic_duties_doctors_arr(){
+
+        $this->get_doctors_rotareq_details();
+        $this->get_duties_info_and_assign_special_requests();
+        // $this->set_min_extra_duties_required();
+    }
     public function set_total_duties_to_applicable_number($duty_date){
         $check_if_total_doctors_count_applicaple  = $this->total_doctor_count_applicable($duty_date);
         while(!$check_if_total_doctors_count_applicaple){
@@ -921,78 +932,8 @@ class GenerateRota
                 unset($this->duties_arr[$duty_date]);
             }
         }
-        // foreach($deleted_doctors as $doctor_id){
-        //     if( in_array($deleted_doctors) ){
-        //         unset($this->doctors_arr[$doctor_id]);
-        //     }
-        // }
         $this->check_duty_allowed = true;
         return;
-
-        // $pre_date = strtotime('-1 day', $duty_date);
-        // $this->duties_arr[$pre_date] = $this->get_initial_duties_arr();
-        // // consective_days_allowed since night are lesser thant consective days it would be safer
-        // $consective_days_allowed = $this->consective_nights_allowed;
-
-        // $day_doctors = [];
-        // $date_rota = $this->rota_by_date($pre_date);
-        // if (count($date_rota)) {
-        //     $day_doctors[] = $date_rota;
-        // }
-
-        // for ($day = 2;$day<=$consective_days_allowed ; $day++) {
-        //     $check_date  = strtotime('-'.$day.' day', $pre_date);
-        //     if (isset($day_doctors[$day-1])) {
-        //         $pre_doctors =  $day_doctors[$day-1]['doctors_id'];//$day_doctors[$day-1];//
-        //         $date_rota = $this->rota_by_date($pre_date, $pre_doctors); // get only those doctors whic exist in pre day
-        //         if (count($date_rota)) {
-        //             $day_doctors[] = $date_rota;
-        //         }
-        //     }
-        // }
-        // if (isset($day_doctors[$consective_days_allowed])) {
-        //     $last_day_doctors = $day_doctors[$consective_days_allowed];
-        //     $this->duties_arr[$duty_date]['dis_qualified_consecutive_doctors'] = $last_day_doctors['doctors_id'];
-        // }
-        // else{
-        //     $this->duties_arr[$duty_date]['dis_qualified_consecutive_doctors'] = [];
-        // }
-
-        // for ($day = 0;$day<$consective_days_allowed ; $day++) {
-        //     foreach ($day_doctors as $doctors) {
-        //         foreach($doctors['doctors_id'] as $doctor_id){
-        //             $this->duties_arr[$pre_date]['doctors_duty_num_initial'][$doctor_id]++;
-        //         }
-        //     }
-        // }
-
-        // if(isset($day_doctors[1])){
-        //     $all_doctors = $this->all_doctors;
-        //     $consecutive_doctors = array_diff($day_doctors[0]['doctors_id'], $day_doctors[1]['doctors_id']); //31dec doctor - 30dec doctor
-        //     $this->duties_arr[$duty_date]['consecutive_doctors'] = $consecutive_doctors;
-        //     $this->duties_arr[$duty_date]['consecutive_leave_doctors'] = array_diff($all_doctors,array_merge($day_doctors[0], $day_doctors[1]));
-        // }
-        // elseif(isset($day_doctors[0])){
-        //     $this->duties_arr[$duty_date]['consecutive_doctors'] = $day_doctors[0]['doctors_id'];
-        // }
-        // else{
-        //     $this->duties_arr[$duty_date]['consecutive_doctors'] = [];
-        // }
-        // foreach ($day_doctors as $daydocs ){
-        //     // $day_doctor =  $daydoc['detail'];
-        //     foreach($daydocs['detail'] as $day_doctor){
-        //         if ($day_doctor->duty_date == $pre_date && in_array($day_doctor->doctor_id, $this->duties_arr[$duty_date]['consecutive_doctors'])) {
-        //             if ($day_doctor->shift == $this->shifts['morning']) {
-        //                 $this->duties_arr[$duty_date]['consecutive_morning_doctors'][] = $day_doctor->doctor_id;
-        //             } elseif ($day_doctor->shift == $this->shifts['evening']) {
-        //                 $this->duties_arr[$duty_date]['consecutive_evening_doctors'][] = $day_doctor->doctor_id;
-        //             } else {
-        //                 $this->duties_arr[$duty_date]['consecutive_night_doctors'][] = $day_doctor->doctor_id;
-        //             }
-        //         }
-        //     }
-
-        // }
     }
 
     public function special_rota_request_details($duty_date)

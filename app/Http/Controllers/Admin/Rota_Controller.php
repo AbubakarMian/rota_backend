@@ -80,6 +80,11 @@ class Rota_Controller extends Controller
     }
 
     public function create_temp_rota($monthly_rota,$exetime){
+        $generated_rota = new GenerateRota($monthly_rota,$exetime);
+        list($rota_generated_successfully,$generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
+        // while(!$rota_generated_successfully){
+        //     list($rota_generated_successfully,$generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
+        // }
         $temp_rota_count = TempRota::withTrashed()->where('monthly_rota_id', $monthly_rota->id)->count('id');
         $temp_rota_count = $temp_rota_count+1;
         $temp_rota = new TempRota();
@@ -87,8 +92,6 @@ class Rota_Controller extends Controller
         $temp_rota->monthly_rota_id = $monthly_rota->id;
         $temp_rota->save();
 
-        $generated_rota = new GenerateRota($monthly_rota,$exetime);
-        list($generated_rota_arr, $doctors_duties_assigned) = $generated_rota->generate_rota_arr();
         $doctors = Doctor::with('user')->get()->pluck('user.name', 'id')->toArray();
         $rota_generate_patterns = Rota_Generate_Pattern::where('monthly_rota_id', $monthly_rota->id)
                                                     ->orderBy('duty_date', 'asc')->get();
@@ -226,11 +229,12 @@ class Rota_Controller extends Controller
 
     public function calender_view_temp_rota($temp_rota_id){
         $temp_rota = TempRota::with('rota_generate_pattern','rota_Date_Detail')->find($temp_rota_id);
-        $doctors = Doctor::with('user')->get();
+        $doctors = Doctor::withTrashed()->with('user')->get();
         $doctors_by_id = [];
-        foreach($doctors as $doctor){
+        foreach($doctors as $key=>$doctor){
             $doctors_by_id[$doctor->id] = $doctor->user->name;
         }
+        $doctors = Doctor::with('user')->get();
         $start_weekday = date('w', $temp_rota->rota_generate_pattern[0]->duty_date)+1; // since our week starts from sunday add 1
         $weekdays = Config::get('constants.weekdays_num');
 

@@ -50,9 +50,8 @@ class DoctorController extends Controller
     }
     public function edit($id)
     {
-
         $control = 'edit';
-        $doctor = Doctor::with('user')->find($id);
+        $doctor = Doctor::withTrashed()->with('user')->find($id);
         $types = Doctor_type::pluck('name', 'id');
         return \View::make('admin.doctor.create', compact(
             'control',
@@ -63,8 +62,8 @@ class DoctorController extends Controller
 
     public function update(Request $request, $id)
     {
-        $doctor = Doctor::find($id);
-        $user = User::find($id);
+        $doctor = Doctor::withTrashed()->find($id);
+        $user = User::withTrashed()->find($id);
         $type = Doctor_type::find($id);
         $this->add_or_update($request, $doctor, $user, $type);
         return Redirect('admin/doctor');
