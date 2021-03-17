@@ -62,8 +62,9 @@ class DoctorController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $doctor = Doctor::withTrashed()->find($id);
-        $user = User::withTrashed()->find($id);
+        $user = User::withTrashed()->find($doctor->user_id);
         $type = Doctor_type::find($id);
         $this->add_or_update($request, $doctor, $user, $type);
         return Redirect('admin/doctor');
