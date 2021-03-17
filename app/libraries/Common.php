@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Libraries;
+namespace App\libraries;
 use Response;
 use DB;
 
