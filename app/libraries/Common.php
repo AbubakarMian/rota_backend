@@ -3,7 +3,6 @@
 namespace App\Libraries;
 use Response;
 use DB;
-// use Excel;
 
 trait Common
 {
