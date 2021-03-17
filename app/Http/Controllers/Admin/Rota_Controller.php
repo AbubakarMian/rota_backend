@@ -22,7 +22,7 @@ use App\models\Temp_Rota_Date_Details;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use App\Libraries\GenerateRota;
+use App\libraries\GenerateRota;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Log;
 
