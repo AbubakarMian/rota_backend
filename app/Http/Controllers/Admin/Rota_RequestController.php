@@ -21,7 +21,7 @@ class Rota_RequestController extends Controller
 {
 
     public function index(Request $request)
-    {      
+    {
         $name = $request->name ?? '';
         $name = strtolower($name);
 

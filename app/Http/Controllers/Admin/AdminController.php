@@ -121,7 +121,7 @@ class AdminController extends Controller
         $count = Doctor::count('id');
         $modules[] = [
             'url' => 'admin/request',
-            'title' => 'Doctors Summary',
+            'title' => 'Leaves',
             'count' => $count
         ];
 

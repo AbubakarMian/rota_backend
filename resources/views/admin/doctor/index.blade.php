@@ -55,9 +55,9 @@ width="400px" style="table-layout:fixed;"
             $deactivate_doctor_style = 'style="background:grey;color:white"';
         }
     ?>
-	<tr {!!$deactivate_doctor_style!!}>
+	<tr >
 
-        <td>{!! ucwords($d->user->fullname) !!}</td>
+        <td >{!! ucwords($d->user->fullname) !!}</td>
         <td>{!! ucwords($d->user->name) !!}</td>
 		<td>{!! $d->age!!}</td>
         <td>{!! $d->qualification !!}</td>

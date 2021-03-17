@@ -10,7 +10,7 @@
 
     <ol class="breadcrumb">
         <li>
-            <a href="{{asset('index.php/home')}}"><i class="ti-home mr5"></i>
+            <a href="{{asset('admin/dashboard')}}"><i class="ti-home mr5"></i>
                 Dashboard</a>
         </li>
         <li>
