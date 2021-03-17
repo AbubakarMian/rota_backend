@@ -58,6 +58,7 @@
             {{-- <input type="submit" value="save"  class="btn btn-primary"> --}}
         &nbsp; <button class="btn btn-warning" id="hide_ucc">Hide UCC</button>
         &nbsp; <button class="btn btn-primary" id="hide_regularduites">Hide Regular Duties</button>
+        <a href="{{ url()->previous() }}" class="btn btn-primary" type="button" >Back</a>
     </div>
     <div class="col-sm-8" style="float: left">
         <h2 class="">
@@ -65,6 +66,8 @@
             <div class="mydoctortable">" {!!sizeof($doctors)!!} DOCTOR's ROTA {!!date("F", mktime(0, 0, 0, $temp_rota->monthly_rota->month, 10)).' '.$temp_rota->monthly_rota->year!!} <span class="demospan">(Demo-{!!$temp_rota->demo_num!!})</span>"</div>
 
         </h2>
+
+
     </div>
 </div>
 <div class="table-responsive fullbox" id="mytableareaa" style="height: auto;display:none;">
