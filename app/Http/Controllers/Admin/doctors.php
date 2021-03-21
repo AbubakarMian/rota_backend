@@ -124,16 +124,9 @@ TRUNCATE monthly_rota;
 // TRUNCATE special_rota_request;
 
 
+TRUNCATE `users`;
 TRUNCATE `doctor`;
 TRUNCATE `doctor_type`;
-TRUNCATE `duties`;
-TRUNCATE `failed_jobs`;
-TRUNCATE `general_rota_request`;
-TRUNCATE `leave_request`;
-TRUNCATE `migrations`;
-TRUNCATE `monthly_rota`;
-TRUNCATE `monthly_rota_doctors`;
-TRUNCATE `password_resets`;
 TRUNCATE `rota`;
 TRUNCATE `rota_detail`;
 TRUNCATE `rota_generate_pattern`;
@@ -142,7 +135,14 @@ TRUNCATE `special_rota_request`;
 TRUNCATE `temp_monthly_rota_doctors`;
 TRUNCATE `temp_rota`;
 TRUNCATE `temp_rota_detail`;
-TRUNCATE `users`;
+TRUNCATE `duties`;
+TRUNCATE `failed_jobs`;
+TRUNCATE `general_rota_request`;
+TRUNCATE `leave_request`;
+TRUNCATE `migrations`;
+TRUNCATE `monthly_rota`;
+TRUNCATE `monthly_rota_doctors`;
+TRUNCATE `password_resets`;
 TRUNCATE `weekday`;
 
 drop TABLE `doctor`;
@@ -184,4 +184,6 @@ dev : $2y$10$Znz.iBnscgguOMl6K49pJOQth14Z0YrePxGLbRe77IoE3k0NI8Hj.
 local : $2y$10$5khvtNrxHhxHXrySnw5UheJiAmy63iREf1HpFohUUfou0BjMUFfJ.
 
 1614816000
+
+if doctor can not be assiged to both avalible shift swap it with other doctor
 
