@@ -234,7 +234,7 @@ class GenerateRota
                 $three_shift[] = $doctor_id;
             }
         }
-        $this->print_log = true;
+        // $this->print_log = true;
         $this->conditions['check_general_request'] = false; // if general request is not possible
         foreach($one_shift as $one_shift_doctor_id){
             $assigned = $this->assign_duty($duty_date, $one_shift_doctor_id, $doctors_shift_allowed[$one_shift_doctor_id][0]);
@@ -321,7 +321,8 @@ class GenerateRota
 
                     // $this->assign_duty_to_any_avalible_shift( $duty_date,$two_shift_doctor_id);
                     unset($two_shift[$two_shift_key]);
-            }$this->print_log = false;
+            }
+            // $this->print_log = false;
             foreach($three_shift as $three_shift_key=>$three_shift_doctor_id){
 
                 if(in_array('night',$doctors_shift_allowed[$three_shift_doctor_id])){
