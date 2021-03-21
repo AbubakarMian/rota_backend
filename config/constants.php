@@ -135,11 +135,11 @@ return [
         ]
     ],
     'conditions'=>[
+        'check_general_request'=>true,
         'consecutive_duties'=>true,
         'consecutive_leave_doctors'=>true,
         'special_rota_duties'=>true,
         'special_rota_off'=>true,
-        'check_general_request'=>true,
         'reg_and_res'=>true,
         'regular_leaves'=>true,
         // 'duties_equilibrium'=>true,
