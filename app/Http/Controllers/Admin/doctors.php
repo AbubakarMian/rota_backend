@@ -185,5 +185,5 @@ local : $2y$10$5khvtNrxHhxHXrySnw5UheJiAmy63iREf1HpFohUUfou0BjMUFfJ.
 
 1614816000
 
-if doctor can not be assiged to both avalible shift swap it with other doctor
+when selected from previous month select general duty
 
