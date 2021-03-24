@@ -345,7 +345,6 @@ class GenerateRota
             // dd($this->if_all_duties_assigned($duty_date),$this->duties_arr[$duty_date],$doctors_shift_allowed,$all_doctors_assigned,$one_shift,$two_shift,$three_shift);
         }
         return $this->if_all_duties_assigned($duty_date);
-        // $this->general_request_allowed($doctor_id,$duty_date,$shift);
     }
 
     public function set_basic_duties_doctors_arr(){
@@ -740,9 +739,9 @@ class GenerateRota
     public function get_duty_shift_doctor_by_general_request_and_duties_assigned($doctor_id){
         $doctor = $this->doctors_arr[$doctor_id];
         $shift_duties_num = [
-            'morning'=>$doctor['req_morning'] - $doctor['given_morning'],
+            'night'=>$doctor['req_night'] - $doctor['given_night'],
             'evening'=>$doctor['req_evening'] - $doctor['given_evening'],
-            'night'=>$doctor['req_night'] - $doctor['given_night']
+            'morning'=>$doctor['req_morning'] - $doctor['given_morning']
         ];
         arsort($shift_duties_num);
         return array_keys($shift_duties_num);
@@ -937,20 +936,22 @@ class GenerateRota
     public function assign_general_duties($duty_date)
     {
         $all_doctors = $this->sort_doctors();
-        foreach ($all_doctors as $doctor_id) {
-            $assigned= false ;
-            if ($this->doctors_arr[$doctor_id]['req_night']>
-                                    $this->doctors_arr[$doctor_id]['given_night']) {
-                $assigned = $this->assign_duty($duty_date, $doctor_id, 'night');
-            }
-            if (!$assigned && $this->doctors_arr[$doctor_id]['req_evening']>$this->doctors_arr[$doctor_id]['given_evening']) {
-                $assigned = $this->assign_duty($duty_date, $doctor_id, 'evening');
-            }
-            if (!$assigned && $this->doctors_arr[$doctor_id]['req_morning']>
-                    $this->doctors_arr[$doctor_id]['given_morning']) {
-                $assigned = $this->assign_duty($duty_date, $doctor_id, 'morning');
-            }
-        }
+        $this->assign_doctors_by_general_requests($all_doctors,$duty_date);
+
+        // foreach ($all_doctors as $doctor_id) {
+        //     $assigned= false ;
+        //     if ($this->doctors_arr[$doctor_id]['req_night']>
+        //                             $this->doctors_arr[$doctor_id]['given_night']) {
+        //         $assigned = $this->assign_duty($duty_date, $doctor_id, 'night');
+        //     }
+        //     if (!$assigned && $this->doctors_arr[$doctor_id]['req_evening']>$this->doctors_arr[$doctor_id]['given_evening']) {
+        //         $assigned = $this->assign_duty($duty_date, $doctor_id, 'evening');
+        //     }
+        //     if (!$assigned && $this->doctors_arr[$doctor_id]['req_morning']>
+        //             $this->doctors_arr[$doctor_id]['given_morning']) {
+        //         $assigned = $this->assign_duty($duty_date, $doctor_id, 'morning');
+        //     }
+        // }
     }
 
     public function if_shift_doctors_completed($duty_date,$shift)
@@ -1392,6 +1393,7 @@ class GenerateRota
 
     public function doctor_duty_allowed($shift, $doctor_id, $duty_date)
     {
+        // return true;
         $duties_shift_type = Config::get('constants.duties_shift_type.'.$shift);
         $pre_date = strtotime('-1 day',$duty_date);
         $is_disqualified = in_array($doctor_id, $this->duties_arr [$duty_date]['disqualified_doctors']);
@@ -1468,7 +1470,7 @@ class GenerateRota
             return false;
         }
 
-        if ($this->conditions['check_general_request']&& !$this->general_request_allowed($doctor_id,$duty_date,$shift)) {
+        if ($this->conditions['check_general_request']&& !$this->general_request_allowed($doctor_id,$shift)) {
             if($this->print_log){
                 echo "<br/> check_general_request : ".$duty_date." doctor_id : ".$doctor_id;
 
@@ -1504,7 +1506,7 @@ class GenerateRota
         return true;
     }
 
-    public function general_request_allowed($doctor_id,$duty_date,$shift){
+    public function general_request_allowed($doctor_id,$shift){
         $duties_shift_type = Config::get('constants.duties_shift_type.'.$shift);
         $total_duties_allowed =  $this->doctors_arr [$doctor_id]['total_duties'] + $this->extra_duties_allowed;
         $total_requested_duties = $this->doctors_arr [$doctor_id]['req_morning'] +

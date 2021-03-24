@@ -97,25 +97,29 @@ class Rota_Controller extends Controller
                                                     ->orderBy('duty_date', 'asc')->get();
 
         $temp_rota_id = $temp_rota->id;
-
         $temp_rota_details = [];
-        foreach($doctors_duties_assigned as $doctor_duties){
-            $total_given_duties = $doctor_duties['given_morning']+$doctor_duties['given_evening']+$doctor_duties['given_night'];
+        $doctor_details = [];
+        // foreach($doctors_duties_assigned as $doctor_duties){
+        //     $total_given_duties = $doctor_duties['given_morning']+$doctor_duties['given_evening']+$doctor_duties['given_night'];
 
-            $temp_rota_details[] = [
-                'monthly_rota_id'=>$monthly_rota->id,
-                'doctor_id'=>$doctor_duties['doctor_id'],
-                'total_morning'=>$doctor_duties['given_morning'],
-                'total_evening'=>$doctor_duties['given_evening'],
-                'total_night'=>$doctor_duties['given_night'],
-                'total_duties'=>$total_given_duties,
-                'total_leaves'=>$monthly_rota->total_days - $total_given_duties,
-                'temp_rota_id'=>$temp_rota_id,
-            ];
-        }
+        //     $temp_rota_details[] = [
+        //         'monthly_rota_id'=>$monthly_rota->id,
+        //         'doctor_id'=>$doctor_duties['doctor_id'],
+        //         'total_morning'=>$doctor_duties['given_morning'],
+        //         'total_evening'=>$doctor_duties['given_evening'],
+        //         'total_night'=>$doctor_duties['given_night'],
+        //         'total_duties'=>$total_given_duties,
+        //         'total_leaves'=>$monthly_rota->total_days - $total_given_duties,
+        //         'temp_rota_id'=>$temp_rota_id,
+        //     ];
+        // }
 
-        Temp_Rota_detail::insert($temp_rota_details);
+        // Temp_Rota_detail::insert($temp_rota_details);
         $temp_monthly_rota = [];
+        $temp_rota_date_details_arr = [];
+        $temp_rota_date_details = [];
+        $temp_rota_date_details['rota_id']=$monthly_rota->id;
+        $temp_rota_date_details['temp_rota_id']=$temp_rota_id;
         foreach ($rota_generate_patterns as $rota_generate_pattern) {
             $duty_date = $rota_generate_pattern->duty_date;
             $rota_by_date = $generated_rota_arr[$duty_date];
@@ -127,11 +131,18 @@ class Rota_Controller extends Controller
                 $doctors_duties_assigned
             );
             $temp_monthly_rota = array_merge($temp_monthly_rota, $temp_date_rota);
+            $doctor_details = $this->get_temp_rota_detail( $doctor_details,$monthly_rota,$temp_rota_id,
+                                                            $duty_date,
+                                                            $rota_generate_pattern,
+                                                            $rota_by_date,
+                                                            $doctors_duties_assigned);
+
             // Temp_Rota_Date_Details for consecutive and annual leave doctor
-            $temp_rota_date_details =new Temp_Rota_Date_Details();
-            $temp_rota_date_details->rota_id= $monthly_rota->id ;
-            $temp_rota_date_details->temp_rota_id= $temp_rota_id ;
-            $temp_rota_date_details->date= $duty_date;
+            // $temp_rota_date_details =new Temp_Rota_Date_Details();
+            $temp_rota_date_details['date']=$duty_date;
+            // $temp_rota_date_details->rota_id= $monthly_rota->id ;
+            // $temp_rota_date_details->temp_rota_id= $temp_rota_id ;
+            // $temp_rota_date_details->date= $duty_date;
 
 
             if($rota_by_date['dis_qualified_consecutive_doctors']){
@@ -141,20 +152,20 @@ class Rota_Controller extends Controller
 
                     $disqualified_doc_merge[] = $doctors[$dqc_id] ;
                 }
-                $temp_rota_date_details->consecutive_doctor= implode(',',$disqualified_doc_merge);
+                $temp_rota_date_details['consecutive_doctor']=implode(',',$disqualified_doc_merge);
+
+                // $temp_rota_date_details->consecutive_doctor= implode(',',$disqualified_doc_merge);
             }
             if($rota_by_date['annual_leaves']){
                 $annual_leave_arr=[] ;
                     foreach($rota_by_date['annual_leaves'] as $al_id){
                     $annual_leave_arr[] = $doctors[$al_id] ;
                 }
-                $temp_rota_date_details->anual_leave_doctor=  implode(',',$annual_leave_arr);
+                $temp_rota_date_details['anual_leave_doctor']=implode(',',$annual_leave_arr);
             }
-                // dd($rota_by_date['conditions']);
-                $temp_rota_date_details->conditions= json_encode( $rota_by_date['conditions']);
+                $temp_rota_date_details['conditions']=json_encode($rota_by_date['conditions']);
 
-
-
+                // $temp_rota_date_details->conditions= json_encode( $rota_by_date['conditions']);
 
             if($rota_by_date['special_rota_off_doctors']){
                 $special_rota_off_arr=[] ;
@@ -162,11 +173,16 @@ class Rota_Controller extends Controller
 
                     $special_rota_off_arr[] = $doctors[$sroff_id] ;
                 }
-                $temp_rota_date_details->special_rota_off=  implode(',',$special_rota_off_arr);
-            }
+                $temp_rota_date_details['special_rota_off']=implode(',',$special_rota_off_arr);
 
-           $temp_rota_date_details->save();
+                // $temp_rota_date_details->special_rota_off=  implode(',',$special_rota_off_arr);
+            }
+            $temp_rota_date_details_arr[] = $temp_rota_date_details;
+        //    $temp_rota_date_details->save();
         }
+        // dd($doctor_details);
+        Temp_Rota_detail::insert($doctor_details);
+        Temp_Rota_Date_Details::insert($temp_rota_date_details_arr);
         Temp_monthly_rota::insert($temp_monthly_rota);
         return [$temp_rota];
     }
@@ -327,6 +343,49 @@ class Rota_Controller extends Controller
             }
         }
         return $temp_duties;
+    }
+
+
+    public function get_temp_rota_detail($doctor_details,$monthly_rota,$temp_rota_id, $duty_date, $rota_generate_pattern, $rota_by_date, $doctors)
+    {
+        $shift_type = Config::get('constants.duties_shift_type');
+        // $doctor_details = [];
+        foreach ($shift_type as $shift_key=>$shift) {
+            $selected_shift_res = $shift['assigned_doctors_res'];
+            $selected_shift_reg = $shift['assigned_doctors_reg'];
+            $all_doctors = array_merge($rota_by_date[$selected_shift_res],$rota_by_date[$selected_shift_reg]);
+
+            foreach ($all_doctors as $key=>$d_id) {
+
+                if(!isset($doctor_details[$d_id])){
+
+                    $doctor_details[$d_id] = [
+                        'monthly_rota_id'=>$monthly_rota->id,
+                        'total_morning'=>0,
+                        'total_evening'=>0,
+                        'total_night'=>0,
+                        'total_duties'=>0,
+                        'total_leaves'=>$monthly_rota->total_days,
+                        'temp_rota_id'=>$temp_rota_id,
+                        'doctor_id'=>$d_id
+                    ];
+                }
+                $doctor_details[$d_id]['total_morning'] = ($shift_key == 'morning'? 1:0) + $doctor_details[$d_id]['total_morning'];
+                $doctor_details[$d_id]['total_evening'] = ($shift_key == 'evening'? 1:0) + $doctor_details[$d_id]['total_evening'];
+                $doctor_details[$d_id]['total_night'] = ($shift_key == 'night'? 1:0) + $doctor_details[$d_id]['total_night'];
+                $doctor_details[$d_id]['total_duties'] = $doctor_details[$d_id]['total_duties'] + 1;
+                $doctor_details[$d_id]['total_leaves'] = $doctor_details[$d_id]['total_leaves'] - 1;
+
+                // $doctor_details[$d_id] = [
+                //     'total_morning'=>($shift_key == 'morning'? 1:0) + $doctor_details[$d_id]['total_morning'],
+                //     'total_evening'=>($shift_key == 'evening'? 1:0) + $doctor_details[$d_id]['total_evening'],
+                //     'total_night'=>($shift_key == 'night'? 1:0) + $doctor_details[$d_id]['total_night'],
+                //     'total_duties'=>$doctor_details[$d_id]['total_duties'] + 1,
+                //     'total_leaves'=>$doctor_details[$d_id]['total_leaves'] - 1,
+                // ];
+            }
+        }
+        return $doctor_details;
     }
 
     public function get_temp_duty($temp_rota_id, $duty_date, $doctor, $shift, $is_ucc)

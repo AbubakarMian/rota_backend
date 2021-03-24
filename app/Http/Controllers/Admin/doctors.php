@@ -23,6 +23,9 @@ $doctors_arr[$d->id] = [
             'holiday_leaves'=>0, // if he already got sat sun off,
             'duties_assigned_dates'=>[]
             ];
+
+            assign_general_duties
+            assign_doctors_by_general_requests
 $duties_arr [$duty_date]= [
             'duty_date'=>$duty_date,
             'total_morning_doctors'=>$rota_generate_pattern->total_morning_doctors,
