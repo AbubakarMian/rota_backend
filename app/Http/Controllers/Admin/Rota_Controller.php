@@ -158,7 +158,8 @@ class Rota_Controller extends Controller
 
     public function save_temp_rota($temp_rota_id){
 
-    $temp_rota = TempRota::find($temp_rota_id);
+    $temp_rota = TempRota::with('monthly_rota')->find($temp_rota_id);
+    $monthly_rota = $temp_rota->monthly_rota;
     $total_month_days = $temp_rota->monthly_rota->total_days;
     $temp_rota->monthly_rota->temp_rota()->where('status','selected')->update(['status' => 'unselected']);
     $shifts = Config::get('constants.duty_type');
@@ -191,22 +192,32 @@ class Rota_Controller extends Controller
             'total_evening'=>0,
             'total_night'=>0,
             'total_duties'=>0,
-            'total_leaves'=>0,
+            'total_leaves'=>$monthly_rota->total_days,
         ];
       }
       $morning_duty = $monthly_rota_doc->shift == $shifts['morning'] ?1:0;
       $evening_duty = $monthly_rota_doc->shift == $shifts['evening'] ?1:0;
       $night_duty = $monthly_rota_doc->shift == $shifts['night'] ?1:0;
+      $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_morning'] =
+                                                    $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_morning']+$morning_duty;
+      $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_evening'] =
+                                                    $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_evening']+$evening_duty;
+      $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_night'] =
+                                                    $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_night']+$night_duty;
+      $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_duties'] =
+                                                    $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_duties']+1;
+      $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_leaves'] =
+                                                    $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_leaves']-1;
 
-        $doctor_rota_detail[$monthly_rota_doc->doctor_id] =  [
-            'total_morning'=>$doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_morning']+$morning_duty,
-            'total_evening'=>$doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_evening']+$evening_duty,
-            'total_night'=>$doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_night']+$night_duty,
-            'total_duties'=>$doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_duties']+1,
-            'total_leaves'=>$total_month_days - $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_duties'],
-        ];
+        // $doctor_rota_detail[$monthly_rota_doc->doctor_id] =  [
+        //     'total_morning'=>$doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_morning']+$morning_duty,
+        //     'total_evening'=>$doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_evening']+$evening_duty,
+        //     'total_night'=>$doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_night']+$night_duty,
+        //     'total_duties'=>$doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_duties']+1,
+        //     'total_leaves'=>$total_month_days - $doctor_rota_detail[$monthly_rota_doc->doctor_id]['total_leaves'],
+        // ];
     }
-
+    // dd($doctor_rota_detail);
     Rota::insert($rota);
     Rota_detail::insert($doctor_rota_detail);
     return redirect('admin/rota');
