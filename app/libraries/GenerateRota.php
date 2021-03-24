@@ -204,148 +204,25 @@ class GenerateRota
         foreach($all_doctors_assigned as $doctor_id){
             $this->remove_assign_doctor($duty_date, $doctor_id );
         }
+        $this->assign_doctors_by_general_requests($all_doctors_assigned,$duty_date);
+        $this->conditions['check_general_request'] = false;
+        if(!$this->if_all_duties_assigned($duty_date)){
+            $this->assign_doctors_from_shift_not_allowed($duty_date);
+        }
 
         foreach($all_doctors_assigned as $doctor_id){
-            $shift_marked = false;
-            foreach($this->shifts as $shift){
-                if($this->doctor_duty_allowed($shift, $doctor_id, $duty_date)){
-                    $doctors_shift_allowed[$doctor_id][] = $shift;
-                    $total_shift_doctors_left[$shift] = $total_shift_doctors_left[$shift]++;
-                    $shift_marked = true;
-                }
-            }
-            if(!$shift_marked){
-                $doctors_shift_allowed[$doctor_id][] = $this->shifts['morning'];
-                $doctors_shift_allowed[$doctor_id][] = $this->shifts['evening'];
-                $doctors_shift_allowed[$doctor_id][] = $this->shifts['night'];
-                $total_shift_doctors_left['morning'] = $total_shift_doctors_left['morning']++;
-                $total_shift_doctors_left['evening'] = $total_shift_doctors_left['evening']++;
-                $total_shift_doctors_left['night'] = $total_shift_doctors_left['night']++;
-            }
-        }
-        foreach($doctors_shift_allowed as $doctor_id=>$shifts_arr){
-            if(sizeof($shifts_arr) == 1){
-                $one_shift[] = $doctor_id;
-            }
-            elseif(sizeof($shifts_arr) == 2){
-                $two_shift[] = $doctor_id;
-            }
-            else{// size is 3
-                $three_shift[] = $doctor_id;
-            }
-        }
-        // $this->print_log = true;
-        $this->conditions['check_general_request'] = false; // if general request is not possible
-        foreach($one_shift as $one_shift_doctor_id){
-            $assigned = $this->assign_duty($duty_date, $one_shift_doctor_id, $doctors_shift_allowed[$one_shift_doctor_id][0]);
-            $total_shift_doctors_left[$doctors_shift_allowed[$one_shift_doctor_id][0]]--;
+
         }
 
-        if($this->conditions['reg_and_res']){
-            $doctor_types = [1,2];
-        }
-        else{
-            $doctor_types = [];
-        }
-        $doctor_types = [1,2];
-        $shifts['night'] = $this->shifts['night'];
-        $shifts['evening'] = $this->shifts['evening'];
-        $shifts['morning'] = $this->shifts['morning'];
-        foreach($shifts as $shift){
-            foreach($doctor_types as $doctor_type){
-                $has_least_number_of_doctors = $this->if_shift_has_least_doctor_type($duty_date, $shift,$doctor_type);
-                if(!$has_least_number_of_doctors){
-                    foreach($two_shift as $two_shift_key=>$two_shift_doctor_id){
-                        if(in_array($shift,$doctors_shift_allowed[$two_shift_doctor_id])){
-                            $assigned = $this->assign_doctor($shift, $two_shift_doctor_id, $duty_date);
-                            if($assigned){
-                                unset($two_shift[$two_shift_key]);
-                            }
-                            $has_least_number_of_doctors = $this->if_shift_has_least_doctor_type($duty_date, $shift,$doctor_type);
-                            if($has_least_number_of_doctors){
-                                break;
-                            }
-                        }
-                    }
-                }
-                $has_least_number_of_doctors = $this->if_shift_has_least_doctor_type($duty_date, $shift,$doctor_type);
-                    if(!$has_least_number_of_doctors){
-                        foreach($three_shift as $three_shift_key=>$three_shift_doctor_id){
-                            if(in_array($shift,$doctors_shift_allowed[$three_shift_doctor_id])){
-                                $assigned = $this->assign_doctor($shift, $three_shift_doctor_id, $duty_date);
-                                if($assigned){
-                                    unset($three_shift[$three_shift_key]);
-                                }
-                                $has_least_number_of_doctors = $this->if_shift_has_least_doctor_type($duty_date, $shift,$doctor_type);
-                                if($has_least_number_of_doctors){
-                                    break;
-                                }
-                            }
-                        }
-                    }
-            }
-        }
-        if($this->conditions['reg_and_res']){
-            // dd('least doctor shift',$this->duties_arr,$this->duties_arr[$duty_date],$doctors_shift_allowed,$all_doctors_assigned,$two_shift);
-        }
-            foreach($two_shift as $two_shift_key=>$two_shift_doctor_id){
-                // if($total_shift_doctors_left[$doctors_shift_allowed[$two_shift_doctor_id][0]] >
-                //             $total_shift_doctors_left[$doctors_shift_allowed[$two_shift_doctor_id][1]]){
-                //     $assigned = $this->assign_duty($duty_date, $two_shift_doctor_id, $doctors_shift_allowed[$two_shift_doctor_id][0]);
-                //     $total_shift_doctors_left[$doctors_shift_allowed[$two_shift_doctor_id][0]]--;
-                // }
-                // else{
-                //     $assigned = $this->assign_duty($duty_date, $two_shift_doctor_id, $doctors_shift_allowed[$two_shift_doctor_id][1]);
-                //     $total_shift_doctors_left[$doctors_shift_allowed[$two_shift_doctor_id][1]]--;
-                // }
-
-                if(in_array('night',$doctors_shift_allowed[$two_shift_doctor_id])){
-                    $assigned = $this->assign_doctor('night', $two_shift_doctor_id, $duty_date);
-                }
-
-                if(!$assigned && in_array('evening',$doctors_shift_allowed[$two_shift_doctor_id])){
-                    $assigned = $this->assign_doctor('evening', $two_shift_doctor_id, $duty_date);
-                }
-
-                if(!$assigned && in_array('morning',$doctors_shift_allowed[$two_shift_doctor_id])){
-                    $assigned = $this->assign_doctor('morning', $two_shift_doctor_id, $duty_date);
-                }
 
 
-                if(!$assigned){
-                    $assigned = $this->assign_duty_to_any_avalible_shift( $duty_date,$two_shift_doctor_id);
-                }
-                if(!$assigned){
-                    // dd('error',$this->duties_arr,$this->duties_arr[$duty_date],$doctors_shift_allowed,$all_doctors_assigned,$two_shift);
-                }
 
-                    // $this->assign_duty_to_any_avalible_shift( $duty_date,$two_shift_doctor_id);
-                    unset($two_shift[$two_shift_key]);
-            }
-            // $this->print_log = false;
-            foreach($three_shift as $three_shift_key=>$three_shift_doctor_id){
 
-                if(in_array('night',$doctors_shift_allowed[$three_shift_doctor_id])){
-                    $assigned = $this->assign_doctor('night', $three_shift_doctor_id, $duty_date);
-                }
 
-                if(!$assigned && in_array('evening',$doctors_shift_allowed[$three_shift_doctor_id])){
-                    $assigned = $this->assign_doctor('evening', $three_shift_doctor_id, $duty_date);
-                }
-
-                if(!$assigned && in_array('morning',$doctors_shift_allowed[$three_shift_doctor_id])){
-                    $assigned = $this->assign_doctor('morning', $three_shift_doctor_id, $duty_date);
-                }
-
-                    // $this->assign_duty_to_any_avalible_shift( $duty_date,$three_shift_doctor_id);
-                    unset($three_shift[$three_shift_key]);
-            }
-        $this->assign_doctors_from_shift_not_allowed($duty_date);
         if(!$this->if_all_duties_assigned($duty_date)){
             // dd($this->if_all_duties_assigned($duty_date),$this->duties_arr[$duty_date],$doctors_shift_allowed,$all_doctors_assigned,$one_shift,$two_shift,$three_shift);
         }
         return $this->if_all_duties_assigned($duty_date);
-        // $this->general_request_allowed($doctor_id,$duty_date,$shift);
     }
 
     public function set_basic_duties_doctors_arr(){
@@ -399,8 +276,6 @@ class GenerateRota
             $all_assigned = $this->find_doctor_from_disqualified_list($duty_date,$d);
             if(!$all_assigned){
                 $all_assigned = $this->find_doctors_from_shift_not_allowed($duty_date);
-
-
             }
         }
         return  $this->if_all_duties_assigned($duty_date);
@@ -740,9 +615,9 @@ class GenerateRota
     public function get_duty_shift_doctor_by_general_request_and_duties_assigned($doctor_id){
         $doctor = $this->doctors_arr[$doctor_id];
         $shift_duties_num = [
-            'morning'=>$doctor['req_morning'] - $doctor['given_morning'],
+            'night'=>$doctor['req_night'] - $doctor['given_night'],
             'evening'=>$doctor['req_evening'] - $doctor['given_evening'],
-            'night'=>$doctor['req_night'] - $doctor['given_night']
+            'morning'=>$doctor['req_morning'] - $doctor['given_morning']
         ];
         arsort($shift_duties_num);
         return array_keys($shift_duties_num);
@@ -937,20 +812,22 @@ class GenerateRota
     public function assign_general_duties($duty_date)
     {
         $all_doctors = $this->sort_doctors();
-        foreach ($all_doctors as $doctor_id) {
-            $assigned= false ;
-            if ($this->doctors_arr[$doctor_id]['req_night']>
-                                    $this->doctors_arr[$doctor_id]['given_night']) {
-                $assigned = $this->assign_duty($duty_date, $doctor_id, 'night');
-            }
-            if (!$assigned && $this->doctors_arr[$doctor_id]['req_evening']>$this->doctors_arr[$doctor_id]['given_evening']) {
-                $assigned = $this->assign_duty($duty_date, $doctor_id, 'evening');
-            }
-            if (!$assigned && $this->doctors_arr[$doctor_id]['req_morning']>
-                    $this->doctors_arr[$doctor_id]['given_morning']) {
-                $assigned = $this->assign_duty($duty_date, $doctor_id, 'morning');
-            }
-        }
+        $this->assign_doctors_by_general_requests($all_doctors,$duty_date);
+
+        // foreach ($all_doctors as $doctor_id) {
+        //     $assigned= false ;
+        //     if ($this->doctors_arr[$doctor_id]['req_night']>
+        //                             $this->doctors_arr[$doctor_id]['given_night']) {
+        //         $assigned = $this->assign_duty($duty_date, $doctor_id, 'night');
+        //     }
+        //     if (!$assigned && $this->doctors_arr[$doctor_id]['req_evening']>$this->doctors_arr[$doctor_id]['given_evening']) {
+        //         $assigned = $this->assign_duty($duty_date, $doctor_id, 'evening');
+        //     }
+        //     if (!$assigned && $this->doctors_arr[$doctor_id]['req_morning']>
+        //             $this->doctors_arr[$doctor_id]['given_morning']) {
+        //         $assigned = $this->assign_duty($duty_date, $doctor_id, 'morning');
+        //     }
+        // }
     }
 
     public function if_shift_doctors_completed($duty_date,$shift)
@@ -1468,7 +1345,7 @@ class GenerateRota
             return false;
         }
 
-        if ($this->conditions['check_general_request']&& !$this->general_request_allowed($doctor_id,$duty_date,$shift)) {
+        if ($this->conditions['check_general_request']&& !$this->general_request_allowed($doctor_id,$shift)) {
             if($this->print_log){
                 echo "<br/> check_general_request : ".$duty_date." doctor_id : ".$doctor_id;
 
@@ -1504,7 +1381,7 @@ class GenerateRota
         return true;
     }
 
-    public function general_request_allowed($doctor_id,$duty_date,$shift){
+    public function general_request_allowed($doctor_id,$shift){
         $duties_shift_type = Config::get('constants.duties_shift_type.'.$shift);
         $total_duties_allowed =  $this->doctors_arr [$doctor_id]['total_duties'] + $this->extra_duties_allowed;
         $total_requested_duties = $this->doctors_arr [$doctor_id]['req_morning'] +
