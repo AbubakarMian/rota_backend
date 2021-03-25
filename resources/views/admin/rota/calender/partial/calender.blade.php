@@ -53,6 +53,8 @@
     <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
         <a target="_blank" href="{{ asset('/admin/rota/detail/'. $monthly_rota->id ) }}"
             class="btn btn-info">Details</a>
+            <a target="_blank" href="{{ asset('/admin/rota/calender/excel/'. $monthly_rota->id ) }}"
+                class="btn btn-info">Excel</a>
             <a href="{{ url()->previous() }}" class="btn btn-primary" type="button" >Back</a>
             {{-- <input type="submit" value="save"  class="btn btn-primary"> --}}
         &nbsp; <button style="display: none" class="btn btn-warning" id="hide_ucc">Hide UCC</button>
