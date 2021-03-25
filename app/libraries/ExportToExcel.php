@@ -12,16 +12,16 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class ExportToExcel  implements FromArray, WithHeadings, ShouldAutoSize,WithEvents//FromArray FromCollection
+class ExportToExcel  implements WithHeadings, ShouldAutoSize,WithEvents,FromView//FromArray FromCollection
 {
     use Exportable;
-    private $myArray;
-    private $myHeadings;
+    private $myData;
 
-    public function __construct($myHeadings,$myArray){
-        $this->myArray = $myArray;
-        $this->myHeadings = $myHeadings;
+    public function __construct($myData){
+        $this->myData = $myData;
     }
 
     // public function array(): array
@@ -33,8 +33,12 @@ class ExportToExcel  implements FromArray, WithHeadings, ShouldAutoSize,WithEven
     // }
 
 
-    public function array(): array{
-        return $this->myArray;
+    public function view(): View
+    {
+        return $this->myData;
+        // return view('exports.invoices', [
+        //     'invoices' => Invoice::all()
+        // ]);
     }
 
     public function collection()
