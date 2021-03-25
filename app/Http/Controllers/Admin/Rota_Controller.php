@@ -52,6 +52,17 @@ class Rota_Controller extends Controller
         $weekdays = Config::get('constants.weekdays_num');
         return \View::make('admin.rota.calender.index', compact('monthly_rota','start_weekday','weekdays', 'doctors','doctors_by_id'));
     }
+    public function excel_rota($monthly_rota_id){
+        $monthly_rota = Monthly_rota::find($monthly_rota_id);
+        $doctors = Doctor::with('user')->get();
+        $doctors_by_id = [];
+        foreach($doctors as $doctor){
+            $doctors_by_id[$doctor->id] = $doctor->user->name;
+        }
+        $start_weekday = date('w', $monthly_rota->rota->rota_generate_pattern[0]->duty_date)+1; // since our week starts from sunday add 1
+        $weekdays = Config::get('constants.weekdays_num');
+        return \View::make('admin.rota.excel.index', compact('monthly_rota','start_weekday','weekdays', 'doctors','doctors_by_id'));
+    }
 
     public function create()
     {
