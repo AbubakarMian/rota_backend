@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\DB;
 use App\libraries\GenerateRota;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Log;
+use App\Libraries\ExportToExcel;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class Rota_Controller extends Controller
@@ -61,7 +63,20 @@ class Rota_Controller extends Controller
         }
         $start_weekday = date('w', $monthly_rota->rota->rota_generate_pattern[0]->duty_date)+1; // since our week starts from sunday add 1
         $weekdays = Config::get('constants.weekdays_num');
-        return \View::make('admin.rota.excel.index', compact('monthly_rota','start_weekday','weekdays', 'doctors','doctors_by_id'));
+        $view= \View::make('admin.rota.excel.index', compact('monthly_rota','start_weekday','weekdays', 'doctors','doctors_by_id'));
+
+        $view=  view('admin.rota.excel.index', [
+            // 'invoices' => Invoice::all()
+            'monthly_rota'=>$monthly_rota,'start_weekday'=>$start_weekday,'weekdays'=>$weekdays, 'doctors'=>$doctors,'doctors_by_id'=>$doctors_by_id
+        ]);
+        // echo $view;
+
+        $export_data = new ExportToExcel($view);
+        // dd($view);
+
+        // $excel = Excel::download($export_data, 'property.xlsx');
+        // return $excel;
+        return $view;
     }
 
     public function create()
