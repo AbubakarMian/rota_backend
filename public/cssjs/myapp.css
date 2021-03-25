@@ -29,6 +29,9 @@ span.error{
     top: 125%!important;
     left: 10%!important;
 }
+body.excel {
+    background-color: white;
+}
 
 .dell-gallery {
 	font-size: 15px;
