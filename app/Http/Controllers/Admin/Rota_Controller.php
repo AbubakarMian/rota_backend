@@ -74,9 +74,9 @@ class Rota_Controller extends Controller
         $export_data = new ExportToExcel($view);
         // dd($view);
 
-        // $excel = Excel::download($export_data, 'property.xlsx');
+        $excel = Excel::download($export_data, 'property.xlsx');
         // return $excel;
-        return $view;
+        return $excel;
     }
 
     public function create()
