@@ -64,6 +64,7 @@ use Illuminate\Support\Facades\Route;
     //////////ROTA
    Route::get('admin/rota', 'Admin\Rota_Controller@index')->name('rota.index');
    Route::get('admin/rota/calender/{monthly_rota_id}', 'Admin\Rota_Controller@show_rota')->name('rota.calender');
+   Route::get('admin/rota/calender/excel/{monthly_rota_id}', 'Admin\Rota_Controller@excel_rota')->name('rota.calender');
    Route::get('admin/list/create', 'Admin\Rota_Controller@create')->name('doctor.list.create');
    ///admin.rota.delete
    Route::post('admin/rota/delete/{id}', 'Admin\Rota_Controller@destroy_undestroy')->name('admin.rota.delete');
