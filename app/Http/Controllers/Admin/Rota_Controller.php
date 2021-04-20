@@ -46,8 +46,9 @@ class Rota_Controller extends Controller
     public function show_rota($monthly_rota_id){
         $monthly_rota = Monthly_rota::find($monthly_rota_id);
         $doctors = Doctor::with('user')->get();
+        $doctors_with_trashed = Doctor::withTrashed()->with('user')->get();
         $doctors_by_id = [];
-        foreach($doctors as $doctor){
+        foreach($doctors_with_trashed as $doctor){
             $doctors_by_id[$doctor->id] = $doctor->user->name;
         }
         $start_weekday = date('w', $monthly_rota->rota->rota_generate_pattern[0]->duty_date)+1; // since our week starts from sunday add 1
