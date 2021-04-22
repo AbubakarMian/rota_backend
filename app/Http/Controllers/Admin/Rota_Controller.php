@@ -149,6 +149,7 @@ class Rota_Controller extends Controller
                                                             $doctors_duties_assigned);
 
             $temp_rota_date_details['date']=$duty_date;
+            $temp_rota_date_details['consecutive_doctor']='';
             if($rota_by_date['dis_qualified_consecutive_doctors']){
                 $disqualified_doc_merge=[] ;
 
@@ -158,6 +159,7 @@ class Rota_Controller extends Controller
                 }
                 $temp_rota_date_details['consecutive_doctor']=implode(',',$disqualified_doc_merge);
             }
+            $temp_rota_date_details['anual_leave_doctor']='';
             if($rota_by_date['annual_leaves']){
                 $annual_leave_arr=[] ;
                     foreach($rota_by_date['annual_leaves'] as $al_id){
@@ -166,7 +168,7 @@ class Rota_Controller extends Controller
                 $temp_rota_date_details['anual_leave_doctor']=implode(',',$annual_leave_arr);
             }
                 $temp_rota_date_details['conditions']=json_encode($rota_by_date['conditions']);
-
+                $temp_rota_date_details['special_rota_off']='';
             if($rota_by_date['special_rota_off_doctors']){
                 $special_rota_off_arr=[] ;
                     foreach($rota_by_date['special_rota_off_doctors'] as $sroff_id){
