@@ -27,7 +27,7 @@ class Rota_RequestController extends Controller
 
         $doctors = Doctor::whereHas('user', function ($query) use ($name) {
             $query->where('name', 'like', '%' . $name . '%');
-        })->with('user')->where('is_deleted',0)->withTrashed()->paginate(10);
+        })->with('user')->where('is_deleted',0)->paginate(10);
         return view('admin.rota_request.index', compact('doctors'));
     }
     public function detail($id){
