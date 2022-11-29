@@ -27,7 +27,8 @@ span.error{
 .date-range-review-btn{
 	position: absolute!important;
     top: 125%!important;
-    left: 10%!important;
+    left: -3%!important;
+    height: 41px;
 }
 body.excel {
     background-color: white;
