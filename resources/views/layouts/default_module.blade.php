@@ -19,7 +19,7 @@
         <li class="active">@yield('module_name')</li>
     </ol>
     @yield('module_search_top')
-    <h3>@yield('module_name')</h3>
+    <h3 class="moheading">@yield('module_name')</h3>
     <br>
     <section class="panel panel-default">
         <div class="panel-body">

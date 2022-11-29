@@ -59,10 +59,10 @@ $admin_common = session()->get('admin_common');
 
                 <!-- logo -->
                 <div CLASS="LOGO">
-                <a href="{{asset('index.php/admin/dashboard')}}" class="navbar-brand" >
-                    <img src="{{ asset('images/medicallogo.png') }}" alt="" class="myimg">
-                    <span class="heading-font"></span>
-                </a>
+                    <a href="{{ asset('index.php/admin/dashboard') }}" class="navbar-brand">
+                        <img src="{{ asset('images/medicallogo.png') }}" alt="" class="myimg">
+                        <span class="heading-font"></span>
+                    </a>
                 </div>
                 <!-- /logo -->
             </div>
@@ -83,17 +83,17 @@ $admin_common = session()->get('admin_common');
 
                 <li class="off-right hidden-xs">
                     <a href="javascript:;" data-toggle="dropdown" class="no-hover">
-                        <img src="{{ asset('theme/images/avatar.jpg') }} " class="header-avatar img-circle" alt="user"
-                            title="user">
-                        {{--                    <span class="hidden-xs ml10">Welcome {!! $admin_common->name !!}</span>--}}
-                        {{--                    <span class="hidden-xs ml10">Welcome {!! $admin_common->name !!}</span>--}}
+                        <img src="{{ asset('theme/images/avatar.jpg') }} " class="header-avatar img-circle"
+                            alt="user" title="user">
+                        {{--                    <span class="hidden-xs ml10">Welcome {!! $admin_common->name !!}</span> --}}
+                        {{--                    <span class="hidden-xs ml10">Welcome {!! $admin_common->name !!}</span> --}}
                         <!-- <i class="ti-angle-down ti-caret hidden-xs"></i> -->
                     </a>
                 </li>
 
                 <li class="off-right">
-                    <form action="{{asset('admin/logout')}}">
-                        <input type="submit" class="btn btn-danger btn-rounded margin-top" value="LogOut">
+                    <form action="{{ asset('admin/logout') }}">
+                        <input type="submit" class="btn btn-danger btn-rounded lugut" value="LogOut">
                     </form>
                     <!--           <button type="button" class="btn btn-danger btn-rounded margin-top">LogOut</button> -->
                 </li>
@@ -112,7 +112,7 @@ $admin_common = session()->get('admin_common');
                     <ul class="nav">
                         <!-- dashboard -->
                         <li>
-                            <a href="{{asset('admin/dashboard')}}">
+                            <a href="{{ asset('admin/dashboard') }}">
                                 <i class="ti-home"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -129,12 +129,12 @@ $admin_common = session()->get('admin_common');
                                 <span>Modules</span>
                             </a>
                             <ul class="sub-menu">
-                                @foreach($admin_common->modules as $key => $module)
-                                <li>
-                                    <a href="{!! asset('index.php/'.$module['url']) !!}">
-                                        <span>{!! $module['title'] !!}</span>
-                                    </a>
-                                </li>
+                                @foreach ($admin_common->modules as $key => $module)
+                                    <li>
+                                        <a href="{!! asset('index.php/' . $module['url']) !!}">
+                                            <span>{!! $module['title'] !!}</span>
+                                        </a>
+                                    </li>
                                 @endforeach
                             </ul>
                         </li>
@@ -142,26 +142,27 @@ $admin_common = session()->get('admin_common');
 
 
                         <!-- Reports -->
-                        @if(sizeof($admin_common->reports))
-                        <li>
-                            <a href="javascript:;">
-                                <i class="toggle-accordion"></i>
-                                <!-- <i class="ti-support"></i> -->
-                                <i class="fa fa-line-chart"></i>
-                                <span>Reports</span>
-                            </a>
-                            <ul class="sub-menu">
+                        @if (sizeof($admin_common->reports))
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="toggle-accordion"></i>
+                                    <!-- <i class="ti-support"></i> -->
+                                    <i class="fa fa-line-chart"></i>
+                                    <span>Reports</span>
+                                </a>
+                                <ul class="sub-menu">
 
-                                @foreach($admin_common->reports as $key => $report) <li>
-                                <li>
-                                    <a href="{{asset('index.php/'.$report['url'])}}">
-                                        <span>{!! $report['title'] !!}</span>
-                                    </a>
+                                    @foreach ($admin_common->reports as $key => $report)
+                                        <li>
+                                        <li>
+                                            <a href="{{ asset('index.php/' . $report['url']) }}">
+                                                <span>{!! $report['title'] !!}</span>
+                                            </a>
 
-                                </li>
-                                @endforeach
-                            </ul>
-                        </li>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
                         @endif
                         <!-- /Reports -->
                     </ul>
@@ -237,7 +238,7 @@ $admin_common = session()->get('admin_common');
     <!--   this file will be loaded individually for all files to avoide conficts  -->
     <!--   <script src="{{ asset('theme/vendor/jquery/dist/jquery.js') }}"></script> -->
     {{-- <script src="{{ asset('cssjs/jQuery-2.1.4.min.js')  }}"></script> --}}
-    <script src="{{ asset('cssjs/jquery.plugin.js')}}"></script>
+    <script src="{{ asset('cssjs/jquery.plugin.js') }}"></script>
     {{-- <script src="{{ asset('cssjs/jquery.timeentry.js')}}"></script> --}}
     <script src="{{ asset('theme/vendor/bootstrap/dist/js/bootstrap.js') }}"></script>
     <script src="{{ asset('theme/vendor/slimScroll/jquery.slimscroll.js') }}"></script>
@@ -245,7 +246,7 @@ $admin_common = session()->get('admin_common');
     <script src="{{ asset('theme/vendor/jquery_appear/jquery.appear.js') }}"></script>
     <script src="{{ asset('theme/vendor/jquery.placeholder.js') }}"></script>
     <script src="{{ asset('theme/vendor/fastclick/lib/fastclick.js') }}"></script>
-    <script src="{{ asset('cssjs/jquery.timeentry.js')}}"></script>
+    <script src="{{ asset('cssjs/jquery.timeentry.js') }}"></script>
     <!-- endbuild -->
 
     <!-- page level scripts -->
