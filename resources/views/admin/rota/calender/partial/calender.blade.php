@@ -10,9 +10,12 @@
 <style>
 
 .doc{
-    display:inline-block;
+    display: inline-block;
     /* margin-left: 3px; */
-    padding: 0px 2px;
+    padding: 0px 3px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #8b8b8b;
 }
 .doc:hover {
     transform: scale(1.12);
@@ -52,10 +55,10 @@
 <div class="row bstmonthly" style="display: flex; justify-content: center;position: relative;width: 100%;">
     <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
         <a target="_blank" href="{{ asset('/admin/rota/detail/'. $monthly_rota->id ) }}"
-            class="btn btn-info">Details</a>
+            class="btn btn-info gren">Details</a>
             <a target="_blank" href="{{ asset('/admin/rota/calender/excel/'. $monthly_rota->id ) }}"
-                class="btn btn-info">Excel</a>
-            <a href="{{ url()->previous() }}" class="btn btn-primary" type="button" >Back</a>
+                class="btn btn-info grexe">Excel</a>
+            <a href="{{ url()->previous() }}" class="btn btn-primary bck" type="button" >Back</a>
             {{-- <input type="submit" value="save"  class="btn btn-primary"> --}}
         &nbsp; <button style="display: none" class="btn btn-warning" id="hide_ucc">Hide UCC</button>
         &nbsp; <button style="display: none" class="btn btn-primary" id="hide_regularduites">Hide Regular Duties</button>
@@ -121,7 +124,7 @@
                             </h5>
                             <div class="">
                                 <div class="col-sm-12 textMorningList">
-                                    <div class="multiple_line_text_morning_{!!$item->id!!}"> {!!$all_morning_doctor!!}</div>
+                                    <div class="multiple_line_text_morning_ acasc {!!$item->id!!}"> {!!$all_morning_doctor!!}</div>
                                     <div class="ucc_morning_{!!$item->id!!} ucctext">{!! $ucc_morning_doctor_name !!}</div>
                                 </div>
                                 <div class="row" style="margin: 2px">
@@ -431,7 +434,7 @@ function sort_by_name_get_ucc($doctors,$doctors_by_id){
     foreach($m_doctors as $doctor_id=>$md){
         $style='';
         if($md['doctor_type_id'] == 2){
-            $style = 'color:#2e4eec';
+            $style = 'color:#8b8b8b';
         }
         $all_doctors .= ',<div style="'.$style.'" data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
     }

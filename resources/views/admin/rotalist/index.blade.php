@@ -63,8 +63,10 @@ width="400px" style="table-layout:fixed;"
 					Delete</span></a>
 		</td>
    </tr>
+   
 	@endforeach
 </tbody>
+
 @section('pagination')
 {{-- <span class="pagination pagination-md pull-right">{!! $l->render() !!}</span> --}}
 <div class="col-md-3 pull-left">
