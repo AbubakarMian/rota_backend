@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-mg bbwith">
         <div class="modal-content" id="confirm">
             <div class="modal-header bblue">
-                <h4 class="modal-title">Details</h4>
+                <h4 class="modal-title">DETAIL'S</h4>
             </div>
             <?php
             $consecutive_doctor = $rota_detail[$date_index]->consecutive_doctor;

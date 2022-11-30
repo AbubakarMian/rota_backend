@@ -89,6 +89,51 @@ body {
   font-size: 13px;
   font-weight: normal;
 }
+.gren {
+  background: #1cc88a !important;
+  border-color: #1cc88a !important;
+  color: white !important;
+  width: 20% !important;
+  border-radius: 0px !important;
+}
+.grexe {
+  background: #36b9cc !important;
+  border-color: #36b9cc !important;
+  color: white !important;
+  width: 20% !important;
+  border-radius: 0px !important;
+}
+.bck {
+  background: #f6c23e!important;
+  border-color: #f6c23e!important;
+  color: white !important;
+  width: 20% !important;
+  border-radius: 0px !important;
+}
+.bckk {
+  background: #f6c23e!important;
+  border-color: #f6c23e!important;
+  color: white !important;
+  width: 20% !important;
+  border-radius: 0px !important;
+  margin-top: 6px;
+}
+.hucc {
+  background: #ff0000!important;
+  border-color: #ff0000!important;
+  color: white !important;
+  width: 20% !important;
+  border-radius: 0px !important;
+  margin-left: -5px;
+}
+.hrducc {
+  background: #5d90aa!important;
+  border-color: #5d90aa!important;
+  color: white !important;
+  width: 20% !important;
+  border-radius: 0px !important;
+  margin-left: -5px;
+}
 @media screen and (min-width: 768px) {
   html,
   body {

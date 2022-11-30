@@ -10,9 +10,12 @@
 <style>
 
 .doc{
-    display:inline-block;
+    display: inline-block;
     /* margin-left: 3px; */
-    padding: 0px 2px;
+    padding: 0px 3px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #8b8b8b;
 }
 .doc:hover {
     transform: scale(1.12);
@@ -50,15 +53,15 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 <div class="row bstmonthly" style="display: flex; justify-content: center;position: relative;width: 100%;">
-    <div class="col-sm-4" style="margin-top: 20px;margin-left: 29px;">
+    <div class="col-sm-12" style="margin-top: 20px;margin-left: 29px;">
         <a target="_blank" href="{{ asset('/admin/temp/rota/detail/'. $temp_rota->id ) }}"
-            class="btn btn-info">Details</a>
-            <a href="{{ url('admin/rota/save/temp/'.$temp_rota->id)  }}" class="btn btn-primary" type="submit" >Save To Rota
+            class="btn btn-info gren">Details</a>
+            <a href="{{ url('admin/rota/save/temp/'.$temp_rota->id)  }}" class="btn btn-primary grexe" type="submit" >Save To Rota
             </a>
             {{-- <input type="submit" value="save"  class="btn btn-primary"> --}}
-        &nbsp; <button class="btn btn-warning" id="hide_ucc">Hide UCC</button>
-        &nbsp; <button class="btn btn-primary" id="hide_regularduites">Hide Regular Duties</button>
-        <a href="{{ url()->previous() }}" class="btn btn-primary" type="button" >Back</a>
+        &nbsp; <button class="btn btn-warning hucc" id="hide_ucc">Hide UCC</button>
+        &nbsp; <button class="btn btn-primary hrducc" id="hide_regularduites">Hide Regular Duties</button>
+        <a href="{{ url()->previous() }}" class="btn btn-primary bckk" type="button" >Back</a>
     </div>
     <div class="col-sm-8" style="float: left">
         <h2 class="">
@@ -113,7 +116,7 @@
                 <td>
                     <div class="mydatearrow">
                         <div class="mydate">{!!($date_index+1)!!}</div>
-                        <span class="ucc detail_{!!$item->id!!}" data-toggle="modal"
+                        <span class="demodal ucc detail_{!!$item->id!!}" data-toggle="modal"
                             data-target=".detail_{!!$item->id!!}">Detail</span>
                         @include('admin.doctor_calender.partial.detail_modal')
                     </div>
@@ -429,7 +432,7 @@ function sort_by_name_get_ucc($doctors,$doctors_by_id){
     foreach($m_doctors as $doctor_id=>$md){
         $style='';
         if($md['doctor_type_id'] == 2){
-            $style = 'color:#2e4eec';
+            $style = 'color:#8b8b8b';
         }
         $all_doctors .= ',<div style="'.$style.'" data-id="'.$md['id'].'" class=" doc did_'.$md['id'].'">'.$md['name'].'</div>';
     }
